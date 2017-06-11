@@ -7,6 +7,7 @@ public class RibbonMovement : MonoBehaviour {
 	public GameObject player;
 	public float speed;
 	public float time;
+	public bool pickedup;
 
 	public Vector3 StartPosition;
 	public Vector3 OffsetPosition = new Vector3 (0f, 0f, 0f);
@@ -19,6 +20,7 @@ public class RibbonMovement : MonoBehaviour {
 		StartPosition = transform.position;
 
 		time = 0f;
+		pickedup = false;
 	}
 	
 	// Update is called once per frame
@@ -30,15 +32,17 @@ public class RibbonMovement : MonoBehaviour {
 
 		if (distance < 5f) {
 
-			time = time + Time.deltaTime;
+			if (pickedup == false) {
+
+				time = time + Time.deltaTime;
 			
-			float x = Mathf.Cos (time);
-			float z = Mathf.Sin (time);
-			float y = heightOffset;
+				float x = Mathf.Cos (time);
+				float z = Mathf.Sin (time);
+				float y = heightOffset;
 
-			gameObject.transform.position = new Vector3 (x, y, z);
-			UpdateLineRenderer ();
-
+				gameObject.transform.position = new Vector3 (x, y, z);
+				UpdateLineRenderer ();
+			}
 
 //			if (this.gameObject.name == "Sphere2") {
 //				this.gameObject.transform.position = new Vector3 (x, y+0.5f, z);
