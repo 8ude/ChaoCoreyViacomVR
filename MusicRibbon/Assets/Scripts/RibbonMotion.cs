@@ -25,7 +25,7 @@ public class RibbonMotion : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
+	
 		frameCountDown--;
 		if (frameCountDown < 0) {
 			FindNextPoint ();
@@ -36,6 +36,7 @@ public class RibbonMotion : MonoBehaviour {
 
 
 	//every n frames, travel to a new point in n frames
+	//may want to check if abs(analyzerValue) > threshold instead
 	void FindNextPoint() {
 		float nextYPos = analyzer.GetWholeEnergy () * dampening;
 		transform.DOMoveY (1f + nextYPos, (frameCount/90f));
