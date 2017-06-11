@@ -1,30 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
+
 
 public class ControllerScript : MonoBehaviour {
 
 	public bool triggerButtonDown = false;
-	private Valve.VR.EVRButtonId triggerButton = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
-	private SteamVR_Controller.Device controller{
-		get{return SteamVR_Controller.Input ((int)TrackedObj.index);
-		}
-	}
+    public Hand handScript;
 
-	private SteamVR_TrackedObject TrackedObj;
+	private SteamVR_TrackedObject trackedObj;
 
 	// Use this for initialization
 	void Start () {
-		//TrackedObj = GetComponent();
-	}
+		//trackedObj = GetComponent<SteamVR_TrackedObject>();
+        handScript = GetComponent<Hand>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
 
-		if (triggerButtonDown) {
+        triggerButtonDown = handScript.GetStandardInteractionButton();
+
+		
 			
-			this.gameObject.GetComponent<TrailRenderer> ().enabled = true;
-		}
+		this.gameObject.GetComponent<TrailRenderer> ().enabled = triggerButtonDown;
+
+		
 		
 	}
 }
