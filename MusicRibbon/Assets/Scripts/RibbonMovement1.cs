@@ -27,7 +27,7 @@ public class RibbonMovement1 : MonoBehaviour {
 
 			float x = Mathf.Cos (time);
 			float z = Mathf.Sin (time);
-			float y = 1f;
+			float y = 1.5f;
 
 			this.gameObject.transform.position = new Vector3 (x, y, z);
 
