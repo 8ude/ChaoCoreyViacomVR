@@ -21,6 +21,9 @@ public class SpectrumAnalysis : MonoBehaviour {
 
 
 	void Awake(){
+
+		audioSource = gameObject.GetComponent<AudioSource> ();
+
 		/*Deleting Singleton Stuff for now
 		if (instance == null) {
 			instance = this;
