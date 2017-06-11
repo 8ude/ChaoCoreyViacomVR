@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class RibbonMotion : MonoBehaviour {
 
@@ -9,22 +10,32 @@ public class RibbonMotion : MonoBehaviour {
 	public float dampening = 0.1f;
 	public float smoothingValue = 0.1f;
 
+	public int frameCount = 10;
+	public int frameCountDown;
+
 
 	// Use this for initialization
 	void Start () {
 		prevAnalyzerValue = 0f;
 		prevYPos = transform.position.y;
 		analyzer = GetComponentInParent<SpectrumAnalysis> ();	
+		frameCountDown = frameCount;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		float nextYPos = (analyzer.GetWholeEnergy () * dampening) - prevAnalyzerValue;
 
-		transform.position = new Vector3 (transform.position.x, 1f+(nextYPos * smoothingValue), transform.position.z);
+		frameCountDown--;
+		if (frameCountDown < 0) {
+			FindNextPoint ();
+			frameCountDown = frameCount;
+		}
 
-		prevAnalyzerValue = analyzer.GetWholeEnergy () * dampening;
+	}
 
+	void FindNextPoint() {
+		float nextYPos = analyzer.GetWholeEnergy () * dampening;
+		transform.DOMoveY (1f + nextYPos, (frameCount/90f));
 	}
 }
