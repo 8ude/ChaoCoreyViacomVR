@@ -40,6 +40,6 @@ public class RibbonMotion : MonoBehaviour {
 	//blah
 	void FindNextPoint() {
 		float nextYPos = analyzer.GetWholeEnergy () * dampening;
-		transform.DOMoveY (1f + nextYPos, (frameCount/90f));
+		transform.DOLocalMoveY (nextYPos, (frameCount/90f));
 	}
 }
