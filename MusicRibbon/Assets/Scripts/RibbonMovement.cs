@@ -123,8 +123,15 @@ public class RibbonMovement : MonoBehaviour {
 
     public void ReleasedByPlayer() {
 
+        pickedUp = false;
+
         StartCoroutine(OrbitPlayer());
 
+    }
+
+    public void PickedUpByPlayer() {
+
+        pickedUp = true;
     }
 
 
