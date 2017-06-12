@@ -6,33 +6,40 @@ public class RibbonMovement : MonoBehaviour {
 
 	public GameObject player;
 	public float speed;
-	public float time;
-	public bool pickedup;
+	public float orbitTime;
+	public bool pickedUp;
+    public float orbitSpeed;
+    
 
 	public Vector3 StartPosition;
 	public Vector3 OffsetPosition = new Vector3 (0f, 0f, 0f);
 
 	public float heightOffset;
+    public Vector3 OrbitStartOffset;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		//this may change later
 		StartPosition = transform.position;
+        OrbitStartOffset = new Vector3(1f, heightOffset, 0f);
 
-		time = 0f;
-		pickedup = false;
+        orbitTime = 0f;
+		pickedUp = false;
+        StartCoroutine(OrbitPlayer());
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		transform.position = Vector3.MoveTowards (transform.position, player.transform.position + new Vector3 (0, 0, 0), speed * Time.deltaTime);
+		//transform.position = Vector3.MoveTowards (transform.position, player.transform.position, speed * Time.deltaTime);
 	
 		float distance = Vector3.Distance (gameObject.transform.position, player.gameObject.transform.position);
 
+
+        /*
 		if (distance < 5f) {
 
-			if (pickedup == false) {
+			if (pickedUp == false) {
 
 				time = time + Time.deltaTime;
 			
@@ -41,7 +48,7 @@ public class RibbonMovement : MonoBehaviour {
 				float y = heightOffset;
 
 				gameObject.transform.position = new Vector3 (x, y, z);
-				UpdateLineRenderer ();
+				
 			}
 
 //			if (this.gameObject.name == "Sphere2") {
@@ -54,8 +61,12 @@ public class RibbonMovement : MonoBehaviour {
 //				this.gameObject.transform.position = new Vector3 (x, y+1.5f, z);
 //			}
 		}
+        */
 
-	}
+        UpdateLineRenderer();
+        
+
+    }
 
 	public void UpdateLineRenderer() {
 		LineRenderer myLineRenderer = GetComponent<LineRenderer> ();
@@ -69,6 +80,52 @@ public class RibbonMovement : MonoBehaviour {
 
 
 	}
+
+    IEnumerator TravelToOrbitPos() {
+
+        Vector3 targetPosition = player.transform.position + OrbitStartOffset;
+
+        orbitTime = 0f;
+
+        while (Vector3.Distance(transform.position, targetPosition) > 0.1f) {
+
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+            yield return null;
+
+        } 
+
+
+    }
+
+    IEnumerator OrbitPlayer() {
+
+        yield return StartCoroutine(TravelToOrbitPos());
+
+        while (!pickedUp) {
+
+            Vector3 nextPosition = new Vector3(
+                Mathf.Cos(orbitTime),
+                heightOffset,
+                Mathf.Sin(orbitTime)
+
+            );
+
+            transform.position = nextPosition;
+
+            orbitTime += Time.deltaTime;
+
+            yield return null;
+
+
+        }
+
+    }
+
+    public void ReleasedByPlayer() {
+
+        StartCoroutine(OrbitPlayer());
+
+    }
 
 
 }
