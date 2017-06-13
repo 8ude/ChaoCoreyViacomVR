@@ -12,10 +12,16 @@ public class RibbonInteractionScript : MonoBehaviour {
   
     public bool isCarriedByPlayer;
 
+    //We want to store this value for when we want to manipulate the volume
+    public float StemVolume = 1.0f;
+
+    Material initSphereMaterial;
+
 	// Use this for initialization
 	void Start () {
 
         isCarriedByPlayer = false;
+        initSphereMaterial = GetComponent<Renderer>().material;
 		
 	}
 	
@@ -48,6 +54,7 @@ public class RibbonInteractionScript : MonoBehaviour {
 
         gameObject.BroadcastMessage("PickedUpByPlayer");
         isCarriedByPlayer = true;
+        GetComponent<AudioHighPassFilter>().enabled = true;
 
     }
 
@@ -60,24 +67,37 @@ public class RibbonInteractionScript : MonoBehaviour {
 
         }
 
+ 
+        GetComponent<AudioHighPassFilter>().cutoffFrequency = RibbonGameManager.instance.RemapRange(transform.position.y, 0f, 3f, 10f, 1000f);
+        
     }
 
     void OnDetachedFromHand(Hand hand) {
 
         gameObject.BroadcastMessage("ReleasedByPlayer");
         isCarriedByPlayer = false;
-            
+        GetComponent<AudioHighPassFilter>().enabled = false;
+
     }
 
     public void ToggleAudioOn() {
 
         AudioSource myAudio = GetComponent<AudioSource>();
 
-        if (myAudio.volume == 1.0f) {
+        if (myAudio.volume != 0.0f) {
 
             myAudio.volume = 0.0f;
 
-        } else myAudio.volume = 1.0f;
+            gameObject.GetComponent<Renderer>().material = RibbonGameManager.instance.ribbonOffMaterial;
+
+            gameObject.GetComponentInChildren<TrailRenderer>().enabled = false;
+
+        } else {
+            myAudio.volume = StemVolume;
+            gameObject.GetComponent<Renderer>().material = initSphereMaterial;
+            gameObject.GetComponentInChildren<TrailRenderer>().enabled = true;
+        }
+
         
     }
 

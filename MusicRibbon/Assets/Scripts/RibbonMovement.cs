@@ -106,9 +106,9 @@ public class RibbonMovement : MonoBehaviour {
         while (!pickedUp) {
 
             Vector3 nextPosition = new Vector3(
-                Mathf.Cos(orbitTime)*orbitRadius,
+                Mathf.Cos(orbitTime * orbitSpeed)*orbitRadius,
                 heightOffset,
-                Mathf.Sin(orbitTime)*orbitRadius
+                Mathf.Sin(orbitTime * orbitSpeed)*orbitRadius
             );
 
             transform.position = nextPosition;
@@ -131,6 +131,8 @@ public class RibbonMovement : MonoBehaviour {
     }
 
     public void PickedUpByPlayer() {
+
+        orbitTime = 0f;
 
         pickedUp = true;
     }
