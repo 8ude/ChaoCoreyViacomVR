@@ -17,6 +17,8 @@ public class RibbonMovement : MonoBehaviour {
 	public float heightOffset;
     public Vector3 OrbitStartOffset;
 
+    public float orbitRadius = 0.5f;
+
     // Use this for initialization
     void Start () {
 		//this may change later
@@ -104,10 +106,9 @@ public class RibbonMovement : MonoBehaviour {
         while (!pickedUp) {
 
             Vector3 nextPosition = new Vector3(
-                Mathf.Cos(orbitTime),
+                Mathf.Cos(orbitTime)*orbitRadius,
                 heightOffset,
-                Mathf.Sin(orbitTime)
-
+                Mathf.Sin(orbitTime)*orbitRadius
             );
 
             transform.position = nextPosition;
