@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/VRTK/Examples/008_Controller_UsingAGrabbedObject.unity
+- path: Assets/MeshDeformationExample/Scene.unity
   isLoaded: 1
   isActive: 1
