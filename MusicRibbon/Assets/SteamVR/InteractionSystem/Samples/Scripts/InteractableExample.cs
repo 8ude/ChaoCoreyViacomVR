@@ -56,9 +56,6 @@ namespace Valve.VR.InteractionSystem
 			{
 				if ( hand.currentAttachedObject != gameObject )
 				{
-
-					this.gameObject.GetComponent<RibbonMovement> ().pickedUp = true;
-					Debug.Log ("picked up");
 					// Save our position/rotation so that we can restore it when we detach
 					oldPosition = transform.position;
 					oldRotation = transform.rotation;
@@ -72,8 +69,6 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
 				{
-					this.gameObject.GetComponent<RibbonMovement> ().pickedUp = false;
-					Debug.Log ("Detached");
 					// Detach this object from the hand
 					hand.DetachObject( gameObject );
 
