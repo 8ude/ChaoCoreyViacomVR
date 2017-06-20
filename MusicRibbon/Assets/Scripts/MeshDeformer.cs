@@ -9,6 +9,11 @@ public class MeshDeformer : MonoBehaviour {
 	Vector3[] originalVertices, displacedVertices;
 	Vector3[] vertexVelocities;
 
+	public float springForce = 20f;
+	public float damping = 5f;
+
+	float uniformScale = 1f;
+
 	void Start() {
 		deformingMesh = GetComponent<MeshFilter> ().mesh;
 		originalVertices = deformingMesh.vertices;
@@ -21,6 +26,7 @@ public class MeshDeformer : MonoBehaviour {
 	}
 
 	void Update() {
+		uniformScale = transform.localScale.x;
 		for (int i = 0; i < displacedVertices.Length; i++) {
 			UpdateVertex (i);
 		}
@@ -29,6 +35,7 @@ public class MeshDeformer : MonoBehaviour {
 	}
 
 	public void AddDeformingForce (Vector3 point, float force) {
+		point = transform.InverseTransformPoint (point);
 		for (int i = 0; i < displacedVertices.Length; i++) {
 			AddForceToVertex (i, point, force);
 		}
@@ -37,6 +44,7 @@ public class MeshDeformer : MonoBehaviour {
 	void AddForceToVertex(int i, Vector3 point, float force) {
 		//need both dir and dist of deforming force per vertex
 		Vector3 pointToVertex = displacedVertices [i] - point;
+		pointToVertex *= uniformScale;
 		//use Fv = F/(1+d^2) so force is at full strength at d = 0
 		float attenuatedForce = force/(1f + pointToVertex.sqrMagnitude);
 		float velocity = attenuatedForce * Time.deltaTime;
@@ -46,7 +54,12 @@ public class MeshDeformer : MonoBehaviour {
 
 	void UpdateVertex(int i) {
 		Vector3 velocity = vertexVelocities [i];
-		displacedVertices [i] += velocity * Time.deltaTime;
+		Vector3 displacement = displacedVertices [i] - originalVertices [i];
+		velocity -= displacement * springForce * Time.deltaTime;
+		velocity *= 1f - (damping * Time.deltaTime);
+		vertexVelocities [i] = velocity;
+		displacedVertices [i] += velocity * (Time.deltaTime / uniformScale);
+		
 	}
 
 
