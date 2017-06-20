@@ -45,7 +45,7 @@ public class VRMeshDeformerInput : MonoBehaviour {
 				Vector3 point = hit.point;
 
 				// multiply by normal and force offset to push towards center
-				point -= hit.normal * forceOffset;
+				point += (-1f * hit.normal) * forceOffset;
 				float forceMag = Vector3.Distance (transform.position, point);
 				float handForce = MathUtil.Remap(forceMag, 0f, 1f, force, 0f);  
 				deformer.AddDeformingForce (point, handForce);

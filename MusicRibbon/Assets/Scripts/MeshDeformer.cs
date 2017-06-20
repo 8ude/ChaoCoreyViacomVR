@@ -51,9 +51,21 @@ public class MeshDeformer : MonoBehaviour {
 		vertexVelocities [i] += pointToVertex.normalized * velocity;
 			
 	}
+	void AddWaveForceToVertex(int i, float force) {
+		//need both dir and dist of deforming force per vertex
+		Vector3 vertexNormal = displacedVertices[i];
+		vertexNormal *= uniformScale;
+		//use Fv = F/(1+d^2) so force is at full strength at d = 0
+		//float attenuatedForce = force/(1f+vertexNormal.normalized.sqrMagnitude);
+		float velocity = force * Time.deltaTime;
+		vertexVelocities [i] += vertexNormal.normalized * velocity;
+
+	}
 
 	void UpdateVertex(int i) {
+		//AddWaveForceToVertex(i, Mathf.Sin(Time.time*i)*5f);
 		Vector3 velocity = vertexVelocities [i];
+		velocity += Vector3.up * Mathf.Sin (Time.time * i/500f) *0.01f;
 		Vector3 displacement = displacedVertices [i] - originalVertices [i];
 		velocity -= displacement * springForce * Time.deltaTime;
 		velocity *= 1f - (damping * Time.deltaTime);
