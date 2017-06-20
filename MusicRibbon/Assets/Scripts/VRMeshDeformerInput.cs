@@ -19,12 +19,14 @@ public class VRMeshDeformerInput : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
+		
 		foreach (GameObject obj in interactableObjects) {
 			float distance = Vector3.Distance (transform.position, obj.transform.position);
 			// this assumes that obj is uniform scale
 			float surfaceOffset = obj.transform.lossyScale.x;
-			if (distance < distanceThreshold) {
+			//Debug.Log (distance);
+			if (distance < distanceThreshold + surfaceOffset) {
+				
 				HandleInput (obj.transform);
 			}
 		}
@@ -32,15 +34,18 @@ public class VRMeshDeformerInput : MonoBehaviour {
 	}
 
 	void HandleInput(Transform target) {
+		
 		Ray inputRay;
 		RaycastHit hit;
 
 		if (Physics.Raycast (transform.position, target.position, out hit)) {
 			MeshDeformer deformer = hit.collider.GetComponent<MeshDeformer> ();
 			if (deformer) {
+				
 				Vector3 point = hit.point;
+
 				// multiply by normal and force offset to push towards center
-				point += hit.normal * forceOffset;
+				point -= hit.normal * forceOffset;
 				float forceMag = Vector3.Distance (transform.position, point);
 				float handForce = MathUtil.Remap(forceMag, 0f, 1f, force, 0f);  
 				deformer.AddDeformingForce (point, handForce);
