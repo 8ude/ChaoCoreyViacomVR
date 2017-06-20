@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/ObjectDeformTest.unity
+- path: Assets/VRTK/Examples/008_Controller_UsingAGrabbedObject.unity
   isLoaded: 1
   isActive: 1
