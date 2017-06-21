@@ -35,11 +35,11 @@ public class VRMeshDeformerInput : MonoBehaviour {
 
 	void HandleInput(Transform target) {
        
-		Ray inputRay;
+		Ray inputRay = new Ray(transform.position, target.position);
 		RaycastHit hit;
 
-		if (Physics.Raycast (transform.position, target.position, out hit)) {
-            Debug.DrawLine(transform.position, hit.point);
+		if (Physics.Raycast (transform.position, (target.position - transform.position), out hit)) {
+            Debug.DrawLine(transform.position, target.position);
             Debug.Log("raycasting");
 			MeshDeformer deformer = hit.collider.GetComponent<MeshDeformer> ();
 			if (deformer) {
