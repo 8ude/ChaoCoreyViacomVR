@@ -24,7 +24,7 @@ public class VRMeshDeformerInput : MonoBehaviour {
 			float distance = Vector3.Distance (transform.position, obj.transform.position);
 			// this assumes that obj is uniform scale
 			float surfaceOffset = obj.transform.lossyScale.x;
-			//Debug.Log (distance);
+            
 			if (distance < distanceThreshold + surfaceOffset) {
 				
 				HandleInput (obj.transform);
@@ -34,11 +34,13 @@ public class VRMeshDeformerInput : MonoBehaviour {
 	}
 
 	void HandleInput(Transform target) {
-		
+       
 		Ray inputRay;
 		RaycastHit hit;
 
 		if (Physics.Raycast (transform.position, target.position, out hit)) {
+            Debug.DrawLine(transform.position, hit.point);
+            Debug.Log("raycasting");
 			MeshDeformer deformer = hit.collider.GetComponent<MeshDeformer> ();
 			if (deformer) {
 				
@@ -47,11 +49,14 @@ public class VRMeshDeformerInput : MonoBehaviour {
 				// multiply by normal and force offset to push towards center
 				point += (-1f * hit.normal) * forceOffset;
 				float forceMag = Vector3.Distance (transform.position, point);
-				float handForce = MathUtil.Remap(forceMag, 0f, 1f, force, 0f);  
+				float handForce = MathUtil.Remap(forceMag, 0f, 1f, force, 0f);
+                //Debug.Log(handForce);
 				deformer.AddDeformingForce (point, handForce);
 			}
 		}
 	}
+
+
 
 
 }
