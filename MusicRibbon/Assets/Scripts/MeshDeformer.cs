@@ -46,7 +46,7 @@ public class MeshDeformer : MonoBehaviour {
 		Vector3 pointToVertex = displacedVertices [i] - point;
 		pointToVertex *= uniformScale;
 		//use Fv = F/(1+d^2) so force is at full strength at d = 0
-		float attenuatedForce = -force/(1f + pointToVertex.sqrMagnitude);
+		float attenuatedForce = force/(1f + pointToVertex.sqrMagnitude);
 		float velocity = attenuatedForce * Time.deltaTime;
 		vertexVelocities [i] += pointToVertex.normalized * velocity;
 			

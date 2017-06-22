@@ -25,10 +25,10 @@ public class VRMeshDeformerInput : MonoBehaviour {
 			// this assumes that obj is uniform scale
 			float surfaceOffset = obj.transform.lossyScale.x;
             
-			if (distance < distanceThreshold + surfaceOffset) {
-				
-				HandleInput (obj.transform);
-			}
+
+
+			HandleInput (obj.transform);
+		
 		}
 
 	}
@@ -38,14 +38,38 @@ public class VRMeshDeformerInput : MonoBehaviour {
 		Ray inputRay = new Ray(transform.position, target.position);
 		RaycastHit hit;
 
-		if (Physics.Raycast (transform.position, (target.position - transform.position), out hit)) {
-            Debug.DrawLine(transform.position, target.position);
-            Debug.Log("raycasting");
+
+		Vector3 targetForward = target.forward;
+
+		Vector3 aVector = target.position - transform.position;
+		float angle = Vector3.Angle (targetForward, aVector);
+		Vector3 rayDirection = aVector - ((aVector.magnitude * Mathf.Cos (angle * Mathf.PI / 180f)) * targetForward);
+		//with prismatic elements, we want the raycast direction to be towards the centerline
+		//
+	
+
+		if (Physics.Raycast (transform.position, rayDirection, out hit, distanceThreshold)) {
+			//Check for audio filter controllers on self
+
+			float distanceToPoint = Vector3.Distance (transform.position, hit.point);
+
+			if (GetComponent<LowPassController> ()) {
+				GetComponent<LowPassController>().AdjustFrequency (target, distanceToPoint);
+			} else if (GetComponent<HighPassController>()) {
+				GetComponent<HighPassController>().AdjustFrequency (target, distanceToPoint);
+			}
+
+
+
+            //Debug.DrawLine(transform.position, target.position);
+            //Debug.Log("raycasting");
 			MeshDeformer deformer = hit.collider.GetComponent<MeshDeformer> ();
 			if (deformer) {
-				
-				Vector3 point = hit.point;
 
+
+
+				Vector3 point = hit.point;
+				Debug.DrawLine (transform.position, point);
 				// multiply by normal and force offset to push towards center
 				point += (-1f * hit.normal) * forceOffset;
 				float forceMag = Vector3.Distance (transform.position, point);
