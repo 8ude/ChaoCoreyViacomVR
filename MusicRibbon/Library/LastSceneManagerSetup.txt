@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/MeshDeformationExample/Scene.unity
+- path: Assets/MeshDeformationExample/RibbonDeformScene.unity
   isLoaded: 1
   isActive: 1
