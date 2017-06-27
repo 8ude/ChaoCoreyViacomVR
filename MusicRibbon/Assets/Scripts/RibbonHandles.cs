@@ -6,15 +6,7 @@ using VRTK.SecondaryControllerGrabActions;
 
 	public class RibbonHandles{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	//Ignore for now -- Can't get these to work
 
 
 

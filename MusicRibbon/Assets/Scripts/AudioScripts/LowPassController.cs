@@ -28,6 +28,7 @@ public class LowPassController : MonoBehaviour {
 	public void AdjustFrequency(Transform target, float distance) {
 
 		AudioLowPassFilter targetFilter = target.gameObject.GetComponent<AudioLowPassFilter> ();
+		RibbonFilters ribbonFilter = target.gameObject.GetComponent<RibbonFilters> ();
 		origFreq = targetFilter.cutoffFrequency;
 
 		Vector3 targetForward = target.forward;
@@ -40,11 +41,13 @@ public class LowPassController : MonoBehaviour {
 			if (targetFilter.cutoffFrequency > maxFreq) {
 				DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, maxFreq, 0.2f);
 			} else {
-				targetFilter.cutoffFrequency = MathUtil.Remap (targetMag, 0f, 2f, minFreq, maxFreq);
-				targetFilter.lowpassResonanceQ = MathUtil.Remap (distance, 0f, 1f, minRes, maxRes);
+
+				ribbonFilter.ChangeLowPassFrequency (MathUtil.Remap (targetMag, 0f, 2f, minFreq, maxFreq), MathUtil.Remap (distance, 0f, 1f, minRes, maxRes));
+
 			}
 		} else {
-			DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, origFreq, 0.2f);
+			//OutOfRange -- revert frequency to original frequency
+			DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, ribbonFilter.origLPCutoff, 0.2f);
 		}
 
 
