@@ -11,7 +11,7 @@ public class LowPassController : MonoBehaviour {
 	public float minRes = 0.5f;
 	public float maxRes = 2.0f;
 
-	float distanceThreshold = 0.2f;
+	float distanceThreshold = 0.5f;
 
 
 
@@ -29,19 +29,20 @@ public class LowPassController : MonoBehaviour {
 
 		AudioLowPassFilter targetFilter = target.gameObject.GetComponent<AudioLowPassFilter> ();
 		RibbonFilters ribbonFilter = target.gameObject.GetComponent<RibbonFilters> ();
-		origFreq = targetFilter.cutoffFrequency;
 
+		//Vector Math to get distance from line running through the local z-axis of the object
 		Vector3 targetForward = target.forward;
 
 		Vector3 aVector = target.position - transform.position;
 		float angle = Vector3.Angle (targetForward, aVector);
-		float targetMag = aVector.magnitude * Mathf.Cos (angle * Mathf.PI / 180f);
+		float targetMag = Mathf.Abs(aVector.magnitude * Mathf.Cos (angle * Mathf.PI / 180f));
+
 
 		if (distance < distanceThreshold) {
 			if (targetFilter.cutoffFrequency > maxFreq) {
 				DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, maxFreq, 0.2f);
 			} else {
-
+				Debug.Log ("LP Frequency magnitude = " + targetMag); 
 				ribbonFilter.ChangeLowPassFrequency (MathUtil.Remap (targetMag, 0f, 2f, minFreq, maxFreq), MathUtil.Remap (distance, 0f, 1f, minRes, maxRes));
 
 			}

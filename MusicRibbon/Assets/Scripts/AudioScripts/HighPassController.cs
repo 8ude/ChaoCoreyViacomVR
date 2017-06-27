@@ -6,8 +6,8 @@ using DG.Tweening;
 public class HighPassController : MonoBehaviour {
 
 	float origFreq;
-	public float minFreq = 500f;
-	public float maxFreq = 5000;
+	public float minFreq = 200f;
+	public float maxFreq = 5000f;
 	public float minRes = 0.5f;
 	public float maxRes = 2.0f;
 
@@ -28,23 +28,24 @@ public class HighPassController : MonoBehaviour {
 	public void AdjustFrequency(Transform target, float distance) {
 
 		AudioHighPassFilter targetFilter = target.gameObject.GetComponent<AudioHighPassFilter> ();
-		origFreq = targetFilter.cutoffFrequency;
+		RibbonFilters ribbonFilter = target.gameObject.GetComponent<RibbonFilters> ();
 
 		Vector3 targetForward = target.forward;
 
 		Vector3 aVector = target.position - transform.position;
 		float angle = Vector3.Angle (targetForward, aVector);
-		float targetMag = aVector.magnitude * Mathf.Cos (angle * Mathf.PI / 180f);
+		float targetMag = Mathf.Abs(aVector.magnitude * Mathf.Cos (angle * Mathf.PI / 180f));
 
 		if (distance < distanceThreshold) {
-			if (targetFilter.cutoffFrequency > maxFreq) {
-				DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, maxFreq, 0.2f);
+			if (targetFilter.cutoffFrequency < minFreq) {
+				DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, minFreq, 2f);
 			} else {
-				targetFilter.cutoffFrequency = MathUtil.Remap (targetMag, 0f, 2f, minFreq, maxFreq);
-				targetFilter.highpassResonanceQ = MathUtil.Remap (distance, 0f, 1f, minRes, maxRes);
+
+				ribbonFilter.ChangeHighPassFrequency (MathUtil.Remap (targetMag, 0f, 2f, minFreq, maxFreq), MathUtil.Remap (distance, 0f, 1f, minRes, maxRes));
+
 			}
 		} else {
-			DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, origFreq, 0.2f);
+			DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, ribbonFilter.origHPCutoff, 1f);
 		}
 
 
