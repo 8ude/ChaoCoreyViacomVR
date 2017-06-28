@@ -21,12 +21,7 @@ public class VRMeshDeformerInput : MonoBehaviour {
 	void Update () {
 		
 		foreach (GameObject obj in interactableObjects) {
-			float distance = Vector3.Distance (transform.position, obj.transform.position);
-			// this assumes that obj is uniform scale
-			float surfaceOffset = obj.transform.lossyScale.x;
-            
-
-
+			
 			HandleInput (obj.transform);
 		
 		}
@@ -39,13 +34,16 @@ public class VRMeshDeformerInput : MonoBehaviour {
 		RaycastHit hit;
 
 
+		//with prismatic elements, we want the raycast direction to be towards the centerline
+		//TODO - if using spheres or icosahedrons, use alternative distance finding (not z-centerline)
+
 		Vector3 targetForward = target.forward;
 
 		Vector3 aVector = target.position - transform.position;
 		float angle = Vector3.Angle (targetForward, aVector);
 		Vector3 rayDirection = aVector - ((aVector.magnitude * Mathf.Cos (angle * Mathf.PI / 180f)) * targetForward);
-		//with prismatic elements, we want the raycast direction to be towards the centerline
-		//
+
+
 	
 
 		if (Physics.Raycast (transform.position, rayDirection, out hit, distanceThreshold)) {

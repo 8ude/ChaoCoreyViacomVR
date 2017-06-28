@@ -36,12 +36,16 @@ public class HighPassController : MonoBehaviour {
 		float angle = Vector3.Angle (targetForward, aVector);
 		float targetMag = Mathf.Abs(aVector.magnitude * Mathf.Cos (angle * Mathf.PI / 180f));
 
+		Debug.Log("HPDistance " + distance);
+
 		if (distance < distanceThreshold) {
 			if (targetFilter.cutoffFrequency < minFreq) {
+
+				//TODO - MAKE SURE THIS IS ALL ON THE RIBBON FILTERS SCRIPT
 				DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, minFreq, 2f);
 			} else {
 
-				ribbonFilter.ChangeHighPassFrequency (MathUtil.Remap (targetMag, 0f, 2f, minFreq, maxFreq), MathUtil.Remap (distance, 0f, 1f, minRes, maxRes));
+				ribbonFilter.ChangeHighPassFrequency (MathUtil.Remap (targetMag, 0f, 2f, maxFreq, minFreq), MathUtil.Remap (distance, 0f, 1f, minRes, maxRes));
 
 			}
 		} else {

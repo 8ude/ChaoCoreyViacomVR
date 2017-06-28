@@ -78,6 +78,11 @@ public class RibbonFilters : MonoBehaviour {
 
 	public void ChangeLowPassFrequency(float inputFreq, float inputRes){
 
+		if (inputFreq <= 100f) {
+			Debug.Log ("Improper LP Filter Input");
+			return;
+		}
+
 		if (frameLPBuffer < frameBufferSize) {
 			return;
 		} else {

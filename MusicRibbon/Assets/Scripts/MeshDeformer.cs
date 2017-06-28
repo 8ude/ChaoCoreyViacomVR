@@ -16,7 +16,11 @@ public class MeshDeformer : MonoBehaviour {
 
 	float uniformScale = 1f;
 
+	SpectrumAnalysis soundAnalyzer;
+	float soundForceAttenuation = 0.1f;
+
 	void Start() {
+		soundAnalyzer = GetComponent<SpectrumAnalysis> ();
 		deformingMesh = GetComponent<MeshFilter> ().mesh;
 		originalVertices = deformingMesh.vertices;
 		displacedVertices = new Vector3[originalVertices.Length];
@@ -72,6 +76,12 @@ public class MeshDeformer : MonoBehaviour {
 		vertexVelocities [i] = velocity;
 		displacedVertices [i] += velocity * (Time.deltaTime / uniformScale);
 		
+	}
+
+	void AddSoundForceToVertex(int i, float soundForce) {
+		//start by adding force to a vertex picked at random
+
+
 	}
 		
 
