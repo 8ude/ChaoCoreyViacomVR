@@ -40,15 +40,14 @@ public class LowPassController : MonoBehaviour {
 
 		if (distance < distanceThreshold) {
 			if (targetFilter.cutoffFrequency > maxFreq) {
+				
 				DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, maxFreq, 0.2f);
 			} else {
-				//Debug.Log ("LP Frequency magnitude = " + targetMag); 
-				ribbonFilter.ChangeLowPassFrequency (MathUtil.Remap (targetMag, 0f, 2f, minFreq, maxFreq), MathUtil.Remap (distance, 0f, 1f, minRes, maxRes));
+				//Debug.Log ("distance along centerline" + targetMag);
+				ribbonFilter.ChangeLowPassFrequency (Mathf.Clamp(MathUtil.Remap (targetMag, 0f, 2f, minFreq, maxFreq), minFreq, maxFreq), 
+					Mathf.Clamp(MathUtil.Remap (distance, 0f, 1f, minRes, maxRes), minRes, maxRes));
 
 			}
-		} else {
-			//OutOfRange -- revert frequency to original frequency
-			DOTween.To (() => targetFilter.cutoffFrequency, x => targetFilter.cutoffFrequency = x, ribbonFilter.origLPCutoff, 0.2f);
 		}
 
 

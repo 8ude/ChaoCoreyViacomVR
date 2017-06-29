@@ -49,7 +49,7 @@ public class ReverbControl : MonoBehaviour {
 
 			//check to see if our dest Reverb has changed
 
-			destReverb = MathUtil.Remap(Mathf.Clamp(transform.localScale.magnitude, 0f, maxScale), minScale, maxScale, minReverb, maxReverb);
+			destReverb = MathUtil.Remap(Mathf.Clamp(transform.localScale.magnitude-originalScale, 0f, maxScale), minScale, maxScale, minReverb, maxReverb);
 			if (destReverb != prevReverb) {
 				//if so, our scale has changed, so we set our frame count to 0
 				frameCount = 0;

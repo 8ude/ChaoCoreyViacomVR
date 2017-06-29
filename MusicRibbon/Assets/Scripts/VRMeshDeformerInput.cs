@@ -52,15 +52,15 @@ public class VRMeshDeformerInput : MonoBehaviour {
 			float distanceToPoint = Vector3.Distance (transform.position, hit.point);
 
 			if (GetComponent<LowPassController> ()) {
-				GetComponent<LowPassController>().AdjustFrequency (target, distanceToPoint);
-			} else if (GetComponent<HighPassController>()) {
-				GetComponent<HighPassController>().AdjustFrequency (target, distanceToPoint);
+				GetComponent<LowPassController> ().AdjustFrequency (target, distanceToPoint);
+			} else if (GetComponent<HighPassController> ()) {
+				//GetComponent<HighPassController> ().AdjustFrequency (target, distanceToPoint);
 			}
 
 
 
-            //Debug.DrawLine(transform.position, target.position);
-            //Debug.Log("raycasting");
+			//Debug.DrawLine(transform.position, target.position);
+			Debug.Log("raycasting");
 			MeshDeformer deformer = hit.collider.GetComponent<MeshDeformer> ();
 			if (deformer) {
 
@@ -71,10 +71,21 @@ public class VRMeshDeformerInput : MonoBehaviour {
 				// multiply by normal and force offset to push towards center
 				point += (-1f * hit.normal) * forceOffset;
 				float forceMag = Vector3.Distance (transform.position, point);
-				float handForce = MathUtil.Remap(forceMag, 0f, 1f, force, 0f);
-                //Debug.Log(handForce);
+				float handForce = MathUtil.Remap (forceMag, 0f, 1f, force, 0f);
+				//Debug.Log(handForce);
 				deformer.AddDeformingForce (point, handForce);
 			}
+		} else {
+
+			if (target.gameObject.GetComponent<RibbonFilters> ()) {
+				if (GetComponent<LowPassController> ()) {
+					//Debug.Log ("Resetting LP");
+					target.gameObject.GetComponent<RibbonFilters> ().ResetLPFrequency ();
+				} else if (GetComponent<HighPassController>()) {
+					//target.gameObject.GetComponent<RibbonFilters> ().ResetHPFrequency ();
+				}
+			} 
+
 		}
 	}
 

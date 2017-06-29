@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 [RequireComponent(typeof(AudioLowPassFilter))]
 [RequireComponent(typeof(AudioHighPassFilter))]
 public class RibbonFilters : MonoBehaviour {
 
 	public float origLPCutoff = 20000; 
+	public float origLPRes = 1.0f;
 	public float origHPCutoff = 10;
+	public float origHPRes = 1.0f;
 	public float lowPassResonance = 2.0f;
 	public float hiPassResonance = 2.0f;
 
@@ -38,7 +41,9 @@ public class RibbonFilters : MonoBehaviour {
 		hiPassFilter = GetComponent<AudioHighPassFilter> ();
 
 		origLPCutoff = lowPassFilter.cutoffFrequency;
+		origLPRes = lowPassFilter.lowpassResonanceQ;
 		origHPCutoff = hiPassFilter.cutoffFrequency;
+		origHPRes = hiPassFilter.highpassResonanceQ;
 
 		oldLPFreq = origLPCutoff;
 		oldLPRes = lowPassFilter.lowpassResonanceQ;
@@ -55,22 +60,22 @@ public class RibbonFilters : MonoBehaviour {
 		frameHPBuffer++;
 
 		if (oldLPFreq != newLPFreq) {
-			lowPassFilter.cutoffFrequency = Mathf.Lerp (oldLPFreq, newLPFreq, (float)frameLPBuffer / frameBufferSize);
+			lowPassFilter.cutoffFrequency = Mathf.Clamp(Mathf.Lerp (oldLPFreq, newLPFreq, (float)frameLPBuffer / frameBufferSize), 300f, 20000f);
 			oldLPFreq = lowPassFilter.cutoffFrequency;
 		}
 
 		if (oldLPRes != newLPRes) {
-			lowPassFilter.lowpassResonanceQ = Mathf.Lerp (oldLPRes, newLPRes, (float)frameLPBuffer / frameBufferSize);
+			lowPassFilter.lowpassResonanceQ = Mathf.Clamp(Mathf.Lerp (oldLPRes, newLPRes, (float)frameLPBuffer / frameBufferSize), 1f, 2f);
 			oldLPRes = lowPassFilter.lowpassResonanceQ;
 		}
 
 		if (oldHPFreq != newHPFreq) {
-			hiPassFilter.cutoffFrequency = Mathf.Lerp (oldHPFreq, newHPFreq, (float)frameHPBuffer / frameBufferSize);
+			hiPassFilter.cutoffFrequency = Mathf.Clamp(Mathf.Lerp (oldHPFreq, newHPFreq, (float)frameHPBuffer / frameBufferSize), 10f, 10000f);
 			oldHPFreq = hiPassFilter.cutoffFrequency;
 		}
 
 		if (oldHPRes != newHPRes) {
-			hiPassFilter.highpassResonanceQ = Mathf.Lerp (oldHPRes, newHPRes, (float)frameHPBuffer / frameBufferSize);
+			hiPassFilter.highpassResonanceQ = Mathf.Clamp(Mathf.Lerp (oldHPRes, newHPRes, (float)frameHPBuffer / frameBufferSize), 1f, 2f);
 			oldHPRes = hiPassFilter.highpassResonanceQ;
 		} 
 		
@@ -107,4 +112,34 @@ public class RibbonFilters : MonoBehaviour {
 		}
 
 	}
+
+	public void ResetLPFrequency() {
+
+		if (lowPassFilter.cutoffFrequency <= origLPCutoff) {
+
+			//Debug.Log ("current cutoff: " + lowPassFilter.cutoffFrequency);
+			//Debug.Log ("target cutoff: " + origLPCutoff);
+			//Debug.Log ("the fucking difference is " + ((origLPCutoff - lowPassFilter.cutoffFrequency) * Time.deltaTime));
+
+			ChangeLowPassFrequency(lowPassFilter.cutoffFrequency += (origLPCutoff - lowPassFilter.cutoffFrequency) * 0.1f, origLPRes);
+
+		
+			//DOTween.To (() => lowPassFilter.cutoffFrequency, x => lowPassFilter.cutoffFrequency = x, origLPCutoff, 1f);
+		}
+
+
+	}
+
+	public void ResetHPFrequency() {
+
+		if (hiPassFilter.cutoffFrequency >= origHPCutoff) {
+
+			ChangeHighPassFrequency(hiPassFilter.cutoffFrequency -= (hiPassFilter.cutoffFrequency - origHPCutoff) * 0.1f, origHPRes); 
+
+			//DOTween.To (() => hiPassFilter.cutoffFrequency, x => hiPassFilter.cutoffFrequency = x, origHPCutoff, 1f);
+		}
+
+	}
+
+	
 }
