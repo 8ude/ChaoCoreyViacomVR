@@ -87,13 +87,28 @@ namespace VRTK.SecondaryControllerGrabActions
             Vector3 initialRotatedPosition = grabbedObject.transform.rotation * grabbedObject.transform.position;
             Vector3 initialSecondGrabRotatedPosition = grabbedObject.transform.rotation * secondaryInitialGrabPoint.position;
             Vector3 currentSecondGrabRotatedPosition = grabbedObject.transform.rotation * secondaryGrabbingObject.transform.position;
+			Vector3 initialPrimaryGrabRotatedPositon = grabbedObject.transform.rotation * primaryInitialGrabPoint.position;
+			Vector3 currentPrimaryGrabRotatedPositin = grabbedObject.transform.rotation * primaryGrabbingObject.transform.position;
 
-            float newScaleX = CalculateAxisScale(initialRotatedPosition.x, initialSecondGrabRotatedPosition.x, currentSecondGrabRotatedPosition.x);
-            float newScaleY = CalculateAxisScale(initialRotatedPosition.y, initialSecondGrabRotatedPosition.y, currentSecondGrabRotatedPosition.y);
-            float newScaleZ = CalculateAxisScale(initialRotatedPosition.z, initialSecondGrabRotatedPosition.z, currentSecondGrabRotatedPosition.z);
+			//Debug.Log ("IRP:"+ initialRotatedPosition +"ISRP:"+initialSecondGrabRotatedPosition +"CSRP:"+ currentSecondGrabRotatedPosition);
 
-            var newScale = new Vector3(newScaleX, newScaleY, newScaleZ) + initialScale;
-            ApplyScale(newScale);
+            //float newScaleX = CalculateAxisScale(initialRotatedPosition.x, initialSecondGrabRotatedPosition.x, currentSecondGrabRotatedPosition.x);
+            //float newScaleY = CalculateAxisScale(initialRotatedPosition.y, initialSecondGrabRotatedPosition.y, currentSecondGrabRotatedPosition.y);
+           // float newScaleZ = CalculateAxisScale(initialRotatedPosition.z, initialSecondGrabRotatedPosition.z, currentSecondGrabRotatedPosition.z);
+			//Debug.Log ("X: "+ newScaleX +" Y: "+ newScaleY+ " Z: "+ newScaleZ);
+
+			float newScaleX = Mathf.Abs(currentSecondGrabRotatedPosition.x - currentPrimaryGrabRotatedPositin.x ) - Mathf.Abs(initialSecondGrabRotatedPosition.x - initialPrimaryGrabRotatedPositon.x);
+			//float newScaleZ = Mathf.Abs(currentSecondGrabRotatedPosition.z - currentPrimaryGrabRotatedPositin.z ) - Mathf.Abs(initialSecondGrabRotatedPosition.z - initialPrimaryGrabRotatedPositon.z);
+           	
+			//var newScale = new Vector3(newScaleX, newScaleY, newScaleZ) + initialScale;
+	
+			var newScale = new Vector3(newScaleX*0.8f, 0, 0)+ initialScale;
+
+			ApplyScale(newScale);
+
+
+
+
         }
 
         private void UniformScale()
