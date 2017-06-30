@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/MeshDeformationExample/RibbonDeformScene.unity
+- path: Assets/Spline Gen Test/Spline Points.unity
   isLoaded: 1
   isActive: 1
