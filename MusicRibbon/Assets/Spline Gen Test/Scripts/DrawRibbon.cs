@@ -12,6 +12,7 @@ public class DrawRibbon: MonoBehaviour {
 	public GameObject markerPrefab;
 	List<GameObject> markerChain;
 	public GameObject markerParentPrefab;
+    
 
 
 	// Use this for initialization
@@ -36,9 +37,18 @@ public class DrawRibbon: MonoBehaviour {
 	void TriggerReleased(object sender, ClickedEventArgs e) {
 
 		GameObject parentObject = Instantiate(markerParentPrefab, transform.position, Quaternion.identity);
-		foreach (GameObject go in markerChain) {
-			go.transform.SetParent (parentObject.transform);
+        BezierCurve parentCurve = parentObject.GetComponent<BezierCurve>();
+        Vector3[] newPoints = new Vector3[markerChain.Count];
+        int i = 0;
+        foreach (GameObject go in markerChain) {
+
+            newPoints[i] = go.transform.position;
+            i++;
+            go.transform.SetParent (parentObject.transform);
+            
+            
 		}
+        parentCurve.SetPoints(newPoints);
 		markerChain.Clear ();
 		Debug.Log ("trigger released?");
 		timeInterval = 0f;
