@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine;
+using Curvy;
 
 public class DrawRibbon: MonoBehaviour {
 
@@ -37,7 +38,7 @@ public class DrawRibbon: MonoBehaviour {
 	void TriggerReleased(object sender, ClickedEventArgs e) {
 
 		GameObject parentObject = Instantiate(markerParentPrefab, transform.position, Quaternion.identity);
-        BezierCurve parentCurve = parentObject.GetComponent<BezierCurve>();
+        
         Vector3[] newPoints = new Vector3[markerChain.Count];
         int i = 0;
         foreach (GameObject go in markerChain) {
@@ -48,7 +49,7 @@ public class DrawRibbon: MonoBehaviour {
             
             
 		}
-        parentCurve.SetPoints(newPoints);
+       
 		markerChain.Clear ();
 		Debug.Log ("trigger released?");
 		timeInterval = 0f;
