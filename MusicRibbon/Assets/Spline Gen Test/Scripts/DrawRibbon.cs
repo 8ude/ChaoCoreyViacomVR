@@ -12,6 +12,7 @@ public class DrawRibbon: MonoBehaviour {
 	public float timeInterval = 0f;
 	public float pointGenTime = 0.1f;
 	public int numRibbons = 0;
+	[SerializeField] float wandTipOffset = 0.4f;
 
 
 
@@ -105,7 +106,7 @@ public class DrawRibbon: MonoBehaviour {
 	
 		timeInterval += Time.deltaTime;
 		if (device.triggerPressed && timeInterval > pointGenTime) {
-            Vector3 newPosition = transform.position + (0.4f * transform.forward);
+			Vector3 newPosition = transform.position + (wandTipOffset * transform.forward);
 			GameObject newMarker = Instantiate (markerPrefab, newPosition, Quaternion.identity);
 			markerChain.Add (newMarker);
 			timeInterval = 0f;

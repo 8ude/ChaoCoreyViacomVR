@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Spline Gen Test/Spline Points.unity
+- path: Assets/Scenes/July6Progress.unity
   isLoaded: 1
   isActive: 1
