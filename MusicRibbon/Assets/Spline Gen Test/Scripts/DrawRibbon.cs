@@ -105,7 +105,8 @@ public class DrawRibbon: MonoBehaviour {
 	
 		timeInterval += Time.deltaTime;
 		if (device.triggerPressed && timeInterval > pointGenTime) {
-			GameObject newMarker = Instantiate (markerPrefab, transform.position, Quaternion.identity);
+            Vector3 newPosition = transform.position + (0.4f * transform.forward);
+			GameObject newMarker = Instantiate (markerPrefab, newPosition, Quaternion.identity);
 			markerChain.Add (newMarker);
 			timeInterval = 0f;
 		}
