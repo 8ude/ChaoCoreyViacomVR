@@ -14,6 +14,8 @@ public class DrawRibbon: MonoBehaviour {
 	public int numRibbons = 0;
 	[SerializeField] float wandTipOffset = 0.4f;
 
+	float minGenTime;
+
 
 
 
@@ -28,6 +30,9 @@ public class DrawRibbon: MonoBehaviour {
 
 	//public CurvySpline ribbonSpline;
 
+	void Awake() {
+		minGenTime = pointGenTime * 4f;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -37,6 +42,7 @@ public class DrawRibbon: MonoBehaviour {
 		device = GetComponent<SteamVR_TrackedController> ();
 		device.TriggerClicked += Trigger;
 		device.TriggerUnclicked += TriggerReleased;
+
 
 	}
 
@@ -49,6 +55,7 @@ public class DrawRibbon: MonoBehaviour {
 		}
 
 		currentRibbonSound = Instantiate (ribbonSoundPrefab, transform.position, Quaternion.identity);
+		currentRibbonSound.transform.SetParent (gameObject.transform);
 		currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = numRibbons % currentRibbonSound.GetComponent<DrawRibbonSound> ().origClips.Length;
 		currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon ();
 
@@ -122,11 +129,7 @@ public class DrawRibbon: MonoBehaviour {
 
 	}
 
-	void RibbonSoundCreator() {
 
-
-
-	}
 
 
 
