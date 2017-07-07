@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Beat;
 
 public class DrawRibbonSound : MonoBehaviour {
 
@@ -9,13 +10,18 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	public int clipIndex = 0;
 
-	float startTime, stopTime;
-	float timeDifference;
+	double startTime, stopTime;
+	double timeDifference;
 
 	int sampleOffset = 0;
 
+	//time to fadeout after 
+	public float fadeOutTime = 0.2f;
+
 	//float[] audioData;
 	float[] origAudioData;
+
+
 
 	void Start() {
 		
@@ -27,32 +33,24 @@ public class DrawRibbonSound : MonoBehaviour {
 
 		mySource = GetComponent<AudioSource> ();
 		mySource.clip = origClips[clipIndex];
-		if (clipIndex == 2) {
-			mySource.time = 30f;
-		} else if (clipIndex == 3) {
-			mySource.time = 60f;
-		}
-		mySource.Play ();
+
+		startTime = Clock.instance.AtNextMeasure();
+
+		mySource.PlayScheduled (startTime);
 
 
 		origAudioData = new float[mySource.clip.samples*mySource.clip.channels];
-		if (clipIndex == 2) {
-			//offset for drum loop
-			sampleOffset = Mathf.RoundToInt (30 * origClips [clipIndex].frequency * origClips [clipIndex].channels);
 
-		} else if (clipIndex == 3) {
-			sampleOffset = Mathf.RoundToInt (60 * origClips [clipIndex].frequency * origClips [clipIndex].channels);
-		}
-		mySource.clip.GetData (origAudioData, sampleOffset);
+		mySource.clip.GetData (origAudioData, 0);
 
-		startTime = Time.time;
+
 
 	}
 
 	public void StopDrawingRibbon() {
-		stopTime = Time.time;
+		stopTime = Clock.instance.AtNextMeasure();
 
-		float newClipLength = stopTime - startTime;
+		float newClipLength = (float)stopTime - (float)startTime;
 		int newClipSamples = Mathf.RoundToInt (newClipLength * origClips[clipIndex].frequency);
 
 		//Debug.Log ("Clip Samples:" + newClipSamples);
@@ -79,7 +77,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 		mySource.clip = newClip;
 
-		mySource.Play ();
+		mySource.PlayScheduled (Clock.instance.AtNextMeasure());
 
 	}
 

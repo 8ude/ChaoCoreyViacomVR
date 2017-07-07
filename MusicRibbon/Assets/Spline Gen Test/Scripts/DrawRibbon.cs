@@ -16,6 +16,8 @@ public class DrawRibbon: MonoBehaviour {
 
 
 
+
+
 	public GameObject markerPrefab;
 	List<GameObject> markerChain;
 	public GameObject markerParentPrefab;
@@ -62,6 +64,8 @@ public class DrawRibbon: MonoBehaviour {
 		GameObject parentObject = Instantiate(markerParentPrefab, Vector3.zero, Quaternion.identity);
 		CurvyGenerator generator = parentObject.GetComponent<CurvyGenerator> ();
 
+		currentRibbonSound.transform.SetParent (parentObject.transform);
+
 		GameObject splineObject = Instantiate (curvySplinePrefab, transform.position, Quaternion.identity);
 		CurvySpline spline = splineObject.GetComponent<CurvySpline> ();
 
@@ -88,6 +92,8 @@ public class DrawRibbon: MonoBehaviour {
 		spline.Add (newPoints);
 
 		isp.Spline = spline;
+
+		spline.transform.SetParent (parentObject.transform);
 			
 		//ribbonSpline.Add (newPoints);
 
@@ -97,6 +103,8 @@ public class DrawRibbon: MonoBehaviour {
 		markerChain.Clear ();
 		Debug.Log ("trigger released?");
 		timeInterval = 0f;
+
+		RibbonGameManager.instance.RibbonObjects.Add (parentObject);
 
 
 	}
