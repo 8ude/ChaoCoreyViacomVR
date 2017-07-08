@@ -79,3 +79,11 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+MusicRibbon/Assets/Models\.meta
+
+MusicRibbon/Assets/Spline Gen Test/Prefabs\.meta
+
+MusicRibbon/Library/InspectorExpandedItems\.asset
+
+MusicRibbon/Library/assetDatabase3

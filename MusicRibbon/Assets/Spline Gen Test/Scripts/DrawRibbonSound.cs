@@ -84,22 +84,22 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	public void DrawBassRibbon(){
 		clipIndex = 0;
-		Debug.Log ("Bass");
+		Debug.Log (" Bass");
 	}
 
 	public void DrawDrumRibbon(){
 		clipIndex = 1;
-		Debug.Log ("Drum");
+		Debug.Log ("Drum ");
 	}
 
 	public void DrawHarmonyRibbon(){
 		clipIndex = 2;
-		Debug.Log ("Harmony");
+		Debug.Log (" Harmony");
 	}
 
 	public void DrawMelodyRibbon(){
 		clipIndex = 3;
-		Debug.Log ("Melody");
+		Debug.Log (" Melody");
 	}
 
 
