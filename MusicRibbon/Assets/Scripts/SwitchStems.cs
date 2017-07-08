@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SwitchStems : MonoBehaviour {
 
-	public int Stemnum;
+	public int Stemnum = 0;
 
 	// Use this for initialization
 	void Start () {
