@@ -9,6 +9,7 @@ using FluffyUnderware.Curvy.Generator.Modules;
 public class DrawRibbon: MonoBehaviour {
 
 	private SteamVR_TrackedController device;
+	public GameObject Swithstems;
 	public float timeInterval = 0f;
 	public float pointGenTime = 0.1f;
 	public int numRibbons = 0;
@@ -56,7 +57,8 @@ public class DrawRibbon: MonoBehaviour {
 
 		currentRibbonSound = Instantiate (ribbonSoundPrefab, transform.position, Quaternion.identity);
 		currentRibbonSound.transform.SetParent (gameObject.transform);
-		currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = numRibbons % currentRibbonSound.GetComponent<DrawRibbonSound> ().origClips.Length;
+		//currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = numRibbons % currentRibbonSound.GetComponent<DrawRibbonSound> ().origClips.Length;
+		currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = Swithstems.GetComponent<SwitchStems>().Stemnum;
 		currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon ();
 
 
