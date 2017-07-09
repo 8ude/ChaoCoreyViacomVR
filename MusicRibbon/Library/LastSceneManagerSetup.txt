@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/Scenes/July6Progress.unity
-  isLoaded: 1
-  isActive: 1
