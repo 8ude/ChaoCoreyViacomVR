@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/July6Progress.unity
+- path: Assets/Scenes/DisplacementShader.unity
   isLoaded: 1
   isActive: 1

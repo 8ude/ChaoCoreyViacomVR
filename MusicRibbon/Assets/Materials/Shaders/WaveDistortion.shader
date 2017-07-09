@@ -89,8 +89,9 @@ Shader "Custom/Waves 2"
 
 	void vert(inout appdata_full v)
 	{	
-		float3 wsVertex = v.vertex.xyz;//mul(unity_ObjectToWorld, v.vertex);
-		wsVertex = gerstnerWave(wsVertex);
+		float3 wsVertex = v.vertex.xyz;//
+		//wsVertex = mul(unity_ObjectToWorld, v.vertex);
+		float3 wsVertexOut = gerstnerWave(wsVertex);
 
 		
 
@@ -103,14 +104,17 @@ Shader "Custom/Waves 2"
 		//and the Offset scale (parameter set in material inspector)
 		//wsVertex += normalize(vecToTarget) / lenToTarget *_OffsetScale;
 
-		v.vertex.xyz = wsVertex;
+		v.vertex.xyz = wsVertexOut;
 		v.vertex.xyz *= _AudioInput;
+		
 
 	}
 
 	void surf(Input IN, inout SurfaceOutputStandard o)
 	{
-		o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb;//_Color.rgb;
+		o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * _Color;//_Color.rgb;
+		//o.Albedo = _MainTex.rgb * _Color;//_Color.rgb;
+
 		o.Metallic = 0;// _Metallic;
 		o.Smoothness = 0;// _Glossiness;
 		float colVal = saturate((1 - tex2D(_MainTex, IN.uv_MainTex).b) * 10); //make blue alpha .. but wrong blue for now
