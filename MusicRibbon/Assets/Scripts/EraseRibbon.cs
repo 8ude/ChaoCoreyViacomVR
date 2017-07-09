@@ -22,6 +22,10 @@ public class EraseRibbon : MonoBehaviour {
 		isErasing = true;
 	}
 
+	public void DisableErasing(){
+		isErasing = false;
+	}
+
 	void OnTriggerEnter(Collider other){
 
 		if (isErasing == true) {
