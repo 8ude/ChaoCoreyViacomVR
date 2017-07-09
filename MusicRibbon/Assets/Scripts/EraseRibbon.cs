@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class EraseRibbon : MonoBehaviour {
 
+	public bool isErasing;
+
 	// Use this for initialization
 	void Start () {
+
+		isErasing = false;
 		
 	}
 	
@@ -14,10 +18,18 @@ public class EraseRibbon : MonoBehaviour {
 		
 	}
 
+	public void EnableErasing(){
+		isErasing = true;
+	}
+
 	void OnTriggerEnter(Collider other){
-		Debug.Log (other.transform.parent.parent.name);
-		if (other.transform.parent.parent.name == "MarkerParent(clone)") {
-			Destroy (other.transform.parent.parent);
+
+		if (isErasing == true) {
+		
+			if (other.transform.parent.parent.name == "MarkerParent(Clone)") {
+			
+				Destroy (other.transform.parent.parent);
+			}
 		}
 	}
 }
