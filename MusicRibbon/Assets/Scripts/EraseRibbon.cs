@@ -16,6 +16,8 @@ public class EraseRibbon : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other){
 		Debug.Log (other.transform.parent.parent.name);
-		Destroy (other.transform.parent.parent);
+		if (other.transform.parent.parent.name == "MarkerParent(clone)") {
+			Destroy (other.transform.parent.parent);
+		}
 	}
 }
