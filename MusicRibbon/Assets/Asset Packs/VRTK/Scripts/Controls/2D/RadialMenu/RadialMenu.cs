@@ -37,7 +37,9 @@ namespace VRTK
         [Tooltip("The background colour of the buttons, default is white.")]
         public Color buttonColor = Color.white;
         [Tooltip("The distance the buttons should move away from the centre. This creates space between the individual buttons.")]
-        public float offsetDistance = 1;
+		public new List<Color> Colors;
+		[Tooltip("A list of customized colors")]
+		public float offsetDistance = 1;
         [Tooltip("The additional rotation of the Radial Menu.")]
         [Range(0, 359)]
         public float offsetRotation;
@@ -279,7 +281,7 @@ namespace VRTK
                 }
                 int fillPerc = (int)(100f / buttons.Count);
                 circle.fillPercent = fillPerc;
-                circle.color = buttonColor;
+				circle.color = Colors[i];
 
                 //Final placement/rotation
                 float angle = ((360 / buttons.Count) * i) + offsetRotation;
