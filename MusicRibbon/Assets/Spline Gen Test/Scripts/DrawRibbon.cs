@@ -14,20 +14,28 @@ public class DrawRibbon: MonoBehaviour {
 	public EraseRibbon eraseRibbon;
 	public float timeInterval = 0f;
 	public float pointGenTime = 0.1f;
-	public int numRibbons = 0;
+
 	[SerializeField] float wandTipOffset = 0.4f;
 
 	float minGenTime;
 
+	//PREFABS
 	public GameObject markerPrefab;
 	List<GameObject> markerChain;
 	public GameObject markerParentPrefab;
 	public GameObject curvySplinePrefab;
 	public GameObject ribbonSoundPrefab;
+
+	//reference to switch stems - use to change color of ribbons to match instruments
+	[SerializeField] SwitchStems switchStems;
+
     
 	GameObject currentRibbonSound;
 
 	public MeshFilter currentMesh;
+
+
+	//public int numRibbons = 0;
 
 	//public CurvySpline ribbonSpline;
 
@@ -62,7 +70,7 @@ public class DrawRibbon: MonoBehaviour {
 		currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon ();
 
 
-		numRibbons++;
+		//numRibbons++;
 
 	}
 
@@ -72,17 +80,22 @@ public class DrawRibbon: MonoBehaviour {
 
 		GameObject parentObject = Instantiate(markerParentPrefab, Vector3.zero, Quaternion.identity);
 		RibbonGenerator ribbonGenerator = parentObject.GetComponent<RibbonGenerator> ();
-	
-		ribbonGenerator.curvyGenerator = parentObject.GetComponent<CurvyGenerator> ();
+		ribbonGenerator.stemIntValue = switchStems.Stemnum;
+		//ribbonGenerator.curvyGenerator = parentObject.GetComponent<CurvyGenerator> ();
+		ribbonGenerator.drawRibbonSound = currentRibbonSound.GetComponent<DrawRibbonSound> ();
 
 		currentRibbonSound.transform.SetParent (parentObject.transform);
 
 		GameObject splineObject = Instantiate (curvySplinePrefab, transform.position, Quaternion.identity);
 		CurvySpline spline = splineObject.GetComponent<CurvySpline> ();
 
-		var isp = ribbonGenerator.curvyGenerator.GetComponentInChildren<InputSplinePath> ();
+		//reference to spline path that will be used to create the ribbon
+		InputSplinePath isp = ribbonGenerator.gameObject.GetComponentInChildren<InputSplinePath> ();
+		 
+		//reference to volume mesh material - set appropriate color
 
-        
+
+		//turn the List into an array, to be fed to the spline generator
         Vector3[] newPoints = new Vector3[markerChain.Count];
         int i = 0;
         foreach (GameObject go in markerChain) {
@@ -94,14 +107,18 @@ public class DrawRibbon: MonoBehaviour {
             
 		}
 
-		spline.Add (newPoints);
+		//For now, feed the point array to the sound object, which runs a coroutine to (mostly) follow the path
+		currentRibbonSound.GetComponent<DrawRibbonSound> ().splinePoints = newPoints;
+		currentRibbonSound.GetComponent<DrawRibbonSound> ().FollowRibbon ();
 
+		//generate our spline, set it's parent (just for organization for now)
+		spline.Add (newPoints);
 		isp.Spline = spline;
 
 		spline.transform.SetParent (parentObject.transform);
 
-
-			
+		//feed this spline to the 
+		ribbonGenerator.ribbonSpline = spline;
 
 		//ribbonSpline.Add (newPoints);
 

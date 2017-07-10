@@ -21,6 +21,10 @@ public class DrawRibbonSound : MonoBehaviour {
 	//float[] audioData;
 	float[] origAudioData;
 
+	public Vector3[] splinePoints;
+
+	int splinePointIndex;
+
 
 
 	void Start() {
@@ -82,10 +86,25 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	}
 
+	public void FollowRibbon() {
 
+		if (splinePoints != null) {
+			StartCoroutine(MoveToNextPoint (splinePoints));
+			//index++;
 
+		}
+	}
 
+	IEnumerator MoveToNextPoint(Vector3[] sPoints) {
 
-
-
+		while (true) {
+			for (int i = 0; i < sPoints.Length; i++) {
+				while (Vector3.Distance (transform.position, sPoints [i]) > 0.1f) {
+					transform.position += (sPoints[i] - transform.position) * Time.deltaTime;
+					yield return null;
+				}
+			}
+		}
+	}
+		
 }
