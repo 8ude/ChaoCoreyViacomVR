@@ -20,11 +20,17 @@ public class EraseRibbon : MonoBehaviour {
 		LeftController = GameObject.Find ("Controller(left)");
 		RightController = GameObject.Find ("Controller(right)");
 
-		LeftWand = LeftController.transform.Find ("Wand").gameObject;
-		LeftRubber = LeftController.transform.Find ("Capsule").gameObject;
+		LeftWand = transform.Find ("Controller(left)/Model/tip/attach/Sword(clone)/Wand").gameObject;
+		LeftRubber = transform.Find ("Controller(left)/Model/tip/attach/Sword(clone)/Capsule").gameObject;
 
-		RightWand = RightController.transform.Find ("Wand").gameObject;
-		RightRubber = RightController.transform.Find ("Capsule").gameObject;
+		RightWand = transform.Find ("Controller(right)/Model/tip/attach/Sword(clone)/Wand").gameObject;
+		RightRubber =  transform.Find ("Controller(right)/Model/tip/attach/Sword(clone)/Capsule").gameObject;
+
+//		LeftWand = LeftController.transform.Find ("Wand").gameObject;
+//		LeftRubber = LeftController.transform.Find ("Capsule").gameObject;
+
+//		RightWand = RightController.transform.Find ("Wand").gameObject;
+//		RightRubber = RightController.transform.Find ("Capsule").gameObject;
 		
 	}
 	
