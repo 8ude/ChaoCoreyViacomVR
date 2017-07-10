@@ -5,8 +5,8 @@ using UnityEngine;
 public class EraseRibbon : MonoBehaviour {
 
 	public bool isErasing;
-	public GameObject LeftController;
-	public GameObject RightController;
+	public GameObject LeftHand;
+	public GameObject Righthand;
 	public GameObject LeftWand;
 	public GameObject LeftRubber;
 	public GameObject RightWand;
@@ -16,28 +16,21 @@ public class EraseRibbon : MonoBehaviour {
 	void Start () {
 
 		isErasing = false;
+       // Model / tip / attach / Sword(Clone) /
+        LeftWand = LeftHand.transform.Find("Wand").gameObject;
+        LeftRubber = LeftHand.transform.Find("Capsule").gameObject;
 
-		LeftController = GameObject.Find ("Controller(left)");
-		RightController = GameObject.Find ("Controller(right)");
+        RightWand = Righthand.transform.Find("Wand").gameObject;
+        RightRubber = Righthand.transform.Find("Capsule").gameObject;
 
-		LeftWand = transform.Find ("Controller(left)/Model/tip/attach/Sword(clone)/Wand").gameObject;
-		LeftRubber = transform.Find ("Controller(left)/Model/tip/attach/Sword(clone)/Capsule").gameObject;
 
-		RightWand = transform.Find ("Controller(right)/Model/tip/attach/Sword(clone)/Wand").gameObject;
-		RightRubber =  transform.Find ("Controller(right)/Model/tip/attach/Sword(clone)/Capsule").gameObject;
-
-//		LeftWand = LeftController.transform.Find ("Wand").gameObject;
-//		LeftRubber = LeftController.transform.Find ("Capsule").gameObject;
-
-//		RightWand = RightController.transform.Find ("Wand").gameObject;
-//		RightRubber = RightController.transform.Find ("Capsule").gameObject;
-		
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+
+    }
 
 	public void EnableErasing(){
 		isErasing = true;
@@ -55,7 +48,7 @@ public class EraseRibbon : MonoBehaviour {
 	}
 
 	public void DisableLeftRubber(){
-		LeftWand.SetActive(true);
+        LeftWand.SetActive(true) ;
 		LeftRubber.SetActive(false);
 		
 	}
