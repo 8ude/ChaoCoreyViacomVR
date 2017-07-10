@@ -10,13 +10,13 @@ public class AudioShaderReact : MonoBehaviour {
     float normalizedEnergy = 0f;
 	float prevEnergy = 0f;
 	float smoothedEnergy = 0f;
-	Material myMaterial;
+	[SerializeField] Material myMaterial;
 
 	// Use this for initialization
 	void Start () {
 
         analyzer = GetComponent<SpectrumAnalysis>();
-		myMaterial = GetComponent<Renderer> ().material;
+		//myMaterial = GetComponent<Renderer> ().material;
 
 
 	}
@@ -24,13 +24,17 @@ public class AudioShaderReact : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//smoothing out to prevent jitter;
-		normalizedEnergy = Mathf.Clamp01(analyzer.GetWholeEnergy());
+		normalizedEnergy = Mathf.Clamp01(analyzer.GetWholeEnergy())*2f;
 		smoothedEnergy = Mathf.Lerp (prevEnergy, normalizedEnergy, smoothing);
 		prevEnergy = smoothedEnergy;
 
         //Debug.Log(normalizedEnergy);
 
 		myMaterial.SetFloat ("_AudioInput", smoothedEnergy);
+
+		Debug.Log (myMaterial.GetFloat("_AudioInput"));
+		myMaterial.SetVector ("_AudioPosition", 
+			new Vector4(transform.position.x, transform.position.y, transform.position.z, 1.0f));
 		//Shader.SetGlobalFloat ("_AudioInput", smoothedEnergy);
         
 

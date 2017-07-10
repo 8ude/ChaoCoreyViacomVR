@@ -19,7 +19,7 @@ Shader "Custom/Waves 2"
 		SubShader
 	{
 		Tags{ "RenderType" = "Opaque" }
-		Cull Off
+
 
 		CGPROGRAM
 
@@ -105,7 +105,9 @@ Shader "Custom/Waves 2"
 		//wsVertex += normalize(vecToTarget) / lenToTarget *_OffsetScale;
 
 		v.vertex.xyz = wsVertexOut;
-		v.vertex.xyz *= _AudioInput;
+		v.vertex.xyz *= (0.5 + _AudioInput);
+
+
 		
 
 	}
