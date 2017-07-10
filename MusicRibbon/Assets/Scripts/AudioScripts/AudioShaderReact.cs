@@ -29,12 +29,13 @@ public class AudioShaderReact : MonoBehaviour {
 		prevEnergy = smoothedEnergy;
 
         //Debug.Log(normalizedEnergy);
+		if (myMaterial) {
+			myMaterial.SetFloat ("_AudioInput", smoothedEnergy);
 
-		myMaterial.SetFloat ("_AudioInput", smoothedEnergy);
-
-		Debug.Log (myMaterial.GetFloat("_AudioInput"));
-		myMaterial.SetVector ("_AudioPosition", 
-			new Vector4(transform.position.x, transform.position.y, transform.position.z, 1.0f));
+			Debug.Log (myMaterial.GetFloat ("_AudioInput"));
+			myMaterial.SetVector ("_AudioPosition", 
+				new Vector4 (transform.position.x, transform.position.y, transform.position.z, 1.0f));
+		}
 		//Shader.SetGlobalFloat ("_AudioInput", smoothedEnergy);
         
 

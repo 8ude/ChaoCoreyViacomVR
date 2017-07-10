@@ -8,6 +8,7 @@ public class RibbonInteractionScript : MonoBehaviour {
 
     /// <summary>
     /// This script controls player interaction with Ribbon
+	/// OLD - DEPRICATED
     /// </summary>
   
     public bool isCarriedByPlayer;
@@ -88,7 +89,7 @@ public class RibbonInteractionScript : MonoBehaviour {
 
             myAudio.volume = 0.0f;
 
-            gameObject.GetComponent<Renderer>().material = RibbonGameManager.instance.ribbonOffMaterial;
+            //gameObject.GetComponent<Renderer>().material = RibbonGameManager.instance.ribbonOffMaterial;
 
             gameObject.GetComponentInChildren<TrailRenderer>().enabled = false;
 

@@ -9,17 +9,15 @@ using FluffyUnderware.Curvy.Generator.Modules;
 public class DrawRibbon: MonoBehaviour {
 
 	private SteamVR_TrackedController device;
-	public GameObject Swithstems;
+	public GameObject Switchstems;
+
+	public EraseRibbon eraseRibbon;
 	public float timeInterval = 0f;
 	public float pointGenTime = 0.1f;
 	public int numRibbons = 0;
 	[SerializeField] float wandTipOffset = 0.4f;
 
 	float minGenTime;
-
-
-
-
 
 	public GameObject markerPrefab;
 	List<GameObject> markerChain;
@@ -28,6 +26,8 @@ public class DrawRibbon: MonoBehaviour {
 	public GameObject ribbonSoundPrefab;
     
 	GameObject currentRibbonSound;
+
+	public MeshFilter currentMesh;
 
 	//public CurvySpline ribbonSpline;
 
@@ -58,7 +58,7 @@ public class DrawRibbon: MonoBehaviour {
 		currentRibbonSound = Instantiate (ribbonSoundPrefab, transform.position, Quaternion.identity);
 		currentRibbonSound.transform.SetParent (gameObject.transform);
 		//currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = numRibbons % currentRibbonSound.GetComponent<DrawRibbonSound> ().origClips.Length;
-		currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = Swithstems.GetComponent<SwitchStems>().Stemnum;
+		currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = Switchstems.GetComponent<SwitchStems>().Stemnum;
 		currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon ();
 
 
@@ -71,20 +71,16 @@ public class DrawRibbon: MonoBehaviour {
 		currentRibbonSound.GetComponent<DrawRibbonSound> ().StopDrawingRibbon ();
 
 		GameObject parentObject = Instantiate(markerParentPrefab, Vector3.zero, Quaternion.identity);
-		CurvyGenerator generator = parentObject.GetComponent<CurvyGenerator> ();
+		RibbonGenerator ribbonGenerator = parentObject.GetComponent<RibbonGenerator> ();
+	
+		ribbonGenerator.curvyGenerator = parentObject.GetComponent<CurvyGenerator> ();
 
 		currentRibbonSound.transform.SetParent (parentObject.transform);
 
 		GameObject splineObject = Instantiate (curvySplinePrefab, transform.position, Quaternion.identity);
 		CurvySpline spline = splineObject.GetComponent<CurvySpline> ();
 
-		var isp = generator.GetComponentInChildren<InputSplinePath> ();
-
-		
-
-		
-
-		//CurvySpline ribbonSpline = parentObject.GetComponent<CurvySpline> ();
+		var isp = ribbonGenerator.curvyGenerator.GetComponentInChildren<InputSplinePath> ();
 
         
         Vector3[] newPoints = new Vector3[markerChain.Count];
@@ -103,7 +99,10 @@ public class DrawRibbon: MonoBehaviour {
 		isp.Spline = spline;
 
 		spline.transform.SetParent (parentObject.transform);
+
+
 			
+
 		//ribbonSpline.Add (newPoints);
 
 		//InputSplinePath inputSpline = parentObject.GetComponentInChildren<InputSplinePath> ();
@@ -130,6 +129,7 @@ public class DrawRibbon: MonoBehaviour {
 		}
 
 	}
+
 
 
 

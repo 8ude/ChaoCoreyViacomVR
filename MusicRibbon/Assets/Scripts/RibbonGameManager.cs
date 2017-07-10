@@ -9,7 +9,9 @@ public class RibbonGameManager : MonoBehaviour {
 	public List<GameObject> RibbonObjects;
 	public int maxRibbons = 4;
 
-    public Material ribbonOffMaterial;
+	public bool LimitRibbonAmount = false;
+
+    //public Material ribbonOffMaterial;
 
     public static RibbonGameManager instance = null;
 
@@ -34,16 +36,26 @@ public class RibbonGameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (RibbonObjects.Count > maxRibbons) {
-			GameObject ribbonToDestroy = RibbonObjects [0];
-			RibbonObjects.RemoveAt (0);
-			Destroy (ribbonToDestroy);
+		if (LimitRibbonAmount) {
+			CapRibbons ();
 		}
+
+
 		
 	}
 
 	public float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax) {
 		return newMin + (value - oldMin) * (newMax - newMin) / (oldMax - oldMin);
+	}
+
+	public void CapRibbons() {
+
+		if (RibbonObjects.Count > maxRibbons) {
+			GameObject ribbonToDestroy = RibbonObjects [0];
+			RibbonObjects.RemoveAt (0);
+			Destroy (ribbonToDestroy);
+		}
+
 	}
 
 }
