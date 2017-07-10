@@ -17,8 +17,8 @@ public class EraseRibbon : MonoBehaviour {
 
 		isErasing = false;
 
-		LeftController = GameObject.Find ("LeftController");
-		RightController = GameObject.Find ("RightController");
+		LeftController = GameObject.Find ("Controller(left)");
+		RightController = GameObject.Find ("Controller(right)");
 
 		LeftWand = LeftController.transform.Find ("Wand").gameObject;
 		LeftRubber = LeftController.transform.Find ("Capsule").gameObject;
@@ -43,6 +43,7 @@ public class EraseRibbon : MonoBehaviour {
 	}
 
 	public void EnableLeftRubber(){
+		
 		LeftWand.SetActive(false);
 		LeftRubber.SetActive(true);
 	}
