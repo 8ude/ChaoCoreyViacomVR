@@ -8,6 +8,8 @@ public class EraseRibbon : MonoBehaviour {
 	public bool isErasing;
 	public GameObject LeftHand;
 	public GameObject RightHand;
+	public GameObject LeftSword;
+	public GameObject RightSword;
 	public GameObject LeftWand;
 	public GameObject LeftRubber;
 	public GameObject RightWand;
@@ -19,13 +21,8 @@ public class EraseRibbon : MonoBehaviour {
 	void Start () {
 
 		isErasing = false;
-       // Model / tip / attach / Sword(Clone) /
-		//GameObject LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
-		//LeftWand = LeftSword.transform.Find ("Wand").gameObject;
-       // LeftRubber = LeftHand.transform.Find("Capsule").gameObject;
 
-        //RightWand = RightHand.transform.Find("Wand").gameObject;
-        //RightRubber = RightHand.transform.Find("Capsule").gameObject;
+		StartCoroutine (WaitForController());
 
 		//drawRibbonScript = GetComponent<DrawRibbon> ();
 
@@ -34,9 +31,6 @@ public class EraseRibbon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-		//GameObject LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
-		//LeftWand = LeftSword.transform.Find ("Wand").gameObject;
 
     }
 
@@ -71,6 +65,21 @@ public class EraseRibbon : MonoBehaviour {
 	public void DiableRightRubber(){
 		RightWand.SetActive (true);
 		RightRubber.SetActive(false);
+	
+	}
+
+	IEnumerator WaitForController(){
+
+		yield return new WaitForSeconds(120);
+
+		LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
+		RightSword = RightHand.GetComponentInChildren<Sword>().gameObject;
+
+		LeftWand = LeftSword.transform.Find ("Wand").gameObject;
+		LeftRubber = LeftSword.transform.Find("Capsule").gameObject;
+
+		RightWand = RightSword.transform.Find("Wand").gameObject;
+		RightRubber = RightSword.transform.Find("Capsule").gameObject;
 	
 	}
 
