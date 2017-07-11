@@ -11,14 +11,14 @@ namespace Beat
 	public class Clock: MonoBehaviour
 	{
 
-		public static Clock instance = null;
+		public static Clock Instance = null;
 		//protected Clock() { }
 
 		void Awake()
 		{
-			if (instance == null) {
-				instance = this;
-			} else if (instance != this) {
+			if (Instance == null) {
+				Instance = this;
+			} else if (Instance != this) {
 				Destroy (gameObject);
 			}
 			DontDestroyOnLoad (gameObject);

@@ -26,7 +26,7 @@ public class AudioShaderReact : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//smoothing out to prevent jitter;
-		normalizedEnergy = analyzer.GetWholeEnergy()*0.2f;
+		normalizedEnergy = analyzer.GetWholeEnergy()*0.1f;
 		smoothedEnergy = Mathf.Lerp (prevEnergy, normalizedEnergy, smoothing);
 		prevEnergy = smoothedEnergy;
 

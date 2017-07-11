@@ -22,7 +22,7 @@ public class RibbonGenerator : MonoBehaviour {
 	public CurvyGenerator curvyGenerator;
 	public DrawRibbonSound drawRibbonSound;
 
-	public enum musicStem {Bass = 0, Drum = 1, Harmony = 2, Melody = 3}
+	public enum musicStem {Bass = 0, Drum = 1, Harmony = 2, Melody = 3};
 	public musicStem myStem;
 	public int stemIntValue;
 
