@@ -5,7 +5,8 @@ using UnityEngine;
 public class AudioShaderReact : MonoBehaviour {
 
     SpectrumAnalysis analyzer;
-	public float smoothing = 0.05f;
+	 
+	public float smoothing = 0.75f;
 
     float normalizedEnergy = 0f;
 	float prevEnergy = 0f;
@@ -15,6 +16,8 @@ public class AudioShaderReact : MonoBehaviour {
 	[SerializeField] Material myMaterial;
 
 	[SerializeField] RibbonGenerator parentRibbonGenerator;
+
+	RibbonGenerator.musicStem myStem;
 
 
 
@@ -29,10 +32,8 @@ public class AudioShaderReact : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//smoothing out to prevent jitter;
-		normalizedEnergy = analyzer.GetWholeEnergy()*0.1f;
-		smoothedEnergy = Mathf.Lerp (prevEnergy, normalizedEnergy, Time.deltaTime);
-		prevEnergy = smoothedEnergy;
+		
+
 
         //Debug.Log(normalizedEnergy);
 
@@ -42,7 +43,36 @@ public class AudioShaderReact : MonoBehaviour {
 		if (parentRibbonGenerator) {
             if (parentRibbonGenerator.ribbonRenderer) {
                 myMaterial = parentRibbonGenerator.ribbonRenderer.material;
+
             }
+			myStem = parentRibbonGenerator.myStem;
+			//smoothing out to prevent jitter;
+
+			switch (myStem) {
+
+			case RibbonGenerator.musicStem.Bass:
+				normalizedEnergy = analyzer.GetEnergyFrequencyRange(100f,350f)*0.1f;
+				break;
+			case RibbonGenerator.musicStem.Drum:
+				energyGate = 0.15f;
+				float newEnergy = analyzer.GetEnergyFrequencyRange (50f, 250f) * 0.1f;
+				newEnergy += analyzer.GetEnergyFrequencyRange (4000f, 8000f) * 0.1f;
+				if (newEnergy >= energyGate) {
+					normalizedEnergy = newEnergy;
+				}
+				break;
+			case RibbonGenerator.musicStem.Harmony:
+				normalizedEnergy = analyzer.GetEnergyFrequencyRange (300f, 1000f) * 0.3f;
+				break;
+			case RibbonGenerator.musicStem.Melody:
+				normalizedEnergy = analyzer.GetEnergyFrequencyRange (400f, 2000f) * 0.3f;
+				break;
+			}
+
+			Debug.Log ("NormEnergy: " + myStem.ToString() + " " + normalizedEnergy);
+			//normalizedEnergy = analyzer.GetWholeEnergy()*0.1f;
+			smoothedEnergy = Mathf.Lerp (prevEnergy, normalizedEnergy, smoothing);
+			prevEnergy = smoothedEnergy;
 
 		}
 
