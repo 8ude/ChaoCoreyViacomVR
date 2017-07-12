@@ -17,7 +17,7 @@ public class EraseRibbon : MonoBehaviour {
 
 	public DrawRibbon drawRibbonScript;
 
-	public float initTimeDelay = 2f;
+	public float initTimeDelay = 4f;
 	bool controllersFound = false;
 
 	// Use this for initialization
@@ -36,10 +36,12 @@ public class EraseRibbon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		//Debug.Log (Time.time);
 		if (Time.time > initTimeDelay && !controllersFound) {
 			FindController ();
 		}
+
+		drawRibbonScript.enabled = !isErasing;
 
     }
 
@@ -125,8 +127,6 @@ public class EraseRibbon : MonoBehaviour {
 	void OnTriggerEnter(Collider other){
 
 		if (isErasing == true) {
-
-			//drawRibbonScript.enabled = false;
 
 			if (other.transform.parent.parent.name == "MarkerParent(Clone)") {
 			

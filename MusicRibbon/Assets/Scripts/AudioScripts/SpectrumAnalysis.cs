@@ -74,6 +74,8 @@ public class SpectrumAnalysis : MonoBehaviour {
 
 	}
 
+
+
 	// Update is called once per frame
 	void FixedUpdate () {
 		audioSource.GetSpectrumData( spectrumData, 0, FFTWindow.Blackman );
@@ -133,7 +135,7 @@ public class SpectrumAnalysis : MonoBehaviour {
 
 			if (spectrumData [i] < bandBuffer [i]) {
 				bandBuffer [i] -= bufferDecrease [i]; 
-				bufferDecrease [i] *= 1.2f;
+				bufferDecrease [i] *= 1.1f;
 			}
 		}
 		

@@ -23,6 +23,7 @@ public class MeshDeformer : MonoBehaviour {
 		soundAnalyzer = GetComponent<SpectrumAnalysis> ();
 		deformingMesh = GetComponent<MeshFilter> ().mesh;
 		originalVertices = deformingMesh.vertices;
+		//duplicate original vertices into displaced vertices
 		displacedVertices = new Vector3[originalVertices.Length];
 		for (int i = 0; i < originalVertices.Length; i++) {
 			displacedVertices [i] = originalVertices [i];
@@ -41,8 +42,11 @@ public class MeshDeformer : MonoBehaviour {
 	}
 
 	public void AddDeformingForce (Vector3 point, float force) {
+		//world --> local space
 		point = transform.InverseTransformPoint (point);
 		for (int i = 0; i < displacedVertices.Length; i++) {
+			//each vertex will receive the same force, but this will be attenuated by the
+			//inverse square of the distance from the vertex to the point 
 			AddForceToVertex (i, point, force);
 		}
 	}

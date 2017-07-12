@@ -57,17 +57,20 @@ public class DrawRibbon: MonoBehaviour {
 
 	void Trigger (object sender, ClickedEventArgs e)
 	{
-		Debug.Log ("trigger pressed");	
+		//Debug.Log ("trigger pressed");
 
-		if (currentRibbonSound) {
-			currentRibbonSound = null;
+		if (!eraseRibbon.isErasing) {
+
+			if (currentRibbonSound) {
+				currentRibbonSound = null;
+			}
+
+			currentRibbonSound = Instantiate (ribbonSoundPrefab, transform.position, Quaternion.identity);
+			currentRibbonSound.transform.SetParent (gameObject.transform);
+			//currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = numRibbons % currentRibbonSound.GetComponent<DrawRibbonSound> ().origClips.Length;
+			currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = Switchstems.GetComponent<SwitchStems> ().Stemnum;
+			currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon ();
 		}
-
-		currentRibbonSound = Instantiate (ribbonSoundPrefab, transform.position, Quaternion.identity);
-		currentRibbonSound.transform.SetParent (gameObject.transform);
-		//currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = numRibbons % currentRibbonSound.GetComponent<DrawRibbonSound> ().origClips.Length;
-		currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = Switchstems.GetComponent<SwitchStems>().Stemnum;
-		currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon ();
 
 
 		//numRibbons++;
@@ -76,64 +79,66 @@ public class DrawRibbon: MonoBehaviour {
 
 	void TriggerReleased(object sender, ClickedEventArgs e) {
 
-		currentRibbonSound.GetComponent<DrawRibbonSound> ().StopDrawingRibbon ();
+		if (!eraseRibbon.isErasing) {
 
-        if (markerChain.Count > 4) {
+			currentRibbonSound.GetComponent<DrawRibbonSound> ().StopDrawingRibbon ();
 
-            GameObject parentObject = Instantiate(markerParentPrefab, Vector3.zero, Quaternion.identity);
-            RibbonGenerator ribbonGenerator = parentObject.GetComponent<RibbonGenerator>();
-            ribbonGenerator.stemIntValue = switchStems.Stemnum;
-            //ribbonGenerator.curvyGenerator = parentObject.GetComponent<CurvyGenerator> ();
-            ribbonGenerator.drawRibbonSound = currentRibbonSound.GetComponent<DrawRibbonSound>();
+			if (markerChain.Count > 4) {
 
-            currentRibbonSound.transform.SetParent(parentObject.transform);
+				GameObject parentObject = Instantiate (markerParentPrefab, Vector3.zero, Quaternion.identity);
+				RibbonGenerator ribbonGenerator = parentObject.GetComponent<RibbonGenerator> ();
+				ribbonGenerator.stemIntValue = switchStems.Stemnum;
+				//ribbonGenerator.curvyGenerator = parentObject.GetComponent<CurvyGenerator> ();
+				ribbonGenerator.drawRibbonSound = currentRibbonSound.GetComponent<DrawRibbonSound> ();
 
-            GameObject splineObject = Instantiate(curvySplinePrefab, transform.position, Quaternion.identity);
-            CurvySpline spline = splineObject.GetComponent<CurvySpline>();
+				currentRibbonSound.transform.SetParent (parentObject.transform);
 
-            //reference to spline path that will be used to create the ribbon
-            InputSplinePath isp = ribbonGenerator.gameObject.GetComponentInChildren<InputSplinePath>();
+				GameObject splineObject = Instantiate (curvySplinePrefab, transform.position, Quaternion.identity);
+				CurvySpline spline = splineObject.GetComponent<CurvySpline> ();
 
-            //reference to volume mesh material - set appropriate color
+				//reference to spline path that will be used to create the ribbon
+				InputSplinePath isp = ribbonGenerator.gameObject.GetComponentInChildren<InputSplinePath> ();
 
-
-            //turn the List into an array, to be fed to the spline generator
-            Vector3[] newPoints = new Vector3[markerChain.Count];
-            int i = 0;
-            foreach (GameObject go in markerChain)
-            {
-
-                newPoints[i] = go.transform.position;
-                i++;
-                go.transform.SetParent(spline.transform);
+				//reference to volume mesh material - set appropriate color
 
 
-            }
+				//turn the List into an array, to be fed to the spline generator
+				Vector3[] newPoints = new Vector3[markerChain.Count];
+				int i = 0;
+				foreach (GameObject go in markerChain) {
 
-            //For now, feed the point array to the sound object, which runs a coroutine to (mostly) follow the path
-            currentRibbonSound.GetComponent<DrawRibbonSound>().splinePoints = newPoints;
-            currentRibbonSound.GetComponent<DrawRibbonSound>().FollowRibbon();
+					newPoints [i] = go.transform.position;
+					i++;
+					go.transform.SetParent (spline.transform);
 
-            //generate our spline, set it's parent (just for organization for now)
-            spline.Add(newPoints);
-            isp.Spline = spline;
 
-            spline.transform.SetParent(parentObject.transform);
+				}
 
-            //feed this spline to the 
-            ribbonGenerator.ribbonSpline = spline;
+				//For now, feed the point array to the sound object, which runs a coroutine to (mostly) follow the path
+				currentRibbonSound.GetComponent<DrawRibbonSound> ().splinePoints = newPoints;
+				currentRibbonSound.GetComponent<DrawRibbonSound> ().FollowRibbon ();
 
-            //ribbonSpline.Add (newPoints);
+				//generate our spline, set it's parent (just for organization for now)
+				spline.Add (newPoints);
+				isp.Spline = spline;
 
-            //InputSplinePath inputSpline = parentObject.GetComponentInChildren<InputSplinePath> ();
-            //inputSpline.Spline = ribbonSpline;
+				spline.transform.SetParent (parentObject.transform);
 
-            markerChain.Clear();
-            Debug.Log("trigger released?");
-            timeInterval = 0f;
+				//feed this spline to the 
+				ribbonGenerator.ribbonSpline = spline;
 
-            RibbonGameManager.instance.RibbonObjects.Add(parentObject);
-        }
+				//ribbonSpline.Add (newPoints);
+
+				//InputSplinePath inputSpline = parentObject.GetComponentInChildren<InputSplinePath> ();
+				//inputSpline.Spline = ribbonSpline;
+
+				markerChain.Clear ();
+				//Debug.Log("trigger released?");
+				timeInterval = 0f;
+
+				RibbonGameManager.instance.RibbonObjects.Add (parentObject);
+			}
+		}
 
 
 	}
@@ -142,7 +147,7 @@ public class DrawRibbon: MonoBehaviour {
 	void Update () {
 	
 		timeInterval += Time.deltaTime;
-		if (device.triggerPressed && timeInterval > pointGenTime) {
+		if (device.triggerPressed && timeInterval > pointGenTime && !eraseRibbon.isErasing) {
 			Vector3 newPosition = transform.position + (wandTipOffset * transform.forward);
 			GameObject newMarker = Instantiate (markerPrefab, newPosition, Quaternion.identity);
 			markerChain.Add (newMarker);

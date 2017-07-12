@@ -10,6 +10,13 @@ Shader "Custom/AudioDisplacement" {
 		_AudioInput ("Audio Input", Float) = 0.0
 
 		_MaxAudioDistance("Max Audio Distance", Float) = 0.4
+
+		A ("Amplitude", Float) = 0.5 //amplitude
+		L ("Wavelength", Float) = 1 //wavelength
+		S ("Speed", Float) = 0.1 //speed
+		Q ("Steepness", Range(0,1)) = 0.5 //steepness
+		i ("Number of Waves",Range(1,10)) = 1 //number of waves
+		D ("Wave Direction", Vector) = (0.5,0.0,0.5,0.0) //wave direction
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -36,6 +43,47 @@ Shader "Custom/AudioDisplacement" {
 		half _Metallic;
 		fixed4 _Color;
 
+		float A = 0.5; //amplitude
+		float L = 1; //wavelength
+		float S = 0.1; //speed
+		float Q = 0.5; //steepness
+		float i = 1; //number of waves
+		float2 D = float2(0.5,0.5); //wave direction
+		float w;
+
+		//w = 2/L
+		float freq(float wavelength){
+			return 2/L;
+		}
+
+		float QA(float w){
+			i = ceil(i);
+			//return A;
+			return A*Q/(w*A*i);
+		}
+
+		float phaseConstant(float speed){
+			return speed * w;
+		}
+
+		float gInner(float3 pos){
+			return dot(D,pos.xy) * w + _Time.y * phaseConstant(S);
+			
+			//return sin(posXY.x)*A;
+		}
+
+		float3 gerstnerWave(float3 pos){
+			w = freq(L);
+			D = normalize(D);
+			float ampCalc = QA(w);
+			float waveCalc = gInner(pos);
+			pos.x += ampCalc * D.x * cos(waveCalc);
+			pos.z += ampCalc * D.y * cos(waveCalc);
+			pos.y += A * sin(waveCalc);
+
+			return pos;
+		}
+
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
 		// #pragma instancing_options assumeuniformscaling
@@ -43,13 +91,21 @@ Shader "Custom/AudioDisplacement" {
 			// put more per-instance properties here
 		UNITY_INSTANCING_CBUFFER_END
 
+
 		void vert (inout appdata_full v) {
 			float3 vertWorld = mul(unity_ObjectToWorld, v.vertex).xyz;
 
 			float distPointToSound = distance(vertWorld, _AudioPosition.xyz);
 
+			S += (S * _AudioInput * 0.1);
+			float3 wsVertexOut = gerstnerWave(v.vertex.xyz);
+
+			v.vertex.xyz = wsVertexOut;
+			 
 			if (distPointToSound < _MaxAudioDistance) {
-				v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
+
+				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
+				v.vertex.xyz += (-v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
 			}
 
 

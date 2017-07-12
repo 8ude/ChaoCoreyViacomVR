@@ -5,14 +5,18 @@ using UnityEngine;
 public class AudioShaderReact : MonoBehaviour {
 
     SpectrumAnalysis analyzer;
-	public float smoothing = 0.1f;
+	public float smoothing = 0.05f;
 
     float normalizedEnergy = 0f;
 	float prevEnergy = 0f;
 	float smoothedEnergy = 0f;
+
+	float energyGate = 0.5f;
 	[SerializeField] Material myMaterial;
 
 	[SerializeField] RibbonGenerator parentRibbonGenerator;
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -26,8 +30,8 @@ public class AudioShaderReact : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//smoothing out to prevent jitter;
-		normalizedEnergy = analyzer.GetWholeEnergy()*0.1f;
-		smoothedEnergy = Mathf.Lerp (prevEnergy, normalizedEnergy, smoothing);
+		normalizedEnergy = analyzer.GetWholeEnergy()*0.05f;
+		smoothedEnergy = Mathf.Lerp (prevEnergy, normalizedEnergy, Time.deltaTime);
 		prevEnergy = smoothedEnergy;
 
         //Debug.Log(normalizedEnergy);

@@ -67,11 +67,11 @@ public class RibbonGenerator : MonoBehaviour {
 
 	IEnumerator WaitForMeshRenderer() {
 
-        Debug.Log("waiting");
+        //Debug.Log("waiting");
 
 		yield return new WaitForSeconds (0.5f);
 
-        Debug.Log("done waiting");
+        //Debug.Log("done waiting");
 
 
         if (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>()) {
@@ -88,7 +88,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 		switch (myStem) {
 		case musicStem.Bass:
-                myColor = SwitchStems.GetComponent<SwitchStems>().bassColor;
+            myColor = SwitchStems.GetComponent<SwitchStems>().bassColor;
 			break;
 		case musicStem.Drum:
 			myColor = SwitchStems.GetComponent<SwitchStems>().drumColor;
