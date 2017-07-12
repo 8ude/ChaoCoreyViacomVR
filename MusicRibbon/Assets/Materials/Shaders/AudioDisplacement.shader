@@ -105,7 +105,7 @@ Shader "Custom/AudioDisplacement" {
 			if (distPointToSound < _MaxAudioDistance) {
 
 				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
-				v.vertex.xyz += (-v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
+				v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
 			}
 
 

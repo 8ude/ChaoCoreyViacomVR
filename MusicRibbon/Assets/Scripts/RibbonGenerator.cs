@@ -40,7 +40,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 		curvyGenerator = GetComponent<CurvyGenerator> ();
 
-		ribbonMesh = GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshFilter> ();
+
 
 
 		if (!ribbonSpline.IsInitialized) {
@@ -76,6 +76,10 @@ public class RibbonGenerator : MonoBehaviour {
 
         if (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>()) {
             ribbonRenderer = GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>();
+			ribbonMesh = GetComponentInChildren<CreateMesh> ().transform.GetComponentInChildren<MeshFilter> ();
+			Mesh mesh = ribbonMesh.mesh;
+			MeshHelper.Subdivide (mesh, 8);
+			ribbonMesh.mesh = mesh;
         } else {
             yield return null;
         }
