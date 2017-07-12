@@ -26,11 +26,15 @@ public class RibbonGenerator : MonoBehaviour {
 	public musicStem myStem;
 	public int stemIntValue;
 
+    public GameObject SwitchStems;
+
 	Color myColor = new Color(1,1,1);
 
 
 	// Use this for initialization
 	IEnumerator Start () {
+
+        SwitchStems = GameObject.Find("SwitchStems");
 
 		myStem = (musicStem)stemIntValue;
 
@@ -84,16 +88,16 @@ public class RibbonGenerator : MonoBehaviour {
 
 		switch (myStem) {
 		case musicStem.Bass:
-			myColor = SwitchStems.bassColor;
+                myColor = SwitchStems.GetComponent<SwitchStems>().bassColor;
 			break;
 		case musicStem.Drum:
-			myColor = SwitchStems.drumColor;
+			myColor = SwitchStems.GetComponent<SwitchStems>().drumColor;
 			break;
 		case musicStem.Melody:
-			myColor = SwitchStems.melodyColor;
+			myColor = SwitchStems.GetComponent<SwitchStems>().melodyColor;
 			break;
 		case musicStem.Harmony:
-			myColor = SwitchStems.harmonyColor;
+			myColor = SwitchStems.GetComponent<SwitchStems>().harmonyColor;
 			break;
 		}
 
