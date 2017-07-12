@@ -27,7 +27,7 @@ public class EraseRibbon : MonoBehaviour {
 
 
 
-		StartCoroutine ("WaitForController");
+		//StartCoroutine ("WaitForController");
 		//Debug.Log ("Started");
 		//drawRibbonScript = GetComponent<DrawRibbon> ();
 
