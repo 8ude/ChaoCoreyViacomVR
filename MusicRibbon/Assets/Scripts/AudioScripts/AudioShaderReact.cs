@@ -36,7 +36,9 @@ public class AudioShaderReact : MonoBehaviour {
 
 		//check if we have a parent ribbon, else keep querying
 		if (parentRibbonGenerator) {
-			myMaterial = parentRibbonGenerator.ribbonRenderer.material;
+            if (parentRibbonGenerator.ribbonRenderer) {
+                myMaterial = parentRibbonGenerator.ribbonRenderer.material;
+            }
 
 		}
 

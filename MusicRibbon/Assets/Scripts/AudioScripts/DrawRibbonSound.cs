@@ -56,10 +56,16 @@ public class DrawRibbonSound : MonoBehaviour {
 		stopTime = Clock.Instance.AtNextMeasure();
 
 		float newClipLength = (float)stopTime - (float)startTime;
-		int newClipSamples = Mathf.RoundToInt (newClipLength * origClips[clipIndex].frequency);
+        if (newClipLength == 0) {
+            newClipLength = Clock.Instance.MeasureLength();
+      
+        }
 
+		int newClipSamples = Mathf.RoundToInt (newClipLength * origClips[clipIndex].frequency);
+        
 
 		float[] audioData = new float[newClipSamples*mySource.clip.channels];
+        
 
 		AudioClip newClip = AudioClip.Create ("RibbonClip", newClipSamples, origClips[clipIndex].channels, origClips[clipIndex].frequency, false);
 

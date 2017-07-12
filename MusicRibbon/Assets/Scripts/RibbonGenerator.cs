@@ -62,10 +62,19 @@ public class RibbonGenerator : MonoBehaviour {
 	}
 
 	IEnumerator WaitForMeshRenderer() {
-		
-		yield return new WaitForSeconds (0.1f);
 
-		ribbonRenderer = GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer> ();
+        Debug.Log("waiting");
+
+		yield return new WaitForSeconds (0.5f);
+
+        Debug.Log("done waiting");
+
+
+        if (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>()) {
+            ribbonRenderer = GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>();
+        } else {
+            yield return null;
+        }
 
 		if (ribbonRenderer == null) {
 			yield return null;
