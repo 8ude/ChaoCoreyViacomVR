@@ -69,7 +69,7 @@ public class AudioShaderReact : MonoBehaviour {
 				break;
 			}
 
-			Debug.Log ("NormEnergy: " + myStem.ToString() + " " + normalizedEnergy);
+			//Debug.Log ("NormEnergy: " + myStem.ToString() + " " + normalizedEnergy);
 			//normalizedEnergy = analyzer.GetWholeEnergy()*0.1f;
 			smoothedEnergy = Mathf.Lerp (prevEnergy, normalizedEnergy, smoothing);
 			prevEnergy = smoothedEnergy;
