@@ -57,7 +57,7 @@ public class DrawRibbon: MonoBehaviour {
 
 	void Trigger (object sender, ClickedEventArgs e)
 	{
-		//Debug.Log ("trigger pressed");
+		Debug.Log (eraseRibbon.isErasing);
 
 		if (!eraseRibbon.isErasing) {
 
