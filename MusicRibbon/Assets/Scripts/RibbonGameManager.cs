@@ -6,6 +6,12 @@ public class RibbonGameManager : MonoBehaviour {
 
     //We don't need this quite yet, but probably will in the near future
 
+	public AudioClip preDrumClip;
+	public AudioClip preBassClip;
+	public AudioClip preHarmonyClip;
+	public AudioClip preMelodyClip;
+
+
 	public List<GameObject> RibbonObjects;
 	public int maxRibbons = 4;
 

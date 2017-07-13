@@ -41,7 +41,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 		startTime = Clock.Instance.AtNextMeasure();
 
-		mySource.PlayScheduled (startTime);
+		//mySource.PlayScheduled (startTime);
 
 
 		origAudioData = new float[mySource.clip.samples*mySource.clip.channels];

@@ -150,6 +150,24 @@ public class DrawRibbon: MonoBehaviour {
 		if (device.triggerPressed && timeInterval > pointGenTime && !eraseRibbon.isErasing) {
 			Vector3 newPosition = transform.position + (wandTipOffset * transform.forward);
 			GameObject newMarker = Instantiate (markerPrefab, newPosition, Quaternion.identity);
+			newMarker.GetComponent<PreRibbon> ().stemIndex = switchStems.Stemnum;
+
+			switch (switchStems.Stemnum) {
+			case 0:
+				newMarker.GetComponent<PreRibbon> ().myClip = RibbonGameManager.instance.preBassClip;
+				break;
+			case 1:
+				newMarker.GetComponent<PreRibbon> ().myClip = RibbonGameManager.instance.preDrumClip;
+				break;
+			case 2:
+				newMarker.GetComponent<PreRibbon> ().myClip = RibbonGameManager.instance.preHarmonyClip;
+				break;
+			case 3:
+				newMarker.GetComponent<PreRibbon> ().myClip = RibbonGameManager.instance.preMelodyClip;
+				break;
+			}
+			newMarker.GetComponent<PreRibbon> ().PlayPreStem ();
+
 			markerChain.Add (newMarker);
 			timeInterval = 0f;
 		}
