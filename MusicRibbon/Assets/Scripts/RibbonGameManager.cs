@@ -11,6 +11,8 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip preHarmonyClip;
 	public AudioClip preMelodyClip;
 
+	public float endingWidth;
+	public float endingHeight;
 
 	public List<GameObject> RibbonObjects;
 	public int maxRibbons = 4;

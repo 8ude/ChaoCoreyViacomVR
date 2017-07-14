@@ -8,6 +8,7 @@ Shader "Custom/AudioDisplacement" {
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 		_AudioPosition ("Audio Position", Vector) = (0,0,0,0)
 		_AudioInput ("Audio Input", Float) = 0.0
+		_InputAlpha("Input Alpha", Float) = 0.0
 
 		_MaxAudioDistance("Max Audio Distance", Float) = 0.4
 
@@ -19,12 +20,12 @@ Shader "Custom/AudioDisplacement" {
 		D ("Wave Direction", Vector) = (0.5,0.0,0.5,0.0) //wave direction
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "Queue" = "Transparent" "RenderType"="Transparent" }
 		LOD 200
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows vertex:vert
+		#pragma surface surf Standard fullforwardshadows vertex:vert alpha:fade
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
@@ -38,6 +39,7 @@ Shader "Custom/AudioDisplacement" {
 		float4 _AudioPosition;
 		float _AudioInput;
 		float _MaxAudioDistance;
+		float _InputAlpha;
 
 		half _Glossiness;
 		half _Metallic;
@@ -92,6 +94,7 @@ Shader "Custom/AudioDisplacement" {
 		UNITY_INSTANCING_CBUFFER_END
 
 
+
 		void vert (inout appdata_full v) {
 			float3 vertWorld = mul(unity_ObjectToWorld, v.vertex).xyz;
 
@@ -122,7 +125,7 @@ Shader "Custom/AudioDisplacement" {
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
 			o.Smoothness = _Glossiness;
-			o.Alpha = c.a;
+			o.Alpha = _InputAlpha;
 		}
 		ENDCG
 	}

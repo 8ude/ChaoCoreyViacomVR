@@ -8,6 +8,8 @@ using FluffyUnderware.Curvy.Controllers;
 using FluffyUnderware.Curvy.Shapes;
 using FluffyUnderware.DevTools;
 using UnityEngine.UI;
+
+using DG.Tweening;
 /// <summary>
 /// Ideally this will be used to store references to the the
 /// spline and meshes of a particular ribbon, after it is drawn and initialized
@@ -28,7 +30,12 @@ public class RibbonGenerator : MonoBehaviour {
 
     public GameObject SwitchStems;
 
+	float endWidth = 0.1f;
+	float endHeight = 0.5f;
+
 	Color myColor = new Color(1,1,1);
+
+	float transparency = 0f;
 
 
 	// Use this for initialization
@@ -39,6 +46,7 @@ public class RibbonGenerator : MonoBehaviour {
 		myStem = (musicStem)stemIntValue;
 
 		curvyGenerator = GetComponent<CurvyGenerator> ();
+		ribbonRenderer = null;
 
 
 
@@ -61,6 +69,10 @@ public class RibbonGenerator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		if (ribbonRenderer) {
+			
+			ribbonRenderer.material.SetFloat ("_InputAlpha", transparency);
+		}
 
 
 	}
@@ -75,18 +87,27 @@ public class RibbonGenerator : MonoBehaviour {
 
 
         if (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>()) {
+			Debug.Log (GetComponentInChildren<CreateMesh> ().transform.GetComponentInChildren<MeshRenderer> ().name);
+			CSRoundedRectangle rect = GetComponentInChildren<CSRoundedRectangle> ();
+			Debug.Log (rect.name);
+			//DOTween.To (() => rect.Width, x => rect.Width = x, endWidth, 1);
+			//DOTween.To (() => rect.Height, x => rect.Height = x, endHeight, 1);
             ribbonRenderer = GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>();
 			ribbonMesh = GetComponentInChildren<CreateMesh> ().transform.GetComponentInChildren<MeshFilter> ();
 			Mesh mesh = ribbonMesh.mesh;
 			MeshHelper.Subdivide (mesh, 8);
 			ribbonMesh.mesh = mesh;
         } else {
+			Debug.Log ("I should be fucking yielding");
             yield return null;
         }
 
 		if (ribbonRenderer == null) {
+			Debug.Log ("I should be fucking yielding");
 			yield return null;
 		}
+
+		Debug.Log (ribbonRenderer.name);
 
 		//Set Mesh Material Values Here
 
@@ -106,6 +127,8 @@ public class RibbonGenerator : MonoBehaviour {
 		}
 
 		ribbonRenderer.material.color = myColor;
+		DOTween.To (() => transparency, x => transparency = x, 1, 1);
+
 	}
 
 
