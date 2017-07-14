@@ -25,12 +25,45 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	int splinePointIndex;
 
-
+	AudioLowPassFilter lpFilter;
+	AudioHighPassFilter hpFilter;
 
 	void Start() {
-		
+
+		lpFilter = GetComponent<AudioLowPassFilter> ();
+		hpFilter = GetComponent<AudioHighPassFilter> ();
 
 
+	}
+
+	void Update() {
+
+
+
+		float lowPassCutoff = lpFilter.cutoffFrequency;
+		float hiPassCutoff = hpFilter.cutoffFrequency;
+
+		float newHPCutoff;
+		float newLPCutoff;
+
+		if (transform.position.y > 1.5f) {
+			newHPCutoff = RibbonGameManager.instance.RemapRange (transform.position.y, 1.5f, 2.5f, 10, 4000);
+		} else
+			newHPCutoff = 10f;
+
+		if (transform.position.y < 1.5f) {
+			newLPCutoff = RibbonGameManager.instance.RemapRange (transform.position.y, 0.3f, 1.5f, 100, 22000);
+		} else
+			newLPCutoff = 22000;
+
+
+		lpFilter.cutoffFrequency = 
+			Mathf.Lerp (lowPassCutoff, newLPCutoff, Time.deltaTime);
+
+		//HIGH PASS FILTER IS GIVING WEIRD POPPING NOISES
+		//hpFilter.cutoffFrequency = 
+			//Mathf.Lerp (hiPassCutoff, newHPCutoff, Time.deltaTime);
+			
 	}
 
 	public void StartDrawingRibbon() {

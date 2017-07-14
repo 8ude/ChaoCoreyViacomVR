@@ -87,11 +87,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 
         if (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>()) {
-			Debug.Log (GetComponentInChildren<CreateMesh> ().transform.GetComponentInChildren<MeshRenderer> ().name);
-			CSRoundedRectangle rect = GetComponentInChildren<CSRoundedRectangle> ();
-			Debug.Log (rect.name);
-			//DOTween.To (() => rect.Width, x => rect.Width = x, endWidth, 1);
-			//DOTween.To (() => rect.Height, x => rect.Height = x, endHeight, 1);
+			
             ribbonRenderer = GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>();
 			ribbonMesh = GetComponentInChildren<CreateMesh> ().transform.GetComponentInChildren<MeshFilter> ();
 			Mesh mesh = ribbonMesh.mesh;
