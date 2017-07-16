@@ -156,7 +156,7 @@ public class EraseRibbon : MonoBehaviour {
 			if (other.transform.name == "MarkerObject(Clone)") {
 
 				Destroy (other.transform.gameObject);
-				drawRibbonScript.markerChain.Clear;
+				drawRibbonScript.markerChain.Clear();
 			}
 
 			if (other.transform.parent.parent.name == "MarkerParent(Clone)") {
