@@ -11,6 +11,22 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip preHarmonyClip;
 	public AudioClip preMelodyClip;
 
+	public AudioClip[] drumClips;
+	public AudioClip[] bassClips;
+	public AudioClip[] harmonyClips;
+	public AudioClip[] melodyClips;
+
+	public int drumRibbonCount;
+	public int bassRibbonCount;
+	public int harmonyRibbonCount;
+	public int melodyRibbonCount;
+
+	[SerializeField] GameObject[] drumRibbons;
+	[SerializeField] GameObject[] bassRibbons;
+	[SerializeField] GameObject[] melodyRibbons;
+	[SerializeField] GameObject[] harmonyRibbons;
+
+
 	public float endingWidth;
 	public float endingHeight;
 
@@ -24,6 +40,16 @@ public class RibbonGameManager : MonoBehaviour {
     public static RibbonGameManager instance = null;
 
     private void Awake() {
+
+		drumClips = Resources.LoadAll <AudioClip>("Audio/Drums");
+		bassClips = Resources.LoadAll <AudioClip>("Audio/Bass");
+		harmonyClips = Resources.LoadAll <AudioClip>("Audio/Harmony");
+		melodyClips = Resources.LoadAll <AudioClip>("Audio/Melody");
+
+		drumRibbonCount = 0;
+		bassRibbonCount = 0;
+		harmonyRibbonCount = 0;
+		melodyRibbonCount = 0;
 
         if (instance == null) {
             instance = this;

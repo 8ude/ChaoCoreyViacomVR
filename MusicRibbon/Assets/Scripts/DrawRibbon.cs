@@ -34,6 +34,8 @@ public class DrawRibbon: MonoBehaviour {
 
 	public MeshFilter currentMesh;
 
+	AudioClip nextClip;
+
 
 	//public int numRibbons = 0;
 
@@ -63,13 +65,43 @@ public class DrawRibbon: MonoBehaviour {
 
 			if (currentRibbonSound) {
 				currentRibbonSound = null;
+
 			}
+
+			nextClip = null;
+
 
 			currentRibbonSound = Instantiate (ribbonSoundPrefab, transform.position, Quaternion.identity);
 			currentRibbonSound.transform.SetParent (gameObject.transform);
-			//currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = numRibbons % currentRibbonSound.GetComponent<DrawRibbonSound> ().origClips.Length;
+
+			//use switch stems to find the current instrument, then cycle through corresponding clips using
+			//Ribbon Game Manager
+			switch (switchStems.currentInstrument) {
+			case "Bass":
+				nextClip = RibbonGameManager.instance.bassClips [
+					RibbonGameManager.instance.bassRibbonCount % RibbonGameManager.instance.bassClips.Length
+				];
+				RibbonGameManager.instance.bassRibbonCount++;
+				break;
+			case "Drums":
+				nextClip = RibbonGameManager.instance.drumClips [
+					RibbonGameManager.instance.drumRibbonCount % RibbonGameManager.instance.drumClips.Length
+				];
+				break;
+			case "Harmony":
+				nextClip = RibbonGameManager.instance.harmonyClips [
+					RibbonGameManager.instance.harmonyRibbonCount % RibbonGameManager.instance.harmonyClips.Length
+				];
+				break;
+			case "Melody":
+				nextClip = RibbonGameManager.instance.melodyClips [
+					RibbonGameManager.instance.melodyRibbonCount % RibbonGameManager.instance.melodyClips.Length
+				];
+				break;
+			}
+
 			currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = Switchstems.GetComponent<SwitchStems> ().Stemnum;
-			currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon ();
+			currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon (nextClip);
 		}
 
 
@@ -81,9 +113,9 @@ public class DrawRibbon: MonoBehaviour {
 
 		if (!eraseRibbon.isErasing) {
 
-			currentRibbonSound.GetComponent<DrawRibbonSound> ().StopDrawingRibbon ();
+			currentRibbonSound.GetComponent<DrawRibbonSound> ().StopDrawingRibbon (nextClip);
 
-			if (markerChain.Count > 4) {
+			if (markerChain.Count > 2) {
 
 				GameObject parentObject = Instantiate (markerParentPrefab, Vector3.zero, Quaternion.identity);
 				RibbonGenerator ribbonGenerator = parentObject.GetComponent<RibbonGenerator> ();

@@ -6,7 +6,8 @@ using Beat;
 public class DrawRibbonSound : MonoBehaviour {
 
 	AudioSource mySource;
-	public AudioClip[] origClips;
+
+	public string instrumentType;
 
 	public int clipIndex = 0;
 
@@ -87,10 +88,10 @@ public class DrawRibbonSound : MonoBehaviour {
 			
 	}
 
-	public void StartDrawingRibbon() {
+	public void StartDrawingRibbon(AudioClip origClip) {
 
 		mySource = GetComponent<AudioSource> ();
-		mySource.clip = origClips[clipIndex];
+		mySource.clip = origClip;
 
 
 		startTime = Clock.Instance.AtNextHalf();
@@ -106,7 +107,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	}
 
-	public void StopDrawingRibbon() {
+	public void StopDrawingRibbon(AudioClip origClip) {
 		stopTime = Clock.Instance.AtNextHalf();
 
 		float newClipLength = (float)stopTime - (float)startTime;
@@ -115,13 +116,13 @@ public class DrawRibbonSound : MonoBehaviour {
       
         }
 
-		int newClipSamples = Mathf.RoundToInt (newClipLength * origClips[clipIndex].frequency);
+		int newClipSamples = Mathf.RoundToInt (newClipLength * origClip.frequency);
         
 
 		float[] audioData = new float[newClipSamples*mySource.clip.channels];
         
 
-		AudioClip newClip = AudioClip.Create ("RibbonClip", newClipSamples, origClips[clipIndex].channels, origClips[clipIndex].frequency, false);
+		AudioClip newClip = AudioClip.Create ("RibbonClip", newClipSamples, origClip.channels, origClip.frequency, false);
 
 
 

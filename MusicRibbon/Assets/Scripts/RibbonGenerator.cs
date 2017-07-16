@@ -51,7 +51,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 
 
-		if (!ribbonSpline.IsInitialized) {
+		while (!ribbonSpline.IsInitialized) {
 			yield return null;
 		}
 

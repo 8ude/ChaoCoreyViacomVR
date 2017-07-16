@@ -14,6 +14,8 @@ public class SwitchStems : MonoBehaviour {
 
     public int Stemnum = 0;
 
+	public string currentInstrument;
+
 
     //public static Color drumColor = new Color((float)177/255, (float)235/255, 0f);
     //public static Color bassColor = new Color((float)83/255, (float)187/255, (float)244/255);
@@ -24,9 +26,9 @@ public class SwitchStems : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
-    drumColor = Colors[0];
-    bassColor = Colors[1];
-    melodyColor = Colors[2];
+    	drumColor = Colors[0];
+    	bassColor = Colors[1];
+    	melodyColor = Colors[2];
         harmonyColor = Colors[3];
 
 
@@ -39,21 +41,25 @@ public class SwitchStems : MonoBehaviour {
 
 	public void DrawBassRibbon(){
 		Stemnum = 0;
+		currentInstrument = "Bass";
 		//Debug.Log ("Bass: "+ Stemnum);
 	}
 
 	public void DrawDrumRibbon(){
 		Stemnum = 1;
+		currentInstrument = "Drums";
 		//Debug.Log ("Drum: "+ Stemnum);
 	}
 
 	public void DrawHarmonyRibbon(){
 		Stemnum = 2;
+		currentInstrument = "Harmony";
 		//Debug.Log ("Harmony: "+ Stemnum);
 	}
 
 	public void DrawMelodyRibbon(){
 		Stemnum = 3;
+		currentInstrument = "Melody";
 		//Debug.Log ("Melody: "+ Stemnum);
 	}
 
