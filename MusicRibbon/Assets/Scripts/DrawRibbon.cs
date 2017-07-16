@@ -176,7 +176,7 @@ public class DrawRibbon: MonoBehaviour {
 				//Debug.Log("trigger released?");
 				timeInterval = 0f;
 
-				RibbonGameManager.instance.RibbonObjects.Add (parentObject);
+				//RibbonGameManager.instance.RibbonObjects.Add (parentObject);
 			}
 		}
 
