@@ -33,8 +33,29 @@ public class DrawRibbonSound : MonoBehaviour {
 		lpFilter = GetComponent<AudioLowPassFilter> ();
 		hpFilter = GetComponent<AudioHighPassFilter> ();
 
+        float hpCutoff;
+        float lpCutoff;
 
-	}
+
+        if (transform.position.y > 1.5f)
+        {
+            hpCutoff = RibbonGameManager.instance.RemapRange(transform.position.y, 1.5f, 2.5f, 10, 4000);
+        }
+        else
+            hpCutoff = 10f;
+
+        if (transform.position.y < 1.5f)
+        {
+            lpCutoff = RibbonGameManager.instance.RemapRange(transform.position.y, 0.3f, 1.5f, 100, 22000);
+        }
+        else
+            lpCutoff = 22000;
+
+        hpFilter.cutoffFrequency = hpCutoff;
+        lpFilter.cutoffFrequency = lpCutoff;
+
+
+    }
 
 	void Update() {
 
@@ -61,8 +82,8 @@ public class DrawRibbonSound : MonoBehaviour {
 			Mathf.Lerp (lowPassCutoff, newLPCutoff, Time.deltaTime);
 
 		//HIGH PASS FILTER IS GIVING WEIRD POPPING NOISES
-		//hpFilter.cutoffFrequency = 
-			//Mathf.Lerp (hiPassCutoff, newHPCutoff, Time.deltaTime);
+	    hpFilter.cutoffFrequency = 
+			Mathf.Lerp (hiPassCutoff, newHPCutoff, Time.deltaTime);
 			
 	}
 
@@ -72,7 +93,7 @@ public class DrawRibbonSound : MonoBehaviour {
 		mySource.clip = origClips[clipIndex];
 
 
-		startTime = Clock.Instance.AtNextMeasure();
+		startTime = Clock.Instance.AtNextHalf();
 
 		//mySource.PlayScheduled (startTime);
 
@@ -86,7 +107,7 @@ public class DrawRibbonSound : MonoBehaviour {
 	}
 
 	public void StopDrawingRibbon() {
-		stopTime = Clock.Instance.AtNextMeasure();
+		stopTime = Clock.Instance.AtNextHalf();
 
 		float newClipLength = (float)stopTime - (float)startTime;
         if (newClipLength == 0) {

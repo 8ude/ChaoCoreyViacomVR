@@ -103,7 +103,7 @@ public class RibbonGenerator : MonoBehaviour {
 			yield return null;
 		}
 
-		Debug.Log (ribbonRenderer.name);
+		//Debug.Log (ribbonRenderer.name);
 
 		//Set Mesh Material Values Here
 
