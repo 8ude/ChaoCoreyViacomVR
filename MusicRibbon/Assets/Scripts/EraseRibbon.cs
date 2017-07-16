@@ -157,6 +157,12 @@ public class EraseRibbon : MonoBehaviour {
 			
 				Destroy (other.transform.parent.parent.gameObject);
 			}
+
+			else if (other.transform.name == "MarkerObject(Clone)") {
+
+				Destroy (other.transform.gameObject);
+			}
+
 		}
 	}
 }
