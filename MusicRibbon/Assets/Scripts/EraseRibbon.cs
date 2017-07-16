@@ -14,8 +14,8 @@ public class EraseRibbon : MonoBehaviour {
 	public GameObject LeftRubber;
 	public GameObject RightWand;
 	public GameObject RightRubber;
-
 	public DrawRibbon drawRibbonScript;
+
 
 	public float initTimeDelay = 4f;
 
@@ -156,6 +156,8 @@ public class EraseRibbon : MonoBehaviour {
 			if (other.transform.parent.parent.name == "MarkerParent(Clone)") {
 			
 				Destroy (other.transform.parent.parent.gameObject);
+				drawRibbonScript.markerChain.Clear;
+
 			}
 
 			else if (other.transform.name == "MarkerObject(Clone)") {

@@ -21,7 +21,7 @@ public class DrawRibbon: MonoBehaviour {
 
 	//PREFABS
 	public GameObject markerPrefab;
-	List<GameObject> markerChain;
+	public List<GameObject> markerChain;
 	public GameObject markerParentPrefab;
 	public GameObject curvySplinePrefab;
 	public GameObject ribbonSoundPrefab;
