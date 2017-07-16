@@ -81,10 +81,13 @@ public class RibbonGenerator : MonoBehaviour {
 
         //Debug.Log("waiting");
 
-		yield return new WaitForSeconds (0.5f);
+		//yield return new WaitForSeconds (0.5f);
 
         //Debug.Log("done waiting");
 
+        while (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>() == null)   {
+            yield return null;
+        }
 
         if (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>()) {
 			
@@ -93,12 +96,9 @@ public class RibbonGenerator : MonoBehaviour {
 			Mesh mesh = ribbonMesh.mesh;
 			MeshHelper.Subdivide (mesh, 8);
 			ribbonMesh.mesh = mesh;
-        } else {
-			Debug.Log ("I should be fucking yielding");
-            yield return null;
-        }
+        } 
 
-		if (ribbonRenderer == null) {
+		while (ribbonRenderer == null) {
 			Debug.Log ("I should be fucking yielding");
 			yield return null;
 		}

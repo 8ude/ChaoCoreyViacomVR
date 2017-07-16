@@ -77,31 +77,39 @@ public class DrawRibbon: MonoBehaviour {
 			//use switch stems to find the current instrument, then cycle through corresponding clips using
 			//Ribbon Game Manager
 			switch (switchStems.currentInstrument) {
-			case "Bass":
-				nextClip = RibbonGameManager.instance.bassClips [
-					RibbonGameManager.instance.bassRibbonCount % RibbonGameManager.instance.bassClips.Length
-				];
-				RibbonGameManager.instance.bassRibbonCount++;
+			    case "Bass":
+				    nextClip = RibbonGameManager.instance.bassClips [
+					    RibbonGameManager.instance.bassRibbonsDrawn % RibbonGameManager.instance.bassClips.Length
+				    ];
+				    RibbonGameManager.instance.bassRibbonsDrawn++;
+                    currentRibbonSound.gameObject.tag = "BassStem";
 				break;
-			case "Drums":
-				nextClip = RibbonGameManager.instance.drumClips [
-					RibbonGameManager.instance.drumRibbonCount % RibbonGameManager.instance.drumClips.Length
-				];
-				break;
-			case "Harmony":
-				nextClip = RibbonGameManager.instance.harmonyClips [
-					RibbonGameManager.instance.harmonyRibbonCount % RibbonGameManager.instance.harmonyClips.Length
-				];
-				break;
-			case "Melody":
-				nextClip = RibbonGameManager.instance.melodyClips [
-					RibbonGameManager.instance.melodyRibbonCount % RibbonGameManager.instance.melodyClips.Length
-				];
-				break;
+			    case "Drums":
+				    nextClip = RibbonGameManager.instance.drumClips [
+					    RibbonGameManager.instance.drumRibbonsDrawn % RibbonGameManager.instance.drumClips.Length
+				    ];
+                    RibbonGameManager.instance.drumRibbonsDrawn++;
+                    currentRibbonSound.gameObject.tag = "DrumStem";
+                    break;
+			    case "Harmony":
+				    nextClip = RibbonGameManager.instance.harmonyClips [
+				    	RibbonGameManager.instance.harmonyRibbonsDrawn % RibbonGameManager.instance.harmonyClips.Length
+			    	];
+                    RibbonGameManager.instance.harmonyRibbonsDrawn++;
+                    currentRibbonSound.gameObject.tag = "HarmonyStem";
+                    break;
+			    case "Melody":
+			    	nextClip = RibbonGameManager.instance.melodyClips [
+				    	RibbonGameManager.instance.melodyRibbonsDrawn % RibbonGameManager.instance.melodyClips.Length
+				    ];
+                    RibbonGameManager.instance.melodyRibbonsDrawn++;
+                    currentRibbonSound.gameObject.tag = "MelodyStem";
+                    break;
 			}
 
 			currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = Switchstems.GetComponent<SwitchStems> ().Stemnum;
-			currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon (nextClip);
+            
+            currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon (nextClip);
 		}
 
 

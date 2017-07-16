@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RibbonGameManager : MonoBehaviour {
 
-    //We don't need this quite yet, but probably will in the near future
+  
 
 	public AudioClip preDrumClip;
 	public AudioClip preBassClip;
@@ -16,22 +16,24 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip[] harmonyClips;
 	public AudioClip[] melodyClips;
 
-	public int drumRibbonCount;
-	public int bassRibbonCount;
-	public int harmonyRibbonCount;
-	public int melodyRibbonCount;
+	public int drumRibbonsDrawn;
+	public int bassRibbonsDrawn;
+	public int harmonyRibbonsDrawn;
+	public int melodyRibbonsDrawn;
 
 	[SerializeField] GameObject[] drumRibbons;
 	[SerializeField] GameObject[] bassRibbons;
 	[SerializeField] GameObject[] melodyRibbons;
 	[SerializeField] GameObject[] harmonyRibbons;
 
+    public int totalRibbons;
+
 
 	public float endingWidth;
 	public float endingHeight;
 
-	public List<GameObject> RibbonObjects;
-	public int maxRibbons = 4;
+	//public List<GameObject> RibbonObjects;
+	//public int maxRibbons = 4;
 
 	public bool LimitRibbonAmount = false;
 
@@ -46,10 +48,10 @@ public class RibbonGameManager : MonoBehaviour {
 		harmonyClips = Resources.LoadAll <AudioClip>("Audio/Harmony");
 		melodyClips = Resources.LoadAll <AudioClip>("Audio/Melody");
 
-		drumRibbonCount = 0;
-		bassRibbonCount = 0;
-		harmonyRibbonCount = 0;
-		melodyRibbonCount = 0;
+		drumRibbonsDrawn = 0;
+		bassRibbonsDrawn = 0;
+		harmonyRibbonsDrawn = 0;
+		melodyRibbonsDrawn = 0;
 
         if (instance == null) {
             instance = this;
@@ -70,8 +72,15 @@ public class RibbonGameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (LimitRibbonAmount) {
-			CapRibbons ();
+        drumRibbons = GameObject.FindGameObjectsWithTag("DrumStem");
+        bassRibbons = GameObject.FindGameObjectsWithTag("BassStem");
+        harmonyRibbons = GameObject.FindGameObjectsWithTag("HarmonyStem");
+        melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
+
+        totalRibbons = drumRibbons.Length + bassRibbons.Length + harmonyRibbons.Length + melodyRibbons.Length;
+
+        if (LimitRibbonAmount) {
+			//CapRibbons ();
 		}
 
 
@@ -81,7 +90,8 @@ public class RibbonGameManager : MonoBehaviour {
 	public float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax) {
 		return newMin + (value - oldMin) * (newMax - newMin) / (oldMax - oldMin);
 	}
-
+    
+    /*
 	public void CapRibbons() {
 
 		if (RibbonObjects.Count > maxRibbons) {
@@ -91,5 +101,6 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 
 	}
+    */
 
 }
