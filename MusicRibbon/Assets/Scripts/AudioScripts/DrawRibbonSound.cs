@@ -90,7 +90,10 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	public void StartDrawingRibbon(AudioClip origClip) {
 
-		mySource = GetComponent<AudioSource> ();
+		Debug.Log (origClip.name);
+		mySource = gameObject.GetComponent<AudioSource> ();
+
+
 		mySource.clip = origClip;
 
 
@@ -149,6 +152,7 @@ public class DrawRibbonSound : MonoBehaviour {
 	public void FollowRibbon() {
 
 		if (splinePoints != null) {
+			//This coroutine is causing issues with small splines/drawing in small areas
 			StartCoroutine(MoveToNextPoint (splinePoints));
 			//index++;
 
@@ -159,7 +163,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 		while (true) {
 			for (int i = 0; i < sPoints.Length; i++) {
-				while (Vector3.Distance (transform.position, sPoints [i]) > 0.1f) {
+				while (Vector3.Distance (transform.position, sPoints [i]) > 0.001f) {
 					transform.position += (sPoints[i] - transform.position) * Time.deltaTime;
 					yield return null;
 				}

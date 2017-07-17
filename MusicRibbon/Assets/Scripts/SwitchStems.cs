@@ -14,7 +14,7 @@ public class SwitchStems : MonoBehaviour {
 
     public int Stemnum = 0;
 
-	public string currentInstrument;
+	public string currentInstrument = "Bass";
 
 
     //public static Color drumColor = new Color((float)177/255, (float)235/255, 0f);

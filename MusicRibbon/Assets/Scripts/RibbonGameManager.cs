@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class RibbonGameManager : MonoBehaviour {
 
@@ -25,6 +26,8 @@ public class RibbonGameManager : MonoBehaviour {
 	[SerializeField] GameObject[] bassRibbons;
 	[SerializeField] GameObject[] melodyRibbons;
 	[SerializeField] GameObject[] harmonyRibbons;
+
+	public 
 
     public int totalRibbons;
 
@@ -73,7 +76,17 @@ public class RibbonGameManager : MonoBehaviour {
 	void Update () {
 
         drumRibbons = GameObject.FindGameObjectsWithTag("DrumStem");
-        bassRibbons = GameObject.FindGameObjectsWithTag("BassStem");
+        
+		//worst volume problems are coming from the bass
+		bassRibbons = GameObject.FindGameObjectsWithTag("BassStem");
+		foreach (GameObject go in bassRibbons) {
+
+			go.GetComponent<AudioSource> ().volume = (float)1f / bassRibbons.Length;
+
+		}
+
+
+
         harmonyRibbons = GameObject.FindGameObjectsWithTag("HarmonyStem");
         melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
 

@@ -30,13 +30,13 @@ public class MarkerObjectBehavior : MonoBehaviour {
 		this.gameObject.GetComponent<MeshRenderer> ().material = BassRibbonMaterial;
 	}
 
-	public void MelodyRibbonObject(){
+	public void MelodyMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = MelodyRibbonMaterial;
 	
 	}
 
-	public void HarmonyRibbonObject(){
+	public void HarmonyMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = HarmonyRibbonMaterial;
 	

@@ -21,7 +21,7 @@ public class EraseRibbon : MonoBehaviour {
 
 	bool bothControllersFound = false;
 
-	public enum controllerFoundStatus {neitherFound = 0, LeftFound = 1, RightFound = 2, BothFound = 3};
+	public enum controllerFoundStatus {NeitherFound = 0, LeftFound = 1, RightFound = 2, BothFound = 3};
 
 	controllerFoundStatus currentStatus;
 
@@ -29,7 +29,7 @@ public class EraseRibbon : MonoBehaviour {
 	void Start () {
 
 		isErasing = false;
-		currentStatus = controllerFoundStatus.neitherFound;
+		currentStatus = controllerFoundStatus.NeitherFound;
 		bothControllersFound = false;
 
 
@@ -43,7 +43,7 @@ public class EraseRibbon : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Debug.Log (Time.time);
-		if (Time.time > initTimeDelay && currentStatus == controllerFoundStatus.neitherFound) {
+		if (Time.time > initTimeDelay && currentStatus != controllerFoundStatus.BothFound) {
 			FindController ();
 		}
 
@@ -111,7 +111,7 @@ public class EraseRibbon : MonoBehaviour {
 
 		//Debug.Log ("Why aren't you working");
 
-		Debug.Log ("wait over");
+		Debug.Log ("searching for controllers");
 
 		//Seperating out finding L controller and finding R controller
 
@@ -119,7 +119,7 @@ public class EraseRibbon : MonoBehaviour {
 			LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
 			LeftWand = LeftSword.transform.Find ("Wand").gameObject;
 			LeftRubber = LeftSword.transform.Find("Capsule").gameObject;
-
+			Debug.Log ("found object: " + LeftRubber.name);
 			//change our status if we've found this particular component
 			currentStatus = controllerFoundStatus.LeftFound;
 		}
@@ -136,7 +136,7 @@ public class EraseRibbon : MonoBehaviour {
 		}
 
 
-		Debug.Log ("found object: " + LeftRubber.name);
+
 
 
 		if (currentStatus == controllerFoundStatus.BothFound) {

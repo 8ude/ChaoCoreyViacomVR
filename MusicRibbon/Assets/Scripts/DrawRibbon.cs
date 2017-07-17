@@ -76,6 +76,8 @@ public class DrawRibbon: MonoBehaviour {
 
 			//use switch stems to find the current instrument, then cycle through corresponding clips using
 			//Ribbon Game Manager
+
+			//Debug.Log (switchStems.currentInstrument);
 			switch (switchStems.currentInstrument) {
 			    case "Bass":
 				    nextClip = RibbonGameManager.instance.bassClips [
@@ -108,6 +110,8 @@ public class DrawRibbon: MonoBehaviour {
 			}
 
 			currentRibbonSound.GetComponent<DrawRibbonSound> ().clipIndex = Switchstems.GetComponent<SwitchStems> ().Stemnum;
+
+			//Debug.Log (nextClip.name);
             
             currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon (nextClip);
 		}
@@ -123,7 +127,7 @@ public class DrawRibbon: MonoBehaviour {
 
 			currentRibbonSound.GetComponent<DrawRibbonSound> ().StopDrawingRibbon (nextClip);
 
-			if (markerChain.Count > 2) {
+			if (markerChain.Count > 1) {
 
 				GameObject parentObject = Instantiate (markerParentPrefab, Vector3.zero, Quaternion.identity);
 				RibbonGenerator ribbonGenerator = parentObject.GetComponent<RibbonGenerator> ();
@@ -194,15 +198,19 @@ public class DrawRibbon: MonoBehaviour {
 
 			switch (switchStems.Stemnum) {
 			case 0:
+				newMarker.GetComponent<MarkerObjectBehavior> ().BassMarkerObject ();
 				newMarker.GetComponent<PreRibbon> ().myClip = RibbonGameManager.instance.preBassClip;
 				break;
 			case 1:
+				newMarker.GetComponent<MarkerObjectBehavior> ().DrumMarkerObject ();
 				newMarker.GetComponent<PreRibbon> ().myClip = RibbonGameManager.instance.preDrumClip;
 				break;
 			case 2:
+				newMarker.GetComponent<MarkerObjectBehavior> ().HarmonyMarkerObject ();
 				newMarker.GetComponent<PreRibbon> ().myClip = RibbonGameManager.instance.preHarmonyClip;
 				break;
 			case 3:
+				newMarker.GetComponent<MarkerObjectBehavior> ().MelodyMarkerObject ();
 				newMarker.GetComponent<PreRibbon> ().myClip = RibbonGameManager.instance.preMelodyClip;
 				break;
 			}

@@ -30,8 +30,8 @@ public class RibbonGenerator : MonoBehaviour {
 
     public GameObject SwitchStems;
 
-	float endWidth = 0.1f;
-	float endHeight = 0.5f;
+	//float endWidth = 0.1f;
+	//float endHeight = 0.5f;
 
 	Color myColor = new Color(1,1,1);
 
