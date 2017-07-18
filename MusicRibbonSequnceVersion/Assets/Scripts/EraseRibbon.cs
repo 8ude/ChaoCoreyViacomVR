@@ -111,7 +111,7 @@ public class EraseRibbon : MonoBehaviour {
 
 		//Debug.Log ("Why aren't you working");
 
-		Debug.Log ("searching for controllers");
+		//Debug.Log ("searching for controllers");
 
 		//Seperating out finding L controller and finding R controller
 

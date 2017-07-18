@@ -72,6 +72,7 @@ public class RibbonGenerator : MonoBehaviour {
 		if (ribbonRenderer) {
 			
 			ribbonRenderer.material.SetFloat ("_InputAlpha", transparency);
+
 		}
 
 

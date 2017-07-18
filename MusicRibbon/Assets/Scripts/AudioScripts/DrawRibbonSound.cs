@@ -133,6 +133,13 @@ public class DrawRibbonSound : MonoBehaviour {
 
 			audioData [i] = origAudioData [i];
 
+			if (i > (newClipSamples * mySource.clip.channels) - 10000) {
+
+				int j = i - ((newClipSamples * mySource.clip.channels) - 10000);
+
+				audioData[i] *= Mathf.Lerp(1f, 0f, (float) j / 10000); 
+			}
+
 
 
 		}

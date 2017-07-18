@@ -1,7 +1,8 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+﻿ // Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
 Shader "Custom/AudioDisplacement" {
 	Properties {
+
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
@@ -18,7 +19,9 @@ Shader "Custom/AudioDisplacement" {
 		Q ("Steepness", Range(0,1)) = 0.5 //steepness
 		i ("Number of Waves",Range(1,10)) = 1 //number of waves
 		D ("Wave Direction", Vector) = (0.5,0.0,0.5,0.0) //wave direction
+
 	}
+
 	SubShader {
 		Tags { "Queue" = "Transparent" "RenderType"="Transparent" }
 		LOD 200
@@ -29,12 +32,16 @@ Shader "Custom/AudioDisplacement" {
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
+		//#include "Common.cginc"
+		#include "SimplexNoiseGrad3D.cginc"
 
 		sampler2D _MainTex;
 
 		struct Input {
 			float2 uv_MainTex;
+			float dummy;
 		};
+
 
 		float4 _AudioPosition;
 		float _AudioInput;
@@ -44,6 +51,7 @@ Shader "Custom/AudioDisplacement" {
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
+
 
 		float A = 0.5; //amplitude
 		float L = 1; //wavelength
@@ -86,6 +94,15 @@ Shader "Custom/AudioDisplacement" {
 			return pos;
 		}
 
+		float rand(float3 myVector) {
+
+			return frac(sin(dot(myVector, float3(12.9898,78.233, 45.5432)))*43758.5453);
+
+		}
+
+
+
+
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
 		// #pragma instancing_options assumeuniformscaling
@@ -96,24 +113,30 @@ Shader "Custom/AudioDisplacement" {
 
 
 		void vert (inout appdata_full v) {
+
 			float3 vertWorld = mul(unity_ObjectToWorld, v.vertex).xyz;
 
 			float distPointToSound = distance(vertWorld, _AudioPosition.xyz);
 
-			S += (S * _AudioInput * 0.1);
+			S += (S * _AudioInput * 0.05);
 			float3 wsVertexOut = gerstnerWave(v.vertex.xyz);
 
 			v.vertex.xyz = wsVertexOut;
-			 
+
+
+			
 			if (distPointToSound < _MaxAudioDistance) {
 
+				S += (S * _AudioInput * 0.1 );
+				float3 subWave = gerstnerWave(cross(v.vertex, v.normal) * _AudioInput * 
+				((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance) * (_AudioInput * 3.0 * 
+				((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance) * 2.0 * rand(v.vertex.xyz)));
+
+				v.vertex.xyz += subWave * 0.3;
+
 				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
-				v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
+				//v.vertex.xyz = v.vertex.xyz + (cross(v.vertex * rand(v.vertex), v.normal)* 0.54 * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
 			}
-
-
-
-
 
 		}
 

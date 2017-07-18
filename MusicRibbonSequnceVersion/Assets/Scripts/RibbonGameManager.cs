@@ -27,8 +27,6 @@ public class RibbonGameManager : MonoBehaviour {
 	[SerializeField] GameObject[] melodyRibbons;
 	[SerializeField] GameObject[] harmonyRibbons;
 
-	public 
-
     public int totalRibbons;
 
 
