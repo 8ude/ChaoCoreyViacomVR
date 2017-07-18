@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using Beat;
 
 public class RibbonGameManager : MonoBehaviour {
 
@@ -23,7 +24,14 @@ public class RibbonGameManager : MonoBehaviour {
 	public int melodyRibbonsDrawn;
 
 	[SerializeField] GameObject[] drumRibbons;
-	[SerializeField] GameObject[] bassRibbons;
+	public GameObject[] bassRibbons;
+
+	public bool[] bassSequencePlaying;
+
+	//private GameObject _bassSequence;
+	//public List<GameObject> bassSequence;
+	double[] bassSequenceStartTimes;
+
 	[SerializeField] GameObject[] melodyRibbons;
 	[SerializeField] GameObject[] harmonyRibbons;
 
@@ -43,6 +51,9 @@ public class RibbonGameManager : MonoBehaviour {
     public static RibbonGameManager instance = null;
 
     private void Awake() {
+
+		//bassSequence = new List<double> ();
+		//bassSequence [0] = 0;
 
 		drumClips = Resources.LoadAll <AudioClip>("Audio/Drums");
 		bassClips = Resources.LoadAll <AudioClip>("Audio/Bass");
@@ -73,10 +84,15 @@ public class RibbonGameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+
         drumRibbons = GameObject.FindGameObjectsWithTag("DrumStem");
         
 		//worst volume problems are coming from the bass
+		//WHAT THE FUCK AM I FUCKING DOING I SHOULD JUST FUCKING KILL MYSELF
+	
 		bassRibbons = GameObject.FindGameObjectsWithTag("BassStem");
+
+		bassSequencePlaying = new bool[bassRibbons.Length];
 		foreach (GameObject go in bassRibbons) {
 
 			go.GetComponent<AudioSource> ().volume = (float)1f / bassRibbons.Length;
@@ -100,6 +116,30 @@ public class RibbonGameManager : MonoBehaviour {
 
 	public float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax) {
 		return newMin + (value - oldMin) * (newMax - newMin) / (oldMax - oldMin);
+	}
+
+	public void PlayClipSequence () {
+
+
+
+			if (bassRibbons.Length > 0) {
+				for (int i = 0; i < bassRibbons.Length; i++) {
+					AudioSource bassSource = bassRibbons [i].GetComponentInChildren<AudioSource> ();
+					bassSequencePlaying [i] = bassSource.isPlaying;
+
+					if (!bassSequencePlaying [i] && bassSequencePlaying [(i - 1) % bassSequencePlaying.Length]) {
+						AudioSource lastClip = bassRibbons [i].GetComponentInChildren<AudioSource> ();
+					bassSource.PlayScheduled (lastClip.time);
+					}
+
+
+				}
+					
+			}
+
+
+	
+
 	}
     
     /*

@@ -29,12 +29,13 @@ public class DrawRibbon: MonoBehaviour {
 	//reference to switch stems - use to change color of ribbons to match instruments
 	[SerializeField] SwitchStems switchStems;
 
-    
+
 	GameObject currentRibbonSound;
 
 	public MeshFilter currentMesh;
 
 	AudioClip nextClip;
+	double nextClipStartTime;
 
 
 	//public int numRibbons = 0;
@@ -79,10 +80,16 @@ public class DrawRibbon: MonoBehaviour {
 
 			//Debug.Log (switchStems.currentInstrument);
 			switch (switchStems.currentInstrument) {
-			    case "Bass":
-				    nextClip = RibbonGameManager.instance.bassClips [
-					    RibbonGameManager.instance.bassRibbonsDrawn % RibbonGameManager.instance.bassClips.Length
-				    ];
+			case "Bass":
+
+				if (RibbonGameManager.instance.bassRibbonsDrawn > 0) {
+					nextClip = RibbonGameManager.instance.bassClips [0];
+					//AudioClip lastClip = RibbonGameManager.instance.bassRibbons [
+						                     //RibbonGameManager.instance.bassRibbons.Length - 1].GetComponentInChildren<AudioSource> ().clip;
+					//nextClipStartTime = (double)lastClip.samples * lastClip.channels / lastClip.frequency;
+					RibbonGameManager.instance.
+				}
+				    
 				    RibbonGameManager.instance.bassRibbonsDrawn++;
                     currentRibbonSound.gameObject.tag = "BassStem";
 				break;

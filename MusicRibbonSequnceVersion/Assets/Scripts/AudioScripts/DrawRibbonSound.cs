@@ -88,12 +88,13 @@ public class DrawRibbonSound : MonoBehaviour {
 			
 	}
 
-	public void StartDrawingRibbon(AudioClip origClip) {
+	public void StartDrawingRibbon(AudioClip origClip, double clipStartTime) {
 
-		Debug.Log (origClip.name);
+		//Debug.Log (origClip.name);
+
+
 		mySource = gameObject.GetComponent<AudioSource> ();
-
-
+	
 		mySource.clip = origClip;
 
 
