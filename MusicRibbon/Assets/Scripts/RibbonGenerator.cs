@@ -127,6 +127,10 @@ public class RibbonGenerator : MonoBehaviour {
 
 	}
 
+	public void DestroySelf(float time) {
+		DOTween.To (() => transparency, x => transparency = x, 0, time);
+	}
+
 
 
 }

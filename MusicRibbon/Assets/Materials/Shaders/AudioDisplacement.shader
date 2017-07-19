@@ -29,6 +29,7 @@ Shader "Custom/AudioDisplacement" {
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
+		#include "ClassicNoise3D.hlsl" 
 
 		sampler2D _MainTex;
 
@@ -44,6 +45,8 @@ Shader "Custom/AudioDisplacement" {
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
+
+		float noise;
 
 		float A = 0.5; //amplitude
 		float L = 1; //wavelength
@@ -86,6 +89,25 @@ Shader "Custom/AudioDisplacement" {
 			return pos;
 		}
 
+		float rand(float3 myVector) {
+
+			return frac(sin(dot(myVector, float3(12.9898,78.233, 45.5432)))*43758.5453);
+
+		}
+
+		float turbulence(float3 p) {
+			float w = 100.0;
+  			float t = -.5;
+
+  			for (float f = 1.0 ; f <= 10.0 ; f++ ){
+   				float power = pow( 2.0, f );
+    			t += abs( pnoise( float3( power * p ), float3( 10.0, 10.0, 10.0 ) ) / power );
+  			}
+
+  			return t;
+
+		}
+
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
 		// #pragma instancing_options assumeuniformscaling
@@ -107,8 +129,21 @@ Shader "Custom/AudioDisplacement" {
 			 
 			if (distPointToSound < _MaxAudioDistance) {
 
+				noise = 10.0 *  -0.10 * turbulence( 0.5 * v.normal + _Time.y);
+ 				// get a 3d noise using the position, low frequency
+ 				float b = 5.0 * pnoise( 0.05 * v.vertex.xyz, float3( 100.0, 100.0, 100.0 ) );
+  				// compose both noises
+  				float displacement = -10.0 * noise + b;
+
+				S += (S * _AudioInput * 0.1 );
+				float3 subWave = gerstnerWave(cross(v.vertex, v.normal) * _AudioInput * 
+				((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance) * (_AudioInput * 3.0 * 
+				((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance) * displacement));
+
+				v.vertex.xyz += subWave * 0.3;
+
 				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
-				v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
+				//v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
 			}
 
 

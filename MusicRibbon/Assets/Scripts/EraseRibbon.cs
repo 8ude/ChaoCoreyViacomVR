@@ -14,6 +14,8 @@ public class EraseRibbon : MonoBehaviour {
 	public GameObject LeftRubber;
 	public GameObject RightWand;
 	public GameObject RightRubber;
+
+	public GameObject EraserCubePrefab;
 	public DrawRibbon drawRibbonScript;
 
 
@@ -160,8 +162,16 @@ public class EraseRibbon : MonoBehaviour {
 			}
 
 			if (other.transform.parent.parent.name == "MarkerParent(Clone)") {
+
+
+				//Want to add juice by having an "eraser" particle follow the ribbon...
+				//the sound follower object already has a reference to the points
+				Vector3[] splinePoints = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound> ().splinePoints;
+
+				GameObject eraserCube = Instantiate (EraserCubePrefab, splinePoints [0], Quaternion.identity);
+				eraserCube.GetComponent<EraseRibbonAnim> ().EraseRibbon (splinePoints, 1.0f);
 			
-				Destroy (other.transform.parent.parent.gameObject);
+				Destroy (other.transform.parent.parent.gameObject, 1.0f);
 
 
 			}

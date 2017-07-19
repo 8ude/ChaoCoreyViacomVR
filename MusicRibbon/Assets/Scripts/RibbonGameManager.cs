@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using DG.Tweening;
 
 public class RibbonGameManager : MonoBehaviour {
 
@@ -33,6 +34,7 @@ public class RibbonGameManager : MonoBehaviour {
 
     public int totalRibbons;
 
+	public GameObject[] ribbonObjects;
 
 	public float endingWidth;
 	public float endingHeight;
@@ -92,6 +94,14 @@ public class RibbonGameManager : MonoBehaviour {
         melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
 		Ribbons = GameObject.FindGameObjectsWithTag("SplinePrefab");
 
+		ribbonObjects = GameObject.FindGameObjectsWithTag ("MarkerParent");
+
+		/*
+		if (ribbonObjects.Length > 0) {
+			MoveRibbons ();
+		}
+		*/
+
         totalRibbons = drumRibbons.Length + bassRibbons.Length + harmonyRibbons.Length + melodyRibbons.Length;
 	
 		if (Ribbons.Length > LimitRibbonAmount * RibbonMoveTimes){
@@ -119,6 +129,23 @@ public class RibbonGameManager : MonoBehaviour {
 	}
     */
 	public void MoveRibbons(){
+		
+		//This first method of moving ribbons works
+		foreach (GameObject ribbonParent in ribbonObjects) {
+
+
+			//using the sound prefab, because the other objects in the ribbon seem to have weird positions
+			Vector3 direction = ribbonParent.GetComponentInChildren<DrawRibbonSound>().transform.position - Camera.main.transform.position;
+			//adding an offset to compensate for the position of the transform (not sure why it is offset to begin with)
+			//direction.y += 1f;
+
+			direction.Normalize ();
+
+			Vector3 endingPosition = ribbonParent.transform.position + (direction * 1.5f);
+
+			ribbonParent.transform.DOMove(endingPosition, 15f);
+
+		}
 
 		foreach (GameObject ribbon in Ribbons) {
 
