@@ -22,15 +22,13 @@ public class RibbonGameManager : MonoBehaviour {
 	public int harmonyRibbonsDrawn;
 	public int melodyRibbonsDrawn;
 
-	public int drumRibbonMoveTimes;
-	public int bassRibbonMoveTimes;
-	public int harmonyRibbonMoveTimes;
-	public int melodyRibbonMoveTimes;
+	public int RibbonMoveTimes;
 
 	[SerializeField] GameObject[] drumRibbons;
 	[SerializeField] GameObject[] bassRibbons;
 	[SerializeField] GameObject[] melodyRibbons;
 	[SerializeField] GameObject[] harmonyRibbons;
+	[SerializeField] GameObject[] Ribbons;
 	 
 
     public int totalRibbons;
@@ -73,10 +71,6 @@ public class RibbonGameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		drumRibbonMoveTimes = 0;
-		bassRibbonMoveTimes = 0;
-		melodyRibbonMoveTimes = 0;
-		harmonyRibbonMoveTimes = 0;
 		
 	}
 	
@@ -96,18 +90,15 @@ public class RibbonGameManager : MonoBehaviour {
 			
         harmonyRibbons = GameObject.FindGameObjectsWithTag("HarmonyStem");
         melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
-
-		drumRibbonsDrawn = drumRibbons.Length;
-		bassRibbonsDrawn = bassRibbons.Length;
-		harmonyRibbonsDrawn = harmonyRibbons.Length;
-		melodyRibbonsDrawn = melodyRibbons.Length;
+		Ribbons = GameObject.FindGameObjectsWithTag("SplinePrefab");
 
         totalRibbons = drumRibbons.Length + bassRibbons.Length + harmonyRibbons.Length + melodyRibbons.Length;
 	
-//if (drumRibbonsDrawn > 1 *(drumRibbonMoveTimes+1)){
-//	MoveDrumRibbon ();
-//	drumRibbonMoveTimes++;
-//}
+		if (Ribbons.Length > LimitRibbonAmount * RibbonMoveTimes){
+			Debug.Log (LimitRibbonAmount * RibbonMoveTimes);
+			MoveRibbons ();
+			RibbonMoveTimes++;
+		}
 
 		
 	}
@@ -127,14 +118,29 @@ public class RibbonGameManager : MonoBehaviour {
 
 	}
     */
-	public void MoveDrumRibbon(){
+	public void MoveRibbons(){
 
-		foreach(GameObject drumribbon in drumRibbons) {
+		foreach (GameObject ribbon in Ribbons) {
 
-			Debug.Log(drumribbon.transform.parent.position);
+			int childnum = ribbon.transform.childCount;
+//
+//			GameObject[] ribbonchildren= new GameObject[100];
+//
+//			if (childnum > 0) {
+//
+//				for (int i = 0; i <= childnum; i++) {
+//
+//					ribbonchildren[i] = ribbon.transform.GetChild(0).gameObject;
+//					Debug.Log (ribbonchildren[i].gameObject.name);
+//				}
+//			}
+//
+
 			
-			Vector3 currentPosition = new Vector3 (0, 0, 0);
+			}
+				
 
+		
 //	if (drumribbon.transform.position.z > 0f) {
 //		currentPosition = new Vector3 (drumribbon.transform.parent.position.x, drumribbon.transform.parent.position.y, drumribbon.transform.parent.position.z + 50f);
 
@@ -142,43 +148,9 @@ public class RibbonGameManager : MonoBehaviour {
 //		currentPosition = new Vector3 (drumribbon.transform.parent.position.x, drumribbon.transform.parent.position.y, drumribbon.transform.parent.position.z - 50f);
 //	}
 
-			drumribbon.transform.parent.position = currentPosition;
-
-		}
 	}
 
-	public void MoveBassRibbon(){
-		foreach (GameObject bassribbon in bassRibbons) {
-			if ( bassribbon.transform.position.z > 0f) {
-				bassribbon.transform.position =  bassribbon.transform.position + new Vector3 (0, 0, 1f);
-			} else if (bassribbon.transform.position.z <= 0f) {
-				bassribbon.transform.position = bassribbon.transform.position + new Vector3 (0, 0, -1f);
-			}
-		}
-		
-	}
 
-	public void MoveMelodyRibbon(){
-		foreach (GameObject melodyribbon in melodyRibbons) {
-			if ( melodyribbon.transform.position.z > 0f) {
-				melodyribbon.transform.position = melodyribbon.transform.position + new Vector3 (0, 0, 1f);
-			} else if (melodyribbon.transform.position.z <= 0f) {
-				melodyribbon.transform.position = melodyribbon.transform.position + new Vector3 (0, 0, -1f);
-			}
-		}
-
-	}
-
-	public void MoveHarmonyRibbon(){
-		foreach (GameObject harmonyribbon in harmonyRibbons) {
-			if ( harmonyribbon.transform.position.z > 0f) {
-				harmonyribbon.transform.position = harmonyribbon.transform.position + new Vector3 (0, 0, 1f);
-			} else if (harmonyribbon.transform.position.z <= 0f) {
-				harmonyribbon.transform.position = harmonyribbon.transform.position + new Vector3 (0, 0, -1f);
-			}
-		}
-
-	}
 
 
 
