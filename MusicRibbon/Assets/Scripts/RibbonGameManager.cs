@@ -48,6 +48,10 @@ public class RibbonGameManager : MonoBehaviour {
 
     public static RibbonGameManager instance = null;
 
+	public bool AutoKillRibbons;
+	public float AutoKillLifetime;
+	public float AutoKillFadeOutTime;
+
     private void Awake() {
 
 		drumClips = Resources.LoadAll <AudioClip>("Audio/Drums");
@@ -83,7 +87,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 		foreach (GameObject go in drumRibbons) {
 
-			go.GetComponent<AudioSource> ().volume = (float)1f / drumRibbons.Length;
+			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / drumRibbons.Length);
 
 		}
         
@@ -92,21 +96,21 @@ public class RibbonGameManager : MonoBehaviour {
 
 		foreach (GameObject go in bassRibbons) {
 
-			go.GetComponent<AudioSource> ().volume = (float)1f / bassRibbons.Length;
+			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / bassRibbons.Length);
 
 		}
 			
         harmonyRibbons = GameObject.FindGameObjectsWithTag("HarmonyStem");
 		foreach (GameObject go in harmonyRibbons) {
 
-			go.GetComponent<AudioSource> ().volume = (float)1f / harmonyRibbons.Length;
-
+			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / harmonyRibbons.Length);
+		
 		}
 
         melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
-		foreach (GameObject go in bassRibbons) {
+		foreach (GameObject go in melodyRibbons) {
 
-			go.GetComponent<AudioSource> ().volume = (float)1f / melodyRibbons.Length;
+			go.GetComponent<AudioSource> ().volume = 0.7f * ((float)1f / melodyRibbons.Length);
 
 		}
 
@@ -123,7 +127,7 @@ public class RibbonGameManager : MonoBehaviour {
         totalRibbons = drumRibbons.Length + bassRibbons.Length + harmonyRibbons.Length + melodyRibbons.Length;
 	
 		if (Ribbons.Length > LimitRibbonAmount * RibbonMoveTimes){
-			Debug.Log (LimitRibbonAmount * RibbonMoveTimes);
+			//Debug.Log (LimitRibbonAmount * RibbonMoveTimes);
 			MoveRibbons ();
 			RibbonMoveTimes++;
 		}

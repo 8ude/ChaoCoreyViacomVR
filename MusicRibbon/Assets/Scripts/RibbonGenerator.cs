@@ -30,6 +30,10 @@ public class RibbonGenerator : MonoBehaviour {
 
     public GameObject SwitchStems;
 
+	float lifeTime;
+	float fadeoutTime;
+	
+
 	//float endWidth = 0.1f;
 	//float endHeight = 0.5f;
 
@@ -40,6 +44,9 @@ public class RibbonGenerator : MonoBehaviour {
 
 	// Use this for initialization
 	IEnumerator Start () {
+		lifeTime = 0f;
+
+		fadeoutTime = RibbonGameManager.instance.AutoKillFadeOutTime;
 
         SwitchStems = GameObject.Find("SwitchStems");
 
@@ -55,6 +62,8 @@ public class RibbonGenerator : MonoBehaviour {
 			yield return null;
 		}
 
+		drawRibbonSound = GetComponentInChildren<DrawRibbonSound> ();
+
 		//Set Spline Controller Values Here
 		//...except they don't work
 		//ribbonController = drawRibbonSound.gameObject.GetComponent<SplineController> ();
@@ -68,6 +77,16 @@ public class RibbonGenerator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		lifeTime += Time.deltaTime;
+
+		if (lifeTime > RibbonGameManager.instance.AutoKillLifetime  && RibbonGameManager.instance.AutoKillRibbons) {
+
+			drawRibbonSound.mySource.DOFade (0f, fadeoutTime);
+			FadeOutRibbon (fadeoutTime);
+			Destroy (gameObject, fadeoutTime);
+
+		}
 
 		if (ribbonRenderer) {
 			
