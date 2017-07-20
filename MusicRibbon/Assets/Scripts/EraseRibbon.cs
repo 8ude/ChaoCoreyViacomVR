@@ -170,7 +170,7 @@ public class EraseRibbon : MonoBehaviour {
 
 				GameObject eraserCube = Instantiate (EraserCubePrefab, splinePoints [0], Quaternion.identity);
 				eraserCube.GetComponent<EraseRibbonAnim> ().EraseRibbon (splinePoints, 1.0f);
-			
+				other.transform.parent.parent.GetComponent<RibbonGenerator> ().FadeOutRibbon (1f);
 				Destroy (other.transform.parent.parent.gameObject, 1.0f);
 
 

@@ -27,7 +27,10 @@ public class EraseRibbonAnim : MonoBehaviour {
 				
 		}
 
-		float timePerSegment = (vertices.Length - 1) / timeToErase;
+		float timePerSegment =  timeToErase / ((float) vertices.Length - 1f);
+
+		Debug.Log (vertices.Length - 1);
+		Debug.Log ("segment time " + timePerSegment);
 
 		for (int i = 1; i < vertices.Length; i++) {
 			if (i < vertices.Length - 1) {
