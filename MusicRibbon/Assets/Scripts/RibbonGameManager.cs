@@ -141,7 +141,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 			direction.Normalize ();
 
-			Vector3 endingPosition = ribbonParent.transform.position + (direction * 1.5f);
+			Vector3 endingPosition = ribbonParent.transform.position + (direction * 0.5f);
 
 			ribbonParent.transform.DOMove(endingPosition, 15f);
 
