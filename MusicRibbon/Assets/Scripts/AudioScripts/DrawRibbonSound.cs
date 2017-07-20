@@ -5,7 +5,7 @@ using Beat;
 
 public class DrawRibbonSound : MonoBehaviour {
 
-	AudioSource mySource;
+	public AudioSource mySource;
 
 	public string instrumentType;
 
@@ -90,7 +90,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	public void StartDrawingRibbon(AudioClip origClip) {
 
-		Debug.Log (origClip.name);
+		//Debug.Log (origClip.name);
 		mySource = gameObject.GetComponent<AudioSource> ();
 
 

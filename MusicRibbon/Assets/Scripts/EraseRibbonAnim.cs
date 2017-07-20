@@ -29,8 +29,8 @@ public class EraseRibbonAnim : MonoBehaviour {
 
 		float timePerSegment =  timeToErase / ((float) vertices.Length - 1f);
 
-		Debug.Log (vertices.Length - 1);
-		Debug.Log ("segment time " + timePerSegment);
+		//Debug.Log (vertices.Length - 1);
+		//Debug.Log ("segment time " + timePerSegment);
 
 		for (int i = 1; i < vertices.Length; i++) {
 			if (i < vertices.Length - 1) {
@@ -44,6 +44,9 @@ public class EraseRibbonAnim : MonoBehaviour {
 	}
 
 	void DestroySelf() {
-		Destroy (gameObject);
+		Color currentColor = gameObject.GetComponent<Renderer> ().material.GetColor ("_TintColor");
+		currentColor.a = 0.0f;
+		gameObject.GetComponent<Renderer> ().material.DOVector (currentColor, "_TintColor", 1.0f);
+		Destroy (gameObject, 3f);
 	}
 }

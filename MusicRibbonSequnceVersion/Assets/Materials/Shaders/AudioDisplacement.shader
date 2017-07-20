@@ -147,7 +147,7 @@ Shader "Custom/AudioDisplacement" {
 			//o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 
-			//float2 bullshit = IN.screenPos.xy / IN.screenPos.w;
+
 			//o.Metallic = _Metallic * bullshit.x ;
 
 			o.Metallic = _AudioInput;

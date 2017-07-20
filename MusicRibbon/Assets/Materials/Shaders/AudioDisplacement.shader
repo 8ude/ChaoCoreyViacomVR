@@ -42,6 +42,7 @@ Shader "Custom/AudioDisplacement" {
 		float _MaxAudioDistance;
 		float _InputAlpha;
 
+
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
@@ -154,8 +155,9 @@ Shader "Custom/AudioDisplacement" {
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+			//fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * _Color;
+	
 			//o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;

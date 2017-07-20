@@ -80,6 +80,12 @@ public class RibbonGameManager : MonoBehaviour {
 	void Update () {
 
 		drumRibbons = GameObject.FindGameObjectsWithTag ("DrumStem");
+
+		foreach (GameObject go in drumRibbons) {
+
+			go.GetComponent<AudioSource> ().volume = (float)1f / drumRibbons.Length;
+
+		}
         
 		//worst volume problems are coming from the bass
 		bassRibbons = GameObject.FindGameObjectsWithTag("BassStem");
@@ -91,7 +97,19 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 			
         harmonyRibbons = GameObject.FindGameObjectsWithTag("HarmonyStem");
+		foreach (GameObject go in harmonyRibbons) {
+
+			go.GetComponent<AudioSource> ().volume = (float)1f / harmonyRibbons.Length;
+
+		}
+
         melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
+		foreach (GameObject go in bassRibbons) {
+
+			go.GetComponent<AudioSource> ().volume = (float)1f / melodyRibbons.Length;
+
+		}
+
 		Ribbons = GameObject.FindGameObjectsWithTag("SplinePrefab");
 
 		ribbonObjects = GameObject.FindGameObjectsWithTag ("MarkerParent");

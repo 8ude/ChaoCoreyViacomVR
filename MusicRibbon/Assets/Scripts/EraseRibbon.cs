@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK.Examples;
+using DG.Tweening;
 
 public class EraseRibbon : MonoBehaviour {
 
@@ -163,14 +164,15 @@ public class EraseRibbon : MonoBehaviour {
 
 			if (other.transform.parent.parent.name == "MarkerParent(Clone)") {
 
-
+				GameObject otherParent = other.transform.parent.parent.gameObject;
 				//Want to add juice by having an "eraser" particle follow the ribbon...
 				//the sound follower object already has a reference to the points
-				Vector3[] splinePoints = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound> ().splinePoints;
+				Vector3[] splinePoints = otherParent.GetComponentInChildren<DrawRibbonSound> ().splinePoints;
 
 				GameObject eraserCube = Instantiate (EraserCubePrefab, splinePoints [0], Quaternion.identity);
 				eraserCube.GetComponent<EraseRibbonAnim> ().EraseRibbon (splinePoints, 1.0f);
-				other.transform.parent.parent.GetComponent<RibbonGenerator> ().FadeOutRibbon (1f);
+				otherParent.GetComponent<RibbonGenerator> ().FadeOutRibbon (0.5f);
+				otherParent.GetComponentInChildren<DrawRibbonSound> ().mySource.DOFade (0f, 0.6f);
 				Destroy (other.transform.parent.parent.gameObject, 1.0f);
 
 
