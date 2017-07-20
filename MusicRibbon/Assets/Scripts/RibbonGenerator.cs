@@ -125,11 +125,19 @@ public class RibbonGenerator : MonoBehaviour {
 		ribbonRenderer.material.color = myColor;
 		DOTween.To (() => transparency, x => transparency = x, 1, 1);
 
+        MarkerObjectBehavior[] markerObjects = GetComponentsInChildren<MarkerObjectBehavior>();
+        foreach(MarkerObjectBehavior markerBehavior in markerObjects) {
+
+            markerBehavior.gameObject.GetComponent<MeshRenderer>().enabled = false;
+
+        }
+
 	}
 
 	public void DestroySelf(float time) {
 		DOTween.To (() => transparency, x => transparency = x, 0, time);
 	}
+
 
 
 
