@@ -28,7 +28,7 @@ public class RibbonGenerator : MonoBehaviour {
 	public musicStem myStem;
 	public int stemIntValue;
 
-    public GameObject SwitchStems;
+    public GameObject switchStems;
 
 	float lifeTime;
 	float fadeoutTime;
@@ -37,7 +37,7 @@ public class RibbonGenerator : MonoBehaviour {
 	//float endWidth = 0.1f;
 	//float endHeight = 0.5f;
 
-	Color myColor = new Color(1,1,1);
+	public Color myColor = new Color(1,1,1);
 
 	float transparency = 0f;
 
@@ -48,7 +48,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 		fadeoutTime = RibbonGameManager.instance.AutoKillFadeOutTime;
 
-        SwitchStems = GameObject.Find("SwitchStems");
+        //switchStems = GameObject.Find("SwitchStems");
 
 		myStem = (musicStem)stemIntValue;
 
@@ -128,16 +128,16 @@ public class RibbonGenerator : MonoBehaviour {
 
 		switch (myStem) {
 		case musicStem.Bass:
-            myColor = SwitchStems.GetComponent<SwitchStems>().bassColor;
+            myColor = switchStems.GetComponent<SwitchStems>().bassColor;
 			break;
 		case musicStem.Drum:
-			myColor = SwitchStems.GetComponent<SwitchStems>().drumColor;
+			myColor = switchStems.GetComponent<SwitchStems>().drumColor;
 			break;
 		case musicStem.Melody:
-			myColor = SwitchStems.GetComponent<SwitchStems>().melodyColor;
+			myColor = switchStems.GetComponent<SwitchStems>().melodyColor;
 			break;
 		case musicStem.Harmony:
-			myColor = SwitchStems.GetComponent<SwitchStems>().harmonyColor;
+			myColor = switchStems.GetComponent<SwitchStems>().harmonyColor;
 			break;
 		}
 
