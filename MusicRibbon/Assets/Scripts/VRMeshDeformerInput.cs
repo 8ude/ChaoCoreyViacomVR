@@ -50,12 +50,13 @@ public class VRMeshDeformerInput : MonoBehaviour {
 			//Check for audio filter controllers on self
 
 			float distanceToPoint = Vector3.Distance (transform.position, hit.point);
-
+			/*
 			if (GetComponent<LowPassController> ()) {
 				GetComponent<LowPassController> ().AdjustFrequency (target, distanceToPoint);
 			} else if (GetComponent<HighPassController> ()) {
 				//GetComponent<HighPassController> ().AdjustFrequency (target, distanceToPoint);
 			}
+			*/
 
 
 
@@ -77,6 +78,7 @@ public class VRMeshDeformerInput : MonoBehaviour {
 			}
 		} else {
 
+			/*
 			if (target.gameObject.GetComponent<RibbonFilters> ()) {
 				if (GetComponent<LowPassController> ()) {
 					//Debug.Log ("Resetting LP");
@@ -84,7 +86,8 @@ public class VRMeshDeformerInput : MonoBehaviour {
 				} else if (GetComponent<HighPassController>()) {
 					//target.gameObject.GetComponent<RibbonFilters> ().ResetHPFrequency ();
 				}
-			} 
+			}
+			*/
 
 		}
 	}
