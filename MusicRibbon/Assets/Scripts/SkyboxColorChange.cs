@@ -172,7 +172,7 @@ public class SkyboxColorChange : MonoBehaviour {
 
 			Color.RGBToHSV (newColor, out hue, out saturation, out value);
 
-			value = 0.6f + ListenerSpectrum.GetBandBufferEnergy () * 0.2f;
+			value = 0.6f + (ListenerSpectrum.GetBandBufferEnergy () * 0.2f);
 
 			newColor = Color.HSVToRGB (hue, saturation, value);
 
