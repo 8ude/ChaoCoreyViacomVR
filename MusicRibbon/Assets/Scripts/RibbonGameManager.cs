@@ -25,11 +25,11 @@ public class RibbonGameManager : MonoBehaviour {
 
 	public int RibbonMoveTimes;
 
-	[SerializeField] GameObject[] drumRibbons;
-	[SerializeField] GameObject[] bassRibbons;
-	[SerializeField] GameObject[] melodyRibbons;
-	[SerializeField] GameObject[] harmonyRibbons;
-	[SerializeField] GameObject[] Ribbons;
+	public GameObject[] drumRibbons;
+	public GameObject[] bassRibbons;
+    public GameObject[] melodyRibbons;
+    public GameObject[] harmonyRibbons;
+    public GameObject[] Ribbons;
 	 
 
     public int totalRibbons;
@@ -39,9 +39,9 @@ public class RibbonGameManager : MonoBehaviour {
 	public float endingWidth;
 	public float endingHeight;
 
-	//public List<GameObject> RibbonObjects;
-	//public int maxRibbons = 4;
-
+    //public List<GameObject> RibbonObjects;
+    //public int maxRibbons = 4;
+    public float RibbonMoveDistance;
 	public float LimitRibbonAmount;
 
     //public Material ribbonOffMaterial;
@@ -163,7 +163,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 			direction.Normalize ();
 
-			Vector3 endingPosition = ribbonParent.transform.position + (direction * 0.5f);
+			Vector3 endingPosition = ribbonParent.transform.position + (direction * RibbonMoveDistance);
 
 			ribbonParent.transform.DOMove(endingPosition, 15f);
 
