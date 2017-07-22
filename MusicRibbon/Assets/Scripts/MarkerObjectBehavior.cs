@@ -9,6 +9,11 @@ public class MarkerObjectBehavior : MonoBehaviour {
 	public Material MelodyRibbonMaterial;
 	public Material HarmonyRibbonMaterial;
 
+	public GameObject DrumMesh;
+	public GameObject BassMesh;
+	public GameObject MelodyMesh;
+	public GameObject HarmonyMesh;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -22,23 +27,27 @@ public class MarkerObjectBehavior : MonoBehaviour {
 	public void DrumMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = DrumRibbonMaterial;
+		this.gameObject.GetComponent<MeshFilter> ().mesh = DrumMesh.gameObject.GetComponent<MeshFilter> ().mesh;
 
 	}
 
 	public void BassMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = BassRibbonMaterial;
+		this.gameObject.GetComponent<MeshFilter> ().mesh = BassMesh.gameObject.GetComponent<MeshFilter> ().mesh;
 	}
 
 	public void MelodyMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = MelodyRibbonMaterial;
+		this.gameObject.GetComponent<MeshFilter> ().mesh = MelodyMesh.gameObject.GetComponent<MeshFilter> ().mesh;
 	
 	}
 
 	public void HarmonyMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = HarmonyRibbonMaterial;
+		this.gameObject.GetComponent<MeshFilter> ().mesh = HarmonyMesh.gameObject.GetComponent<MeshFilter> ().mesh;
 	
 	}
 
