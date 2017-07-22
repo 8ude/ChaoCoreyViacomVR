@@ -92,7 +92,7 @@ public class SkyboxColorChange : MonoBehaviour {
 		}
 
 		if (newR != 0f) {
-			Debug.Log ("new R " + newR);
+			//Debug.Log ("new R " + newR);
 			Color newColor = new Color (newR, newG, newB);
 
 
