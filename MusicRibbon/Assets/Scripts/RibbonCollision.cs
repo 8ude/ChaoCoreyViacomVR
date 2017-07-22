@@ -35,7 +35,7 @@ public class RibbonCollision : MonoBehaviour {
                 ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
                 var main = ps.main;
 
-                main.startColor = other.gameObject.GetComponent<Renderer>().material.color;
+                main.startColor = new ParticleSystem.MinMaxGradient( other.gameObject.GetComponent<Renderer>().material.color, Color.white);
 
                 Destroy(newParticles, 3.0f);
 
