@@ -27,27 +27,27 @@ public class MarkerObjectBehavior : MonoBehaviour {
 	public void DrumMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = DrumRibbonMaterial;
-		this.gameObject.GetComponent<MeshFilter> ().mesh = DrumMesh.gameObject.GetComponent<MeshFilter> ().mesh;
+		this.gameObject.GetComponent<MeshFilter> ().mesh = DrumMesh.gameObject.GetComponent<MeshFilter> ().sharedMesh;
 
 	}
 
 	public void BassMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = BassRibbonMaterial;
-		this.gameObject.GetComponent<MeshFilter> ().mesh = BassMesh.gameObject.GetComponent<MeshFilter> ().mesh;
+		this.gameObject.GetComponent<MeshFilter> ().mesh = BassMesh.gameObject.GetComponent<MeshFilter> ().sharedMesh;
 	}
 
 	public void MelodyMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = MelodyRibbonMaterial;
-		this.gameObject.GetComponent<MeshFilter> ().mesh = MelodyMesh.gameObject.GetComponent<MeshFilter> ().mesh;
+		this.gameObject.GetComponent<MeshFilter> ().mesh = MelodyMesh.gameObject.GetComponent<MeshFilter> ().sharedMesh;
 	
 	}
 
 	public void HarmonyMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = HarmonyRibbonMaterial;
-		this.gameObject.GetComponent<MeshFilter> ().mesh = HarmonyMesh.gameObject.GetComponent<MeshFilter> ().mesh;
+		this.gameObject.GetComponent<MeshFilter> ().mesh = HarmonyMesh.gameObject.GetComponent<MeshFilter> ().sharedMesh;
 	
 	}
 
