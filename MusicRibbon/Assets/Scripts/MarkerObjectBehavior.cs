@@ -35,12 +35,14 @@ public class MarkerObjectBehavior : MonoBehaviour {
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = BassRibbonMaterial;
 		this.gameObject.GetComponent<MeshFilter> ().mesh = BassMesh.gameObject.GetComponent<MeshFilter> ().sharedMesh;
+		this.gameObject.transform.Rotate (-90f, 0f, 0f);
 	}
 
 	public void MelodyMarkerObject(){
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = MelodyRibbonMaterial;
 		this.gameObject.GetComponent<MeshFilter> ().mesh = MelodyMesh.gameObject.GetComponent<MeshFilter> ().sharedMesh;
+		this.gameObject.transform.Rotate (-90f, 0f, 0f);
 	
 	}
 
@@ -48,6 +50,7 @@ public class MarkerObjectBehavior : MonoBehaviour {
 		
 		this.gameObject.GetComponent<MeshRenderer> ().material = HarmonyRibbonMaterial;
 		this.gameObject.GetComponent<MeshFilter> ().mesh = HarmonyMesh.gameObject.GetComponent<MeshFilter> ().sharedMesh;
+		this.gameObject.transform.Rotate (-90f, 0f, 0f);
 	
 	}
 
