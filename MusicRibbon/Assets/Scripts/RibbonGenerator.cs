@@ -30,8 +30,10 @@ public class RibbonGenerator : MonoBehaviour {
 
     public GameObject switchStems;
 
-	float lifeTime;
+	public float lifeTime;
 	float fadeoutTime;
+
+	public float ribbonLength;
 	
 
 	//float endWidth = 0.1f;
@@ -39,14 +41,14 @@ public class RibbonGenerator : MonoBehaviour {
 
 	public Color myColor = new Color(1,1,1);
 
-	float transparency = 0f;
+	public float transparency = 0f;
 
 
 	// Use this for initialization
 	IEnumerator Start () {
 		lifeTime = 0f;
 
-		fadeoutTime = RibbonGameManager.instance.AutoKillFadeOutTime;
+		fadeoutTime = RibbonGameManager.instance.autoKillFadeOutTime;
 
         //switchStems = GameObject.Find("SwitchStems");
 
@@ -80,9 +82,8 @@ public class RibbonGenerator : MonoBehaviour {
 
 		lifeTime += Time.deltaTime;
 
-		if (lifeTime > RibbonGameManager.instance.AutoKillLifetime  && RibbonGameManager.instance.AutoKillRibbons) {
+		if (lifeTime > RibbonGameManager.instance.autoKillLifetime  && RibbonGameManager.instance.autoKillRibbons) {
 
-			drawRibbonSound.mySource.DOFade (0f, fadeoutTime);
 			FadeOutRibbon (fadeoutTime);
 			Destroy (gameObject, fadeoutTime);
 
@@ -155,6 +156,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 	public void FadeOutRibbon(float time) {
 		DOTween.To (() => transparency, x => transparency = x, 0, time);
+		drawRibbonSound.mySource.DOFade (0f, fadeoutTime);
 	}
 
 

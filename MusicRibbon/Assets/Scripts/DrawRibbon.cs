@@ -151,10 +151,12 @@ public class DrawRibbon: MonoBehaviour {
 				//turn the List into an array, to be fed to the spline generator
 				Vector3[] newPoints = new Vector3[markerChain.Count];
 				int i = 0;
+				ribbonGenerator.ribbonLength = 0;
 				foreach (GameObject go in markerChain) {
 
 					newPoints [i] = go.transform.position;
 					i++;
+					ribbonGenerator.ribbonLength += 1f;
 					go.transform.SetParent (spline.transform);
 
 

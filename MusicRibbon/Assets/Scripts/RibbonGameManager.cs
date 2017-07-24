@@ -23,7 +23,7 @@ public class RibbonGameManager : MonoBehaviour {
 	public int harmonyRibbonsDrawn;
 	public int melodyRibbonsDrawn;
 
-	public int RibbonMoveTimes;
+	public int ribbonMoveTimes;
 
 	public GameObject[] drumRibbons;
 	public GameObject[] bassRibbons;
@@ -41,16 +41,16 @@ public class RibbonGameManager : MonoBehaviour {
 
     //public List<GameObject> RibbonObjects;
     //public int maxRibbons = 4;
-    public float RibbonMoveDistance;
-	public float LimitRibbonAmount;
+    public float ribbonMoveDistance;
+	public float limitRibbonAmount;
 
     //public Material ribbonOffMaterial;
 
     public static RibbonGameManager instance = null;
 
-	public bool AutoKillRibbons;
-	public float AutoKillLifetime;
-	public float AutoKillFadeOutTime;
+	public bool autoKillRibbons;
+	public float autoKillLifetime;
+	public float autoKillFadeOutTime;
 
     private void Awake() {
 
@@ -110,7 +110,7 @@ public class RibbonGameManager : MonoBehaviour {
         melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
 		foreach (GameObject go in melodyRibbons) {
 
-			go.GetComponent<AudioSource> ().volume = 0.7f * ((float)1f / melodyRibbons.Length);
+			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / melodyRibbons.Length);
 
 		}
 
@@ -125,13 +125,16 @@ public class RibbonGameManager : MonoBehaviour {
 		*/
 
         totalRibbons = drumRibbons.Length + bassRibbons.Length + harmonyRibbons.Length + melodyRibbons.Length;
-	
-		if (Ribbons.Length > LimitRibbonAmount * RibbonMoveTimes){
+
+
+
+		if (Ribbons.Length > limitRibbonAmount * ribbonMoveTimes){
 			//Debug.Log (LimitRibbonAmount * RibbonMoveTimes);
 			MoveRibbons ();
-			RibbonMoveTimes++;
+			ribbonMoveTimes++;
 		}
 
+		MoveSmallRibbons ();
 		
 	}
 
@@ -151,7 +154,9 @@ public class RibbonGameManager : MonoBehaviour {
 	}
     */
 	public void MoveRibbons(){
-		
+
+
+
 		//This first method of moving ribbons works
 		foreach (GameObject ribbonParent in ribbonObjects) {
 
@@ -162,40 +167,44 @@ public class RibbonGameManager : MonoBehaviour {
 			//direction.y += 1f;
 
 			direction.Normalize ();
+			float clampedRibbonLength = Mathf.Clamp (ribbonParent.GetComponent<RibbonGenerator> ().ribbonLength, 0f, 20f);
 
-			Vector3 endingPosition = ribbonParent.transform.position + (direction * RibbonMoveDistance);
+			float ribbonMoveAmount = ribbonMoveDistance * RemapRange (clampedRibbonLength, 0f, 20f, 2f, 0.1f);
+			Vector3 endingPosition = ribbonParent.transform.position + (direction * ribbonMoveAmount);
 
 			ribbonParent.transform.DOMove(endingPosition, 15f);
 
 		}
-
-		foreach (GameObject ribbon in Ribbons) {
-
-			int childnum = ribbon.transform.childCount;
-//
-//			GameObject[] ribbonchildren= new GameObject[100];
-//
-//			if (childnum > 0) {
-//
-//				for (int i = 0; i <= childnum; i++) {
-//
-//					ribbonchildren[i] = ribbon.transform.GetChild(0).gameObject;
-//					Debug.Log (ribbonchildren[i].gameObject.name);
-//				}
-//			}
-//
-
 			
+
+	}
+
+	void MoveSmallRibbons() {
+
+		foreach (GameObject ribbonParent in ribbonObjects) {
+
+			if (ribbonParent.GetComponent<RibbonGenerator> ().ribbonLength < 3.0f) {
+
+				//using the sound prefab, because the other objects in the ribbon seem to have weird positions
+				Vector3 direction = ribbonParent.GetComponentInChildren<DrawRibbonSound>().transform.position - Camera.main.transform.position;
+				//adding an offset to compensate for the position of the transform (not sure why it is offset to begin with)
+				//direction.y += 1f;
+
+				direction.Normalize ();
+				float clampedRibbonLength = Mathf.Clamp (ribbonParent.GetComponent<RibbonGenerator> ().ribbonLength, 0f, 20f);
+
+				float ribbonMoveAmount = ribbonMoveDistance * RemapRange (clampedRibbonLength, 0f, 20f, 2f, 0.1f);
+	
+
+				//ribbonParent.GetComponent<RibbonGenerator> ().FadeOutRibbon (30f);
+				ribbonParent.transform.Translate(direction * Time.deltaTime * 0.1f);
+				if (ribbonParent.GetComponent<RibbonGenerator> ().lifeTime >= 1.0) {
+					ribbonParent.GetComponent<RibbonGenerator> ().FadeOutRibbon (15f);
+				}
+
 			}
-				
 
-		
-//	if (drumribbon.transform.position.z > 0f) {
-//		currentPosition = new Vector3 (drumribbon.transform.parent.position.x, drumribbon.transform.parent.position.y, drumribbon.transform.parent.position.z + 50f);
-
-//	} else if (drumribbon.transform.position.z <= 0f) {
-//		currentPosition = new Vector3 (drumribbon.transform.parent.position.x, drumribbon.transform.parent.position.y, drumribbon.transform.parent.position.z - 50f);
-//	}
+		}
 
 	}
 
