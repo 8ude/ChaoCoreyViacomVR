@@ -18,12 +18,14 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip[] harmonyClips;
 	public AudioClip[] melodyClips;
 
-	public int drumRibbonsDrawn;
-	public int bassRibbonsDrawn;
-	public int harmonyRibbonsDrawn;
-	public int melodyRibbonsDrawn;
+
+
+	[HideInInspector]
+	public int drumRibbonsDrawn, bassRibbonsDrawn, harmonyRibbonsDrawn, melodyRibbonsDrawn;
 
 	public int ribbonMoveTimes;
+
+	[Space(20)]
 
 	public GameObject[] drumRibbons;
 	public GameObject[] bassRibbons;
@@ -35,6 +37,8 @@ public class RibbonGameManager : MonoBehaviour {
     public int totalRibbons;
 
 	public GameObject[] ribbonObjects;
+
+	[Space(20)]
 
 	public float endingWidth;
 	public float endingHeight;
@@ -51,6 +55,8 @@ public class RibbonGameManager : MonoBehaviour {
 	public bool autoKillRibbons;
 	public float autoKillLifetime;
 	public float autoKillFadeOutTime;
+
+	public float maxDistanceBeforeFade;
 
     private void Awake() {
 
@@ -88,6 +94,10 @@ public class RibbonGameManager : MonoBehaviour {
 		foreach (GameObject go in drumRibbons) {
 
 			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / drumRibbons.Length);
+
+			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
+				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (20f);
+			}
 
 		}
         
@@ -167,12 +177,17 @@ public class RibbonGameManager : MonoBehaviour {
 			//direction.y += 1f;
 
 			direction.Normalize ();
+			//direction.y *= Mathf.Sin (Time.time);
 			float clampedRibbonLength = Mathf.Clamp (ribbonParent.GetComponent<RibbonGenerator> ().ribbonLength, 0f, 20f);
 
 			float ribbonMoveAmount = ribbonMoveDistance * RemapRange (clampedRibbonLength, 0f, 20f, 2f, 0.1f);
 			Vector3 endingPosition = ribbonParent.transform.position + (direction * ribbonMoveAmount);
 
-			ribbonParent.transform.DOMove(endingPosition, 15f);
+			StartCoroutine(MoveAlongSineCurve(ribbonParent, direction, 15f));
+
+			//ribbonParent.transform.Translate(direction * Time.deltaTime);
+
+			//ribbonParent.transform.DOMove(endingPosition, 15f);
 
 		}
 			
@@ -191,6 +206,7 @@ public class RibbonGameManager : MonoBehaviour {
 				//direction.y += 1f;
 
 				direction.Normalize ();
+				direction.y *= Mathf.Sin (Time.time);
 				float clampedRibbonLength = Mathf.Clamp (ribbonParent.GetComponent<RibbonGenerator> ().ribbonLength, 0f, 20f);
 
 				float ribbonMoveAmount = ribbonMoveDistance * RemapRange (clampedRibbonLength, 0f, 20f, 2f, 0.1f);
@@ -207,8 +223,23 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 
 	}
+		
+	IEnumerator MoveAlongSineCurve(GameObject go, Vector3 direction, float timeToComplete) {
+		float timeElapsed = 0;
 
+		while (timeElapsed < timeToComplete) {
 
+			Vector3 newDirection = direction;
+			newDirection.y *= Mathf.Cos (Time.time) * 0.4f;
+			 
+			go.transform.Translate (newDirection * (Mathf.Abs(0.5f * Mathf.Cos(Time.time)) + 0.5f) * (Time.deltaTime / 3f) 
+				* ((timeToComplete - timeElapsed)/timeToComplete));
+			timeElapsed += Time.deltaTime;
+			yield return null;
+
+		}
+
+	}
 
 
 

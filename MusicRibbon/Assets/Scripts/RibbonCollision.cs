@@ -11,8 +11,14 @@ public class RibbonCollision : MonoBehaviour {
     public GameObject particlePrefab;
     public Vector3 offset;
 
+	public float yOffset;
+
+	DrawRibbon drawRibbonScript;
+
 	// Use this for initialization
 	void Start () {
+
+		drawRibbonScript = transform.root.GetComponentInChildren<DrawRibbon> ();
 		
 	}
 	
@@ -25,12 +31,12 @@ public class RibbonCollision : MonoBehaviour {
 
         Debug.Log("collision occured");
 
-        if (other.transform.parent != null) {
+		if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
                 Debug.Log("wand-ribbon collision occured");
 
-                GameObject newParticles = Instantiate(particlePrefab, transform.position + offset, Quaternion.identity);
+				GameObject newParticles = Instantiate(particlePrefab, transform.position + (Vector3.up * yOffset) , Quaternion.identity);
 
                 ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
                 var main = ps.main;

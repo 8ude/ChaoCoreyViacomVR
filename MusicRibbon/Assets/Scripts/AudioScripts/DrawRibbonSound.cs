@@ -29,6 +29,9 @@ public class DrawRibbonSound : MonoBehaviour {
 	AudioLowPassFilter lpFilter;
 	AudioHighPassFilter hpFilter;
 
+	//need this for debugging Audio Sync issues
+	[SerializeField] double sourceStartTime;
+
 	void Start() {
 
 		lpFilter = GetComponent<AudioLowPassFilter> ();
@@ -152,7 +155,9 @@ public class DrawRibbonSound : MonoBehaviour {
 
 		mySource.clip = newClip;
 
-		mySource.PlayScheduled (Clock.Instance.AtNextMeasure());
+
+		sourceStartTime = Clock.Instance.AtNextMeasure ();
+		mySource.PlayScheduled (sourceStartTime);
 
 	}
 
