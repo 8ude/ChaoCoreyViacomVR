@@ -36,7 +36,7 @@ public class RibbonCollision : MonoBehaviour {
 
                 Debug.Log("wand-ribbon collision occured");
 
-				GameObject newParticles = Instantiate(particlePrefab, transform.position + (Vector3.up * yOffset) , Quaternion.identity);
+				GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset) , Quaternion.identity);
 
                 ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
                 var main = ps.main;
