@@ -119,7 +119,7 @@ public class RibbonGenerator : MonoBehaviour {
         } 
 
 		while (ribbonRenderer == null) {
-			Debug.Log ("I should be fucking yielding");
+			//Debug.Log ("I should be fucking yielding");
 			yield return null;
 		}
 
@@ -152,11 +152,15 @@ public class RibbonGenerator : MonoBehaviour {
 
         }
 
+		CurvySpline mySpline = GetComponentInChildren<CurvySpline> ();
+		Destroy (mySpline.gameObject);
+
 	}
 
 	public void FadeOutRibbon(float time) {
 		DOTween.To (() => transparency, x => transparency = x, 0, time);
 		drawRibbonSound.mySource.DOFade (0f, fadeoutTime);
+		Destroy (gameObject, time);
 	}
 
 

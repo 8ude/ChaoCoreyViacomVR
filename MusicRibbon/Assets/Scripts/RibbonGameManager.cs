@@ -96,7 +96,7 @@ public class RibbonGameManager : MonoBehaviour {
 			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / drumRibbons.Length);
 
 			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
-				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (20f);
+				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
 			}
 
 		}
@@ -107,6 +107,9 @@ public class RibbonGameManager : MonoBehaviour {
 		foreach (GameObject go in bassRibbons) {
 
 			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / bassRibbons.Length);
+			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
+				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
+			}
 
 		}
 			
@@ -114,6 +117,9 @@ public class RibbonGameManager : MonoBehaviour {
 		foreach (GameObject go in harmonyRibbons) {
 
 			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / harmonyRibbons.Length);
+			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
+				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
+			}
 		
 		}
 
@@ -121,6 +127,9 @@ public class RibbonGameManager : MonoBehaviour {
 		foreach (GameObject go in melodyRibbons) {
 
 			go.GetComponent<AudioSource> ().volume = 0.7f * Mathf.Sqrt((float)1f / melodyRibbons.Length);
+			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
+				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
+			}
 
 		}
 
@@ -227,7 +236,7 @@ public class RibbonGameManager : MonoBehaviour {
 	IEnumerator MoveAlongSineCurve(GameObject go, Vector3 direction, float timeToComplete) {
 		float timeElapsed = 0;
 
-		while (timeElapsed < timeToComplete) {
+		while (timeElapsed < timeToComplete && go != null) {
 
 			Vector3 newDirection = direction;
 			newDirection.y *= Mathf.Cos (Time.time) * 0.4f;
