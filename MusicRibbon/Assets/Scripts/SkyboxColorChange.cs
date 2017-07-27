@@ -102,7 +102,7 @@ public class SkyboxColorChange : MonoBehaviour {
 			SkyboxMaterial.SetColor ("_SkyColor1", Color.Lerp(prevColor, Colors[4], Time.deltaTime));
 		}
 
-		RenderSettings.fogColor = SkyboxMaterial.GetColor ("_SkyColor1");
+		//RenderSettings.fogColor = SkyboxMaterial.GetColor ("_SkyColor1");
 		/*
 
         if( drumRibbonsNum >0 &&
