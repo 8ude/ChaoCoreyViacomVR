@@ -45,6 +45,25 @@ public class RibbonCollision : MonoBehaviour {
                 
                 //set the audio clip in accordance with the collision audio in the game manager
                 AudioSource aSource = newParticles.GetComponent<AudioSource>();
+                RibbonGenerator collidedGenerator = other.transform.root.GetComponent<RibbonGenerator>();
+                RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
+                Debug.Log(drawRibbonScript.switchStems.currentInstrument);
+                switch (collidedStemType) {
+                    case RibbonGenerator.musicStem.Bass:
+                        aSource.clip = RibbonGameManager.instance.bassCollisionClips[clipIndex % RibbonGameManager.instance.bassCollisionClips.Length];
+                        break;
+                    case RibbonGenerator.musicStem.Drum:
+                        aSource.clip = RibbonGameManager.instance.drumCollisionClips[clipIndex % RibbonGameManager.instance.drumCollisionClips.Length];
+                        break;
+                    case RibbonGenerator.musicStem.Harmony:
+                        aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[clipIndex % RibbonGameManager.instance.harmonyCollisionClips.Length];
+                        break;
+                    case RibbonGenerator.musicStem.Melody:
+                        aSource.clip = RibbonGameManager.instance.melodyCollisionClips[clipIndex % RibbonGameManager.instance.melodyCollisionClips.Length];
+                        break;
+
+                }
+                aSource.Play();
 
                 ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
                 var main = ps.main;
@@ -52,7 +71,8 @@ public class RibbonCollision : MonoBehaviour {
                 //Particle color will be somewhere between white and the ribbon color
                 main.startColor = new ParticleSystem.MinMaxGradient( other.gameObject.GetComponent<Renderer>().material.color, Color.white);
 
-                Destroy(newParticles, 3.0f);
+                Destroy(newParticles, 2.0f);
+                clipIndex++;
 
             }
         }

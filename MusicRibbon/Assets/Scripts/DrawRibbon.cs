@@ -26,7 +26,7 @@ public class DrawRibbon: MonoBehaviour {
 	public GameObject ribbonSoundPrefab;
 
 	//reference to switch stems - use to change color of ribbons to match instruments
-	[SerializeField] SwitchStems switchStems;
+	public SwitchStems switchStems;
 
     
 	GameObject currentRibbonSound;
