@@ -13,6 +13,11 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip preHarmonyClip;
 	public AudioClip preMelodyClip;
 
+	public AudioClip[] drumCollisionClips;
+	public AudioClip[] bassCollisionClips;
+	public AudioClip[] harmonyCollisionClips;
+	public AudioClip[] melodyCollisionClips;
+
 	public AudioClip[] drumClips;
 	public AudioClip[] bassClips;
 	public AudioClip[] harmonyClips;
@@ -64,6 +69,12 @@ public class RibbonGameManager : MonoBehaviour {
 		bassClips = Resources.LoadAll <AudioClip>("Audio/Bass");
 		harmonyClips = Resources.LoadAll <AudioClip>("Audio/Harmony");
 		melodyClips = Resources.LoadAll <AudioClip>("Audio/Melody");
+
+		drumCollisionClips = Resources.LoadAll<AudioClip>("Audio/DrumCollision");
+		bassCollisionClips = Resources.LoadAll<AudioClip>("Audio/BassCollision");
+		harmonyCollisionClips = Resources.LoadAll<AudioClip>("Audio/HarmonyCollision");
+		melodyCollisionClips = Resources.LoadAll<AudioClip>("Audio/MelodyCollision");
+
 
 		drumRibbonsDrawn = 0;
 		bassRibbonsDrawn = 0;
@@ -125,7 +136,7 @@ public class RibbonGameManager : MonoBehaviour {
 
         melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
 		foreach (GameObject go in melodyRibbons) {
-
+	
 			go.GetComponent<AudioSource> ().volume = Mathf.Sqrt((float)1f / melodyRibbons.Length);
 			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
 				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
