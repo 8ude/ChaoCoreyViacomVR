@@ -22,6 +22,9 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip[] bassClips;
 	public AudioClip[] harmonyClips;
 	public AudioClip[] melodyClips;
+	[Space(20)]
+	public GameObject particlePrefab;
+	[Space(20)]
 
 
 

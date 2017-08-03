@@ -47,7 +47,7 @@ public class RibbonCollision : MonoBehaviour {
                 AudioSource aSource = newParticles.GetComponent<AudioSource>();
                 RibbonGenerator collidedGenerator = other.transform.root.GetComponent<RibbonGenerator>();
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
-                Debug.Log(drawRibbonScript.switchStems.currentInstrument);
+                //Debug.Log(drawRibbonScript.switchStems.currentInstrument);
                 switch (collidedStemType) {
                     case RibbonGenerator.musicStem.Bass:
                         aSource.clip = RibbonGameManager.instance.bassCollisionClips[clipIndex % RibbonGameManager.instance.bassCollisionClips.Length];
