@@ -6,6 +6,10 @@ public class AttractorMotion : MonoBehaviour {
 
 	public float radius = 50;
 
+	public ListenerSpectrumAnalysis listenerSpectrum;
+
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -17,7 +21,7 @@ public class AttractorMotion : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		transform.position = new Vector3 (radius * Mathf.Cos (Time.time/4), 1.5f + 10 * Mathf.Cos (Time.time/16), radius * Mathf.Sin (Time.time/4));
+		transform.position = new Vector3 (radius * Mathf.Cos (Time.time/4), 1.5f + 10 * listenerSpectrum.GetWholeEnergy() * Mathf.Cos (Time.time/16), radius * Mathf.Sin (Time.time/4));
 
 	}
 }
