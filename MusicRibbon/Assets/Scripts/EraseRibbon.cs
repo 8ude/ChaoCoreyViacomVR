@@ -122,7 +122,7 @@ public class EraseRibbon : MonoBehaviour {
 			LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
 			LeftWand = LeftSword.transform.Find ("Wand").gameObject;
 			LeftRubber = LeftSword.transform.Find("Capsule").gameObject;
-			Debug.Log ("found object: " + LeftRubber.name);
+			//Debug.Log ("found object: " + LeftRubber.name);
 			//change our status if we've found this particular component
 			currentStatus = controllerFoundStatus.LeftFound;
 		}

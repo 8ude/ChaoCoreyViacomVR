@@ -8,6 +8,7 @@ public class SkyboxColorChange : MonoBehaviour {
     public Material SkyboxMaterial;
     public new List<Color> Colors;
 	public float[] ColorWeights;
+	public Color topColor;
 
 
     public GameObject[] drumRibbons;
@@ -103,6 +104,7 @@ public class SkyboxColorChange : MonoBehaviour {
 		}
 
 		RenderSettings.fogColor = SkyboxMaterial.GetColor ("_SkyColor1");
+		topColor = SkyboxMaterial.GetColor ("_SkyColor1");
 		/*
 
         if( drumRibbonsNum >0 &&
