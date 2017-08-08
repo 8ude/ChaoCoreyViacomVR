@@ -165,7 +165,7 @@ public class RibbonGenerator : MonoBehaviour {
 		if (!fadingOut) {
 			fadingOut = true;
 			DOTween.To (() => transparency, x => transparency = x, 0, time);
-			drawRibbonSound.mySource.DOFade (0f, fadeoutTime);
+			drawRibbonSound.mySource.DOFade (0.01f, time);
 			Destroy (gameObject, time);
 		}
 	}
