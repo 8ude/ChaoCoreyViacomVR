@@ -32,7 +32,7 @@ public class SwarmDance : MonoBehaviour {
 		swarm.lineWidth += (listenerSpectrum.GetWholeEnergy () - prevWidth) * widthSmoothing;
 		prevWidth = swarm.lineWidth;
 
-		swarm.flow = new Vector3 (0f, swarm.flow.y + (2f*listenerSpectrum.GetWholeEnergy () - prevYFlow) * heightSmoothing, 0f);
+		swarm.flow = new Vector3 (0f, swarm.flow.y + (4f*listenerSpectrum.GetWholeEnergy () - prevYFlow) * heightSmoothing, 0f);
 		prevYFlow = swarm.flow.y;
 
 		swarm.color = skyboxChanger.topColor;

@@ -187,11 +187,14 @@ public class DrawRibbon: MonoBehaviour {
 			} else {
 				//ribbon length is less than one, so we'll just shoot out some particles?
 				Destroy (currentRibbonSound);
-				ShortStem (markerChain [0]);
+                if (markerChain.Count > 0) {
+                    ShortStem(markerChain[0]);
+                }
 				markerChain.Clear ();
-			
+                timeInterval = 0f;
 
-			}
+
+            }
 		}
 
 

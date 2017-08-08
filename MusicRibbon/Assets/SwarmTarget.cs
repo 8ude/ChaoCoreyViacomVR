@@ -26,7 +26,7 @@ public class SwarmTarget : MonoBehaviour {
 
 
 
-		transform.position = new Vector3(transform.position.x, Mathf.Sin(Time.time / 20f) * 20 + 10, transform.position.z); 
+		transform.position = new Vector3(transform.position.x, Mathf.Sin(Time.time / 20f) * 40 + 20, transform.position.z); 
 
 	}
 }

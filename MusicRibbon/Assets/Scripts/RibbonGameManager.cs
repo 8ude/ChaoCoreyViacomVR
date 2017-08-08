@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class RibbonGameManager : MonoBehaviour {
 
@@ -22,7 +23,12 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip[] bassClips;
 	public AudioClip[] harmonyClips;
 	public AudioClip[] melodyClips;
-	[Space(20)]
+
+    [Space(20)]
+    public AudioMixerSnapshot audioOutSnapshot, audioInSnapshot;
+    public float gameFadeTime;
+
+    [Space(20)]
 	public GameObject particlePrefab;
 	[Space(20)]
 
@@ -91,13 +97,13 @@ public class RibbonGameManager : MonoBehaviour {
             Destroy(gameObject);
         }
 
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
     }
 
     // Use this for initialization
     void Start () {
-		
+        FadeFromWhite();
 	}
 	
 	// Update is called once per frame
@@ -168,6 +174,11 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 
 		MoveSmallRibbons ();
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            FadeToWhite();
+            Invoke("ResetGame", gameFadeTime);
+        }
 		
 	}
 
@@ -263,6 +274,25 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 
 	}
+
+    void ResetGame() {
+
+        SceneManager.LoadScene(0);
+    }
+
+    void FadeFromWhite() {
+        SteamVR_Fade.Start(Color.white, 0f);
+
+        SteamVR_Fade.Start(Color.clear, gameFadeTime);
+        audioInSnapshot.TransitionTo(gameFadeTime);
+    }
+
+    void FadeToWhite() {
+        SteamVR_Fade.Start(Color.white, gameFadeTime);
+        audioOutSnapshot.TransitionTo(gameFadeTime);
+
+
+    }
 
 
 

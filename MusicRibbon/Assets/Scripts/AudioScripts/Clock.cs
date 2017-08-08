@@ -21,7 +21,7 @@ namespace Beat
 			} else if (Instance != this) {
 				Destroy (gameObject);
 			}
-			DontDestroyOnLoad (gameObject);
+			//DontDestroyOnLoad (gameObject);
 
 
 			if (BPM.Equals(0.0)) Debug.LogWarning("BPM not set! Please set the BPM in the BeatClock");
