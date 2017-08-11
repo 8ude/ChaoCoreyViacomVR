@@ -33,7 +33,7 @@ public class RibbonGenerator : MonoBehaviour {
 	public float lifeTime;
 	float fadeoutTime;
 
-	bool fadingOut;
+	public bool fadingOut;
 
 	public float ribbonLength;
 	
