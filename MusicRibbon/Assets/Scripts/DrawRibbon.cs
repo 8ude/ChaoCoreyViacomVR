@@ -184,7 +184,17 @@ public class DrawRibbon: MonoBehaviour {
 				timeInterval = 0f;
 
 				//RibbonGameManager.instance.RibbonObjects.Add (parentObject);
-			}
+			} else {
+				//ribbon length is less than one, so we'll just shoot out some particles?
+				Destroy (currentRibbonSound);
+                if (markerChain.Count > 0) {
+                    ShortStem(markerChain[0]);
+                }
+				markerChain.Clear ();
+                timeInterval = 0f;
+
+
+            }
 		}
 
 
@@ -222,6 +232,47 @@ public class DrawRibbon: MonoBehaviour {
 			markerChain.Add (newMarker);
 			timeInterval = 0f;
 		}
+
+	}
+
+	void ShortStem (GameObject go) {
+
+		GameObject newParticles = Instantiate (
+			RibbonGameManager.instance.particlePrefab, 
+			markerChain [0].transform.position, 
+			Quaternion.identity);
+
+		//set the audio clip in accordance with the collision audio in the game manager
+		AudioSource aSource = newParticles.GetComponent<AudioSource>();
+
+		string instrumentType = switchStems.currentInstrument;
+		//Debug.Log(drawRibbonScript.switchStems.currentInstrument);
+		switch (instrumentType) {
+		case "Bass":
+			aSource.clip = RibbonGameManager.instance.bassCollisionClips[0];
+			break;
+		case "Drums":
+			aSource.clip = RibbonGameManager.instance.drumCollisionClips[0];
+			break;
+		case "Harmony":
+			aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[0];
+			break;
+		case "Melody":
+			aSource.clip = RibbonGameManager.instance.melodyCollisionClips[0];
+			break;
+
+		}
+		aSource.Play();
+
+		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
+		var main = ps.main;
+
+		//Particle color will be somewhere between white and the ribbon color
+		main.startColor = new ParticleSystem.MinMaxGradient( go.GetComponent<Renderer>().material.color, Color.white);
+
+		Destroy (go);
+
+		Destroy(newParticles, 2.0f);
 
 	}
 

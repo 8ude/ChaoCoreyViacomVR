@@ -32,6 +32,8 @@ public class RibbonGenerator : MonoBehaviour {
 	public float lifeTime;
 	float fadeoutTime;
 
+	public bool fadingOut;
+
 	public float ribbonLength;
 	
 
@@ -46,6 +48,7 @@ public class RibbonGenerator : MonoBehaviour {
 	// Use this for initialization
 	IEnumerator Start () {
 		lifeTime = 0f;
+		fadingOut = false;
 
 		fadeoutTime = RibbonGameManager.instance.autoKillFadeOutTime;
 
@@ -79,6 +82,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 		if (lifeTime > RibbonGameManager.instance.autoKillLifetime  && RibbonGameManager.instance.autoKillRibbons) {
 
+			lifeTime = 0f;
 			FadeOutRibbon (fadeoutTime);
 			Destroy (gameObject, fadeoutTime);
 
@@ -147,9 +151,12 @@ public class RibbonGenerator : MonoBehaviour {
 	}
 
 	public void FadeOutRibbon(float time) {
-		DOTween.To (() => transparency, x => transparency = x, 0, time);
-		drawRibbonSound.mySource.DOFade (0f, fadeoutTime);
-		Destroy (gameObject, time);
+		if (!fadingOut) {
+			fadingOut = true;
+			DOTween.To (() => transparency, x => transparency = x, 0, time);
+			drawRibbonSound.mySource.DOFade (0.01f, time);
+			Destroy (gameObject, time);
+		}
 	}
 
 

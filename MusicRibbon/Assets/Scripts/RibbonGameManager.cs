@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class RibbonGameManager : MonoBehaviour {
 
@@ -22,6 +23,14 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip[] bassClips;
 	public AudioClip[] harmonyClips;
 	public AudioClip[] melodyClips;
+
+    [Space(20)]
+    public AudioMixerSnapshot audioOutSnapshot, audioInSnapshot;
+    public float gameFadeTime;
+
+    [Space(20)]
+	public GameObject particlePrefab;
+	[Space(20)]
 
 
 
@@ -88,13 +97,13 @@ public class RibbonGameManager : MonoBehaviour {
             Destroy(gameObject);
         }
 
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
 
     }
 
     // Use this for initialization
     void Start () {
-		
+        FadeFromWhite();
 	}
 	
 	// Update is called once per frame
@@ -104,11 +113,15 @@ public class RibbonGameManager : MonoBehaviour {
 
 		foreach (GameObject go in drumRibbons) {
 
-			go.GetComponent<AudioSource> ().volume = Mathf.Sqrt((float)1f / drumRibbons.Length);
+            if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) {
 
-			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
-				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
-			}
+                go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)1f / drumRibbons.Length);
+
+                if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade)
+                {
+                    go.transform.root.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
+                }
+            }
 
 		}
         
@@ -116,31 +129,38 @@ public class RibbonGameManager : MonoBehaviour {
 		bassRibbons = GameObject.FindGameObjectsWithTag("BassStem");
 
 		foreach (GameObject go in bassRibbons) {
-
-			go.GetComponent<AudioSource> ().volume = Mathf.Sqrt((float)1f / bassRibbons.Length);
-			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
-				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
-			}
+            if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) {
+                go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)0.7f / bassRibbons.Length);
+                if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade)
+                {
+                    go.transform.root.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
+                }
+            }
 
 		}
 			
         harmonyRibbons = GameObject.FindGameObjectsWithTag("HarmonyStem");
 		foreach (GameObject go in harmonyRibbons) {
+                if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) {
 
-			go.GetComponent<AudioSource> ().volume = Mathf.Sqrt((float)1f / harmonyRibbons.Length);
-			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
-				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
-			}
+                    go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)1f / harmonyRibbons.Length);
+                    if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade)
+                    {
+                        go.transform.root.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
+                    }
+                }
 		
 		}
 
         melodyRibbons = GameObject.FindGameObjectsWithTag("MelodyStem");
-		foreach (GameObject go in melodyRibbons) {
-	
-			go.GetComponent<AudioSource> ().volume = Mathf.Sqrt((float)1f / melodyRibbons.Length);
-			if (Vector3.Distance (Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
-				go.transform.root.GetComponent<RibbonGenerator> ().FadeOutRibbon (10f);
-			}
+        foreach (GameObject go in melodyRibbons) {
+            if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) { 
+
+                go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)1f / melodyRibbons.Length);
+                if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
+                    go.transform.root.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
+                }
+            }
 
 		}
 
@@ -165,6 +185,11 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 
 		MoveSmallRibbons ();
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            FadeToWhite();
+            Invoke("ResetGame", gameFadeTime);
+        }
 		
 	}
 
@@ -260,6 +285,25 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 
 	}
+
+    void ResetGame() {
+
+        SceneManager.LoadScene(0);
+    }
+
+    void FadeFromWhite() {
+        SteamVR_Fade.Start(Color.white, 0f);
+
+        SteamVR_Fade.Start(Color.clear, gameFadeTime);
+        audioInSnapshot.TransitionTo(gameFadeTime);
+    }
+
+    void FadeToWhite() {
+        SteamVR_Fade.Start(Color.white, gameFadeTime);
+        audioOutSnapshot.TransitionTo(gameFadeTime);
+
+
+    }
 
 
 

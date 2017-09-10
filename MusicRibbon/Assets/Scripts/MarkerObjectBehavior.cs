@@ -29,6 +29,7 @@ public class MarkerObjectBehavior : MonoBehaviour {
 		this.gameObject.GetComponent<MeshRenderer> ().material = DrumRibbonMaterial;
 		this.gameObject.GetComponent<MeshFilter> ().mesh = DrumMesh.gameObject.GetComponent<MeshFilter> ().sharedMesh;
 
+
 	}
 
 	public void BassMarkerObject(){

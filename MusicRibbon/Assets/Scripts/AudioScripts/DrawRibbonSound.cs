@@ -117,10 +117,12 @@ public class DrawRibbonSound : MonoBehaviour {
 		stopTime = Clock.Instance.AtNextHalf();
 
 		float newClipLength = (float)stopTime - (float)startTime;
-        if (newClipLength == 0) {
-            newClipLength = Clock.Instance.MeasureLength();
+		if (newClipLength == 0) {
+			newClipLength = Clock.Instance.MeasureLength ();
       
-        }
+		} else if (newClipLength > origClip.length) {
+			newClipLength = origClip.length;
+		}
 
 		int newClipSamples = Mathf.RoundToInt (newClipLength * origClip.frequency);
         
@@ -176,7 +178,7 @@ public class DrawRibbonSound : MonoBehaviour {
 		while (true) {
 			for (int i = 0; i < sPoints.Length; i++) {
 				while (Vector3.Distance (transform.position, sPoints [i]) > 0.001f) {
-					transform.position += (sPoints[i] - transform.position) * Time.deltaTime;
+					transform.position += (sPoints[i] - transform.position) * Time.deltaTime * 2;
 					yield return null;
 				}
 			}

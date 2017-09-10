@@ -8,6 +8,7 @@ public class SkyboxColorChange : MonoBehaviour {
     public Material SkyboxMaterial;
     public new List<Color> Colors;
 	public float[] ColorWeights;
+	public Color topColor;
 
 
     public GameObject[] drumRibbons;
@@ -102,7 +103,8 @@ public class SkyboxColorChange : MonoBehaviour {
 			SkyboxMaterial.SetColor ("_SkyColor1", Color.Lerp(prevColor, Colors[4], Time.deltaTime));
 		}
 
-		//RenderSettings.fogColor = SkyboxMaterial.GetColor ("_SkyColor1");
+		RenderSettings.fogColor = SkyboxMaterial.GetColor ("_SkyColor1");
+		topColor = SkyboxMaterial.GetColor ("_SkyColor1");
 		/*
 
         if( drumRibbonsNum >0 &&
@@ -174,7 +176,7 @@ public class SkyboxColorChange : MonoBehaviour {
 
 			Color.RGBToHSV (newColor, out hue, out saturation, out value);
 
-			value = 0.7f + (ListenerSpectrum.GetBandBufferEnergy () * 0.1f);
+			value = 1f + (ListenerSpectrum.GetBandBufferEnergy () * 0.1f);
 
 			newColor = Color.HSVToRGB (hue, saturation, value);
 
