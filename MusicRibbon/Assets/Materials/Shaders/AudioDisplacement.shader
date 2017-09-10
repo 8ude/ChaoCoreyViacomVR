@@ -1,4 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+﻿﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
 Shader "Custom/AudioDisplacement" {
 	Properties {
@@ -20,8 +20,8 @@ Shader "Custom/AudioDisplacement" {
 		D ("Wave Direction", Vector) = (0.5,0.0,0.5,0.0) //wave direction
 	}
 	SubShader {
-		Tags { "Queue" = "Transparent" "RenderType"="Transparent" }
-		LOD 200
+		Tags { "Queue" = "Geometry" "RenderType"="Geometry" }
+        LOD 200
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
