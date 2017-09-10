@@ -117,7 +117,7 @@ public class DrawRibbonSound : MonoBehaviour {
 		stopTime = Clock.Instance.AtNextHalf();
 
 		float newClipLength = (float)stopTime - (float)startTime;
-		if (newClipLength == 0) {
+        if (newClipLength <= Clock.Instance.MeasureLength()) {
 			newClipLength = Clock.Instance.MeasureLength ();
       
 		} else if (newClipLength > origClip.length) {

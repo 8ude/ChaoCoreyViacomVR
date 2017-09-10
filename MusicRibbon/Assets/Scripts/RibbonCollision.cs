@@ -17,6 +17,8 @@ public class RibbonCollision : MonoBehaviour {
     // use DrawRibbon.cs to tell if we are erasing or not
 	DrawRibbon drawRibbonScript;
 
+    bool playingMicroSample = false;
+
     //using this to make sure we cycle through the collision audio clips
     int clipIndex;
 
@@ -34,45 +36,49 @@ public class RibbonCollision : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
 
-        Debug.Log("collision occured");
+        //Debug.Log("collision occured");
 
 		if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
-                Debug.Log("wand-ribbon collision occured");
+                //Debug.Log("wand-ribbon collision occured");
 
-				GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset) , Quaternion.identity);
-                
                 //set the audio clip in accordance with the collision audio in the game manager
-                AudioSource aSource = newParticles.GetComponent<AudioSource>();
+
                 RibbonGenerator collidedGenerator = other.transform.root.GetComponent<RibbonGenerator>();
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
-                //Debug.Log(drawRibbonScript.switchStems.currentInstrument);
-                switch (collidedStemType) {
-                    case RibbonGenerator.musicStem.Bass:
-                        aSource.clip = RibbonGameManager.instance.bassCollisionClips[clipIndex % RibbonGameManager.instance.bassCollisionClips.Length];
-                        break;
-                    case RibbonGenerator.musicStem.Drum:
-                        aSource.clip = RibbonGameManager.instance.drumCollisionClips[clipIndex % RibbonGameManager.instance.drumCollisionClips.Length];
-                        break;
-                    case RibbonGenerator.musicStem.Harmony:
-                        aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[clipIndex % RibbonGameManager.instance.harmonyCollisionClips.Length];
-                        break;
-                    case RibbonGenerator.musicStem.Melody:
-                        aSource.clip = RibbonGameManager.instance.melodyCollisionClips[clipIndex % RibbonGameManager.instance.melodyCollisionClips.Length];
-                        break;
 
+                //if we hit the melody stem, we want a different kind of interaction
+
+                if(collidedStemType != RibbonGenerator.musicStem.Melody) {
+
+                    GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+                    AudioSource aSource = newParticles.GetComponent<AudioSource>();
+					switch (collidedStemType)
+					{
+						case RibbonGenerator.musicStem.Bass:
+							aSource.clip = RibbonGameManager.instance.bassCollisionClips[clipIndex % RibbonGameManager.instance.bassCollisionClips.Length];
+							break;
+						case RibbonGenerator.musicStem.Drum:
+							aSource.clip = RibbonGameManager.instance.drumCollisionClips[clipIndex % RibbonGameManager.instance.drumCollisionClips.Length];
+							break;
+						case RibbonGenerator.musicStem.Harmony:
+							aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[clipIndex % RibbonGameManager.instance.harmonyCollisionClips.Length];
+							break;
+
+					}
+                    aSource.Play();
+                    ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
+                    var main = ps.main;
+
+                    //Particle color will be somewhere between white and the ribbon color
+                    main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
+
+                    Destroy(newParticles, 2.0f);
+                    clipIndex++;
+                } else {
+                    //melody ribbon - touching ribbon will create microsampled fragment
                 }
-                aSource.Play();
-
-                ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
-                var main = ps.main;
-
-                //Particle color will be somewhere between white and the ribbon color
-                main.startColor = new ParticleSystem.MinMaxGradient( other.gameObject.GetComponent<Renderer>().material.color, Color.white);
-
-                Destroy(newParticles, 2.0f);
-                clipIndex++;
 
             }
         }
