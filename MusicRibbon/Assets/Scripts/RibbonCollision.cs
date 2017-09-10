@@ -34,12 +34,12 @@ public class RibbonCollision : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
 
-        Debug.Log("collision occured");
+        //Debug.Log("collision occured");
 
 		if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
-                Debug.Log("wand-ribbon collision occured");
+                //Debug.Log("wand-ribbon collision occured");
 
 				GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset) , Quaternion.identity);
                 
