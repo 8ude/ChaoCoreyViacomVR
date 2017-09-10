@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using DG.Tweening;
 
 /// <summary>
 /// Attach to Wand object to spawn particles upon collision with ribbon
@@ -12,6 +13,7 @@ public class RibbonCollision : MonoBehaviour {
     public GameObject particlePrefab;
     public AudioSource mySource;
     AudioClip melodyClip;
+    public AudioMixerGroup mutedGroup;
     
     //the distance along the wand where the particles will spawn
     public float yOffset;
@@ -29,6 +31,7 @@ public class RibbonCollision : MonoBehaviour {
 
         drawRibbonScript = transform.root.GetComponentInChildren<DrawRibbon> ();
         melodyClip = null;
+        mySource = GetComponent<AudioSource>();
     }
     
     // Update is called once per frame
@@ -81,7 +84,7 @@ public class RibbonCollision : MonoBehaviour {
                 else {
                     //melody ribbon - touching ribbon will create microsampled fragment
                     playingMicroSample = true;
-                    MarkerObjectBehavior[] markers = other.GetComponentsInChildren<MarkerObjectBehavior>();
+                    MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
                     //find closest marker
                     float[] markerDistances = new float[markers.Length];
                     int closestMarkerIndex = 0;
@@ -93,7 +96,8 @@ public class RibbonCollision : MonoBehaviour {
                             closestMarkerDistance = markerDistances[i];
                         }
                     }
-                    melodyClip = other.transform.parent.GetComponentInChildren<DrawRibbonSound>().mySource.clip;
+                    melodyClip = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.clip;
+                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.DOFade(0f, 0.2f);
                     mySource.clip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(1f / closestMarkerDistance, 0.2f, 1f));
                     mySource.Play();
                 }
@@ -119,7 +123,7 @@ public class RibbonCollision : MonoBehaviour {
                 if (collidedStemType == RibbonGenerator.musicStem.Melody && !mySource.isPlaying) {
                     //melody ribbon - touching ribbon will create microsampled fragment
                     playingMicroSample = true;
-                    MarkerObjectBehavior[] markers = other.GetComponentsInChildren<MarkerObjectBehavior>();
+                    MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
                     //find closest marker
                     float[] markerDistances = new float[markers.Length];
                     int closestMarkerIndex = 0;
@@ -131,7 +135,8 @@ public class RibbonCollision : MonoBehaviour {
                             closestMarkerDistance = markerDistances[i];
                         }
                     }
-                    melodyClip = other.transform.parent.GetComponentInChildren<DrawRibbonSound>().mySource.clip;
+                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.volume = 0f;
+                    melodyClip = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.clip;
                     mySource.clip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(1f / closestMarkerDistance, 0.2f, 1f));
                     mySource.Play();
                 }
@@ -143,10 +148,17 @@ public class RibbonCollision : MonoBehaviour {
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
+                RibbonGenerator collidedGenerator = other.transform.root.GetComponent<RibbonGenerator>();
+                RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
+
                 melodyClip = null;
                 mySource.Stop();
                 mySource.clip = null;
-                
+                if (collidedStemType == RibbonGenerator.musicStem.Melody) {
+                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.DOFade(0.3f, 0.3f);
+
+                }
+
             }
         }
         

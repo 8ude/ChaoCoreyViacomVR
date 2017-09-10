@@ -20,7 +20,7 @@ public class MicroClipMaker : MonoBehaviour {
         for (int i = 0; i < newClipData.Length; i++) {
             newClipData[i] = origClipData[clipDataStart + i];
         }
-
+        newClip.SetData(newClipData, 0);
         return newClip;
 
     }
