@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BorderParticles : MonoBehaviour {
+
+    /// <summary>
+    /// Particle system reacts to audio listener
+    /// </summary>
+
+
 	public ListenerSpectrumAnalysis listenerSpectrum;
 	ParticleSystem myParticleSystem;
 
@@ -10,6 +16,7 @@ public class BorderParticles : MonoBehaviour {
 	public float startEmissionRate = 0f;
 	float emissionRate;
 	public float velocityMultiplier = 10f;
+
 
 	// Use this for initialization
 	void Start () {

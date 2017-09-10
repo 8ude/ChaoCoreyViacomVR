@@ -11,15 +11,14 @@ using UnityEngine.UI;
 
 using DG.Tweening;
 /// <summary>
-/// Ideally this will be used to store references to the the
-/// spline and meshes of a particular ribbon, after it is drawn and initialized
+/// Stores references to spline and spline mesh, and confirms when they have been initialized
 /// </summary>
 public class RibbonGenerator : MonoBehaviour {
 	
 	public CurvySpline ribbonSpline;
 	public MeshFilter ribbonMesh;
 	public MeshRenderer ribbonRenderer;
-	//public SplineController ribbonController;
+
 
 	public CurvyGenerator curvyGenerator;
 	public DrawRibbonSound drawRibbonSound;
@@ -50,15 +49,11 @@ public class RibbonGenerator : MonoBehaviour {
 
 		fadeoutTime = RibbonGameManager.instance.autoKillFadeOutTime;
 
-        //switchStems = GameObject.Find("SwitchStems");
 
 		myStem = (musicStem)stemIntValue;
 
 		curvyGenerator = GetComponent<CurvyGenerator> ();
 		ribbonRenderer = null;
-
-
-
 
 		while (!ribbonSpline.IsInitialized) {
 			yield return null;
@@ -99,12 +94,6 @@ public class RibbonGenerator : MonoBehaviour {
 
 	IEnumerator WaitForMeshRenderer() {
 
-        //Debug.Log("waiting");
-
-		//yield return new WaitForSeconds (0.5f);
-
-        //Debug.Log("done waiting");
-
         while (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>() == null)   {
             yield return null;
         }
@@ -116,14 +105,14 @@ public class RibbonGenerator : MonoBehaviour {
 			Mesh mesh = ribbonMesh.mesh;
 			MeshHelper.Subdivide (mesh, 8);
 			ribbonMesh.mesh = mesh;
+
         } 
 
 		while (ribbonRenderer == null) {
-			//Debug.Log ("I should be fucking yielding");
+
 			yield return null;
 		}
 
-		//Debug.Log (ribbonRenderer.name);
 
 		//Set Mesh Material Values Here
 
