@@ -12,10 +12,12 @@ public class MicroClipMaker : MonoBehaviour {
         AudioClip newClip = AudioClip.Create("MicroClip", Mathf.RoundToInt((origClip.length / totalSegments) * origClip.frequency * origClip.channels * sizeAdjust),
                                              origClip.channels, origClip.frequency, false);
         float[] newClipData = new float[Mathf.RoundToInt((origClip.length / totalSegments) * origClip.frequency * origClip.channels * sizeAdjust)];
-        float[] origClipData = new float[Mathf.RoundToInt(origClip.length * origClip.frequency * origClip.channels)];
+        float[] origClipData = new float[Mathf.RoundToInt(origClip.samples * origClip.channels)];
         origClip.GetData(origClipData, 0);
 
         int clipDataStart = Mathf.RoundToInt((origClip.length / totalSegments) * origClip.frequency * origClip.channels * segmentIndex);
+        Debug.Log("microclip start index: " + clipDataStart);
+        Debug.Log("microclip total samples: " + origClipData.Length);
 
         for (int i = 0; i < newClipData.Length; i++) {
             newClipData[i] = origClipData[clipDataStart + i];

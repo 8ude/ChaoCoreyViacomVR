@@ -13,7 +13,7 @@ public class RibbonCollision : MonoBehaviour {
     public GameObject particlePrefab;
     public AudioSource mySource;
     AudioClip melodyClip;
-    public AudioMixerGroup mutedGroup;
+    public AudioMixerGroup mutedGroup, origGroup;
     
     //the distance along the wand where the particles will spawn
     public float yOffset;
@@ -97,7 +97,7 @@ public class RibbonCollision : MonoBehaviour {
                         }
                     }
                     melodyClip = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.clip;
-                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.DOFade(0f, 0.2f);
+                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.outputAudioMixerGroup = mutedGroup;
                     mySource.clip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(1f / closestMarkerDistance, 0.2f, 1f));
                     mySource.Play();
                 }
@@ -135,7 +135,7 @@ public class RibbonCollision : MonoBehaviour {
                             closestMarkerDistance = markerDistances[i];
                         }
                     }
-                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.volume = 0f;
+
                     melodyClip = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.clip;
                     mySource.clip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(1f / closestMarkerDistance, 0.2f, 1f));
                     mySource.Play();
