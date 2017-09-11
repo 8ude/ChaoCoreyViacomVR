@@ -16,8 +16,8 @@ public class MicroClipMaker : MonoBehaviour {
         origClip.GetData(origClipData, 0);
 
         int clipDataStart = Mathf.RoundToInt((origClip.length / totalSegments) * origClip.frequency * origClip.channels * segmentIndex);
-        Debug.Log("microclip start index: " + clipDataStart);
-        Debug.Log("microclip total samples: " + origClipData.Length);
+        //Debug.Log("microclip start index: " + clipDataStart);
+        //Debug.Log("microclip total samples: " + origClipData.Length);
 
         for (int i = 0; i < newClipData.Length; i++) {
             newClipData[i] = origClipData[clipDataStart + i];

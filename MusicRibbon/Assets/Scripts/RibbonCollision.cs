@@ -14,6 +14,7 @@ public class RibbonCollision : MonoBehaviour {
     public AudioSource mySource;
     AudioClip melodyClip;
     public AudioMixerGroup mutedGroup, origGroup;
+ 
     
     //the distance along the wand where the particles will spawn
     public float yOffset;
@@ -32,6 +33,7 @@ public class RibbonCollision : MonoBehaviour {
         drawRibbonScript = transform.root.GetComponentInChildren<DrawRibbon> ();
         melodyClip = null;
         mySource = GetComponent<AudioSource>();
+        playingMicroSample = false;
     }
     
     // Update is called once per frame
@@ -98,7 +100,7 @@ public class RibbonCollision : MonoBehaviour {
                     }
                     melodyClip = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.clip;
                     other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.outputAudioMixerGroup = mutedGroup;
-                    mySource.clip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(1f / closestMarkerDistance, 0.2f, 1f));
+                    mySource.clip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(closestMarkerDistance, 0.1f, 1f));
                     mySource.Play();
                 }
             }
@@ -135,9 +137,13 @@ public class RibbonCollision : MonoBehaviour {
                             closestMarkerDistance = markerDistances[i];
                         }
                     }
+                    float sizeAdjust = Mathf.Clamp(closestMarkerDistance, 0.1f, 1f);
+                    Debug.Log("Closest Marker Distance: " + closestMarkerDistance);
+                    Debug.Log("size adjust: " + sizeAdjust);
 
+                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.outputAudioMixerGroup = mutedGroup;
                     melodyClip = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.clip;
-                    mySource.clip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(1f / closestMarkerDistance, 0.2f, 1f));
+                    mySource.clip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp (sizeAdjust, 0.1f, 1f));
                     mySource.Play();
                 }
             }
@@ -155,12 +161,19 @@ public class RibbonCollision : MonoBehaviour {
                 mySource.Stop();
                 mySource.clip = null;
                 if (collidedStemType == RibbonGenerator.musicStem.Melody) {
-                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.DOFade(0.3f, 0.3f);
+                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.outputAudioMixerGroup = origGroup;
 
                 }
+                playingMicroSample = false;
 
             }
         }
         
+    }
+
+    void OnAudioFilterRead(float[] data, int channels) {
+        if (!playingMicroSample)
+            return;
+
     }
 }
