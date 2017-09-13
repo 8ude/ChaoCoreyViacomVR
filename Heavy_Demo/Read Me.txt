@@ -1,0 +1,14 @@
+Heavy Demo material for the demonstration video on implementing Pure Data into Unity with the Heavy Compiler
+by Wolphox
+
+Wolphox.com
+
+Unzip these contents onto your computer
+
+- Use the Heavy_DemoPatches.Zip file to upload the patches to their website at EnzienAudio.com
+
+- Add the ControlScript.cs to your Unity Project Assets folder
+
+- Add the Heavy_DemoPatches folder somewhere you can easily remember and access. 
+
+- A completed Unity scene implementing these files is provided.

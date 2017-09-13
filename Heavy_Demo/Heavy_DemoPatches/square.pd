@@ -1,0 +1,16 @@
+#N canvas 496 96 450 300 10;
+#X obj 219 123 inlet;
+#X obj 220 326 outlet~;
+#X obj 219 151 phasor~;
+#X obj 219 224 *~ 1000;
+#X obj 219 198 -~ 0.5;
+#X obj 220 270 *~ 0.5;
+#X obj 219 246 clip~ -1 1;
+#X text 89 26 Save this abstratcion as 'square.pd';
+#X text 89 8 Square wave abstraction;
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 6 0;
+#X connect 4 0 3 0;
+#X connect 5 0 1 0;
+#X connect 6 0 5 0;
