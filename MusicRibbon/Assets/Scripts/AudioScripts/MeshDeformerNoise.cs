@@ -42,13 +42,12 @@ public class MeshDeformerNoise : MonoBehaviour {
             modPhase = modPhase + modOSCIncrement;
             LFOPhase = LFOPhase + LFOIncrement;
 
-            currentGain = gain + LFOAmount * Mathf.Sin(LFOPhase);
-            data[i] = (float)currentGain * Mathf.Sin(mainPhase);
-            data[i] += Mathf.Sin(mainPhase * frequency/sampling_frequency + )
+            currentGain = gain + LFOAmount * Mathf.Sin((float)LFOPhase);
+            data[i] = (float)currentGain * Mathf.Sin((float)mainPhase);
+            //data[i] += Mathf.Sin(mainPhase * frequency / sampling_frequency);
 
         }
         //data[i] = 
-        signal += wave_function(note_phase * note_frequency / sample_rate + 
-                                fm_index * sin(note_phase * fm_frequency * pi / sample_rate)) * note_amplitude
+        //signal += wave_function(note_phase * note_frequency / sample_rate fm_index * sin(note_phase * fm_frequency * pi / sample_rate)) * note_amplitude
     }
 }
