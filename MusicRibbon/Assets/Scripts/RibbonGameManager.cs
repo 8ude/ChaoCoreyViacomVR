@@ -7,7 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class RibbonGameManager : MonoBehaviour {
 
-  
+    /// <summary>
+    /// Game Manager for original ribbon drawing scene
+    /// </summary>
 
 	public AudioClip preDrumClip;
 	public AudioClip preBassClip;
@@ -46,10 +48,14 @@ public class RibbonGameManager : MonoBehaviour {
     public GameObject[] melodyRibbons;
     public GameObject[] harmonyRibbons;
     public GameObject[] Ribbons;
+
+
 	 
 
     public int totalRibbons;
 
+    //ribbonObjects refers to the Marker Parent, which is the root (top parent)
+    //of each ribbon's hierarchy 
 	public GameObject[] ribbonObjects;
 
 	[Space(20)]
@@ -62,11 +68,11 @@ public class RibbonGameManager : MonoBehaviour {
     public float ribbonMoveDistance;
 	public float limitRibbonAmount;
 
-    //public Material ribbonOffMaterial;
+ 
 
     public static RibbonGameManager instance = null;
 
-	public bool autoKillRibbons;
+	public bool autoKillRibbons, autoMoveRibbons;
 	public float autoKillLifetime;
 	public float autoKillFadeOutTime;
 
@@ -168,22 +174,18 @@ public class RibbonGameManager : MonoBehaviour {
 
 		ribbonObjects = GameObject.FindGameObjectsWithTag ("MarkerParent");
 
-		/*
-		if (ribbonObjects.Length > 0) {
-			MoveRibbons ();
-		}
-		*/
+		
 
         totalRibbons = drumRibbons.Length + bassRibbons.Length + harmonyRibbons.Length + melodyRibbons.Length;
 
 
 
-		if (Ribbons.Length > limitRibbonAmount * ribbonMoveTimes){
-			//Debug.Log (LimitRibbonAmount * RibbonMoveTimes);
+        if (Ribbons.Length > limitRibbonAmount * ribbonMoveTimes && autoMoveRibbons){
 			MoveRibbons ();
 			ribbonMoveTimes++;
 		}
 
+        //For now, always move the small ribbons so the audio doesn't overload
 		MoveSmallRibbons ();
 
         if (Input.GetKeyDown(KeyCode.R)) {
@@ -193,6 +195,7 @@ public class RibbonGameManager : MonoBehaviour {
 		
 	}
 
+    //useful helper function -- TODO : move to some kind of Utilities Class
 	public float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax) {
 		return newMin + (value - oldMin) * (newMax - newMin) / (oldMax - oldMin);
 	}

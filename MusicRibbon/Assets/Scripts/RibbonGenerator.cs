@@ -80,6 +80,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 		lifeTime += Time.deltaTime;
 
+
 		if (lifeTime > RibbonGameManager.instance.autoKillLifetime  && RibbonGameManager.instance.autoKillRibbons) {
 
 			lifeTime = 0f;

@@ -5,6 +5,11 @@ using Beat;
 
 public class DrawRibbonSound : MonoBehaviour {
 
+    /// <summary>
+    /// Class for Audio that is attached to Ribbons and plays the associated clip
+    /// Controls behavior for audiosource moving along ribbon, HP+LP filter
+    /// </summary>
+
 	public AudioSource mySource;
 
 	public string instrumentType;
@@ -93,26 +98,19 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	public void StartDrawingRibbon(AudioClip origClip) {
 
-		//Debug.Log (origClip.name);
+
 		mySource = gameObject.GetComponent<AudioSource> ();
-
-
 		mySource.clip = origClip;
 
-
 		startTime = Clock.Instance.AtNextHalf();
-
-		//mySource.PlayScheduled (startTime);
-
 
 		origAudioData = new float[mySource.clip.samples*mySource.clip.channels];
 
 		mySource.clip.GetData (origAudioData, 0);
 
-
-
 	}
 
+    //
 	public void StopDrawingRibbon(AudioClip origClip) {
 		stopTime = Clock.Instance.AtNextHalf();
 
@@ -129,15 +127,16 @@ public class DrawRibbonSound : MonoBehaviour {
 
 		float[] audioData = new float[newClipSamples*mySource.clip.channels];
         
-
+        //newClip to be attached to this game object
 		AudioClip newClip = AudioClip.Create ("RibbonClip", newClipSamples, origClip.channels, origClip.frequency, false);
 
 
-
+        //write the Audio data for the clip
 		for (int i = 0; i < (newClipSamples*mySource.clip.channels); i++) {
 
 			audioData [i] = origAudioData [i];
 
+            //fade out over the last 10,000 samples (0.25 s) to prevent popping
 			if (i > (newClipSamples * mySource.clip.channels) - 10000) {
 
 				int j = i - ((newClipSamples * mySource.clip.channels) - 10000);
@@ -149,11 +148,8 @@ public class DrawRibbonSound : MonoBehaviour {
 
 		}
 
-		//Debug.Log ("10000th sample:" + audioData[10000]);
 
 		newClip.SetData (audioData, 0);
-
-
 
 		mySource.clip = newClip;
 
