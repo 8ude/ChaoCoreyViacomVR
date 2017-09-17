@@ -5,19 +5,28 @@ using UnityEngine.SceneManagement;
 
 public class SceneChange : MonoBehaviour {
 
+	public float gameFadeTime;
+
+
+
     public void OnTriggerEnter(Collider other) {
 
         if(other.transform.parent.parent.tag == "Controller") {
-            SceneManager.LoadScene("Echo");
+			FadeToWhite ();
+			Invoke("ResetGame", gameFadeTime);
         }
 
 
     }
+		
 
+	void FadeToWhite() {
+		SteamVR_Fade.Start(Color.white, gameFadeTime);
+	}
 
-	public void Scenechange(){
+	void ResetGame() {
 
-		SceneManager.LoadScene ("Echo");
+		SceneManager.LoadScene("Echo");
 	}
 
     
