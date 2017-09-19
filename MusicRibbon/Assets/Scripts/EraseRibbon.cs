@@ -15,8 +15,11 @@ public class EraseRibbon : MonoBehaviour {
 	public GameObject LeftRubber;
 	public GameObject RightWand;
 	public GameObject RightRubber;
+    public GameObject LeftColorBall;
+    public GameObject RightColorBall;
 
-	public GameObject EraserCubePrefab;
+
+    public GameObject EraserCubePrefab;
 	public DrawRibbon drawRibbonScript;
 
 
@@ -67,24 +70,28 @@ public class EraseRibbon : MonoBehaviour {
 	public void EnableLeftRubber(){
 		
 		LeftWand.SetActive(false);
+        LeftColorBall.SetActive(false);
 		LeftRubber.SetActive(true);
 	}
 
 	public void DisableLeftRubber(){
         LeftWand.SetActive(true) ;
-		LeftRubber.SetActive(false);
+        LeftColorBall.SetActive(true);
+        LeftRubber.SetActive(false);
 		
 	}
 
 	public void EnableRightRubber(){
 		RightWand.SetActive (false);
-		RightRubber.SetActive(true);
+        RightColorBall.SetActive(false);
+        RightRubber.SetActive(true);
 	
 	}
 
 	public void DiableRightRubber(){
 		RightWand.SetActive (true);
-		RightRubber.SetActive(false);
+        RightColorBall.SetActive(true);
+        RightRubber.SetActive(false);
 	
 	}
 
@@ -112,26 +119,25 @@ public class EraseRibbon : MonoBehaviour {
 
 	void FindController(){
 
-		//Debug.Log ("Why aren't you working");
-
-		//Debug.Log ("searching for controllers");
-
 		//Seperating out finding L controller and finding R controller
 
 		if (LeftHand.GetComponentInChildren<Sword> ()) {
 			LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
 			LeftWand = LeftSword.transform.Find ("Wand").gameObject;
 			LeftRubber = LeftSword.transform.Find("Capsule").gameObject;
-			//Debug.Log ("found object: " + LeftRubber.name);
-			//change our status if we've found this particular component
-			currentStatus = controllerFoundStatus.LeftFound;
+            LeftColorBall = LeftSword.transform.Find("StemIndicator").gameObject;
+            
+            //Debug.Log ("found object: " + LeftRubber.name);
+            //change our status if we've found this particular component
+            currentStatus = controllerFoundStatus.LeftFound;
 		}
 
 		if (RightHand.GetComponentInChildren<Sword> ()) {
 			RightSword = RightHand.GetComponentInChildren<Sword>().gameObject;
 			RightWand = RightSword.transform.Find("Wand").gameObject;
 			RightRubber = RightSword.transform.Find("Capsule").gameObject;
-			if (currentStatus == controllerFoundStatus.LeftFound) {
+            RightColorBall = RightSword.transform.Find("StemIndicator").gameObject;
+            if (currentStatus == controllerFoundStatus.LeftFound) {
 				//if we've already found the other controller, set current status accordingly and stop searching
 				currentStatus = controllerFoundStatus.BothFound;
 			} else

@@ -29,7 +29,8 @@ public class RibbonGenerator : MonoBehaviour {
 
     public GameObject switchStems;
 
-	public float lifeTime;
+
+    public float lifeTime;
 	float fadeoutTime;
 
 	public bool fadingOut;
