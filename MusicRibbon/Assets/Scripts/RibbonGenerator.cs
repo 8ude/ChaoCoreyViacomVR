@@ -149,6 +149,8 @@ public class RibbonGenerator : MonoBehaviour {
 		CurvySpline mySpline = GetComponentInChildren<CurvySpline> ();
 		Destroy (mySpline.gameObject);
 
+        RibbonGameManager.instance.ribbonObjects.Add(gameObject);
+
 	}
 
 	public void FadeOutRibbon(float time) {

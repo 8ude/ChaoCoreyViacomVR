@@ -47,7 +47,7 @@ public class RibbonGameManager : MonoBehaviour {
 	public GameObject[] bassRibbons;
     public GameObject[] melodyRibbons;
     public GameObject[] harmonyRibbons;
-    public GameObject[] Ribbons;
+    //public GameObject[] Ribbons;
 
 
 	 
@@ -56,14 +56,14 @@ public class RibbonGameManager : MonoBehaviour {
 
     //ribbonObjects refers to the Marker Parent, which is the root (top parent)
     //of each ribbon's hierarchy 
-	public GameObject[] ribbonObjects;
+	//public GameObject[] ribbonObjects;
 
 	[Space(20)]
 
 	public float endingWidth;
 	public float endingHeight;
 
-    //public List<GameObject> RibbonObjects;
+    public List<GameObject> ribbonObjects;
     //public int maxRibbons = 4;
     public float ribbonMoveDistance;
 	public float limitRibbonAmount;
@@ -96,6 +96,8 @@ public class RibbonGameManager : MonoBehaviour {
 		harmonyRibbonsDrawn = 0;
 		melodyRibbonsDrawn = 0;
 
+        ribbonObjects = new List<GameObject>();
+
         if (instance == null) {
             instance = this;
 
@@ -115,6 +117,9 @@ public class RibbonGameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        /////////////////////////////////////////////////////////////
+        //populate arrays with each stem type, then adjust the volumes of each stem according
+        //to how many stems of that type currently exist
 		drumRibbons = GameObject.FindGameObjectsWithTag ("DrumStem");
 
 		foreach (GameObject go in drumRibbons) {
@@ -170,17 +175,16 @@ public class RibbonGameManager : MonoBehaviour {
 
 		}
 
-		Ribbons = GameObject.FindGameObjectsWithTag("SplinePrefab");
-
-		ribbonObjects = GameObject.FindGameObjectsWithTag ("MarkerParent");
-
-		
-
-        totalRibbons = drumRibbons.Length + bassRibbons.Length + harmonyRibbons.Length + melodyRibbons.Length;
+        //Ribbons = GameObject.FindGameObjectsWithTag("SplinePrefab");
 
 
 
-        if (Ribbons.Length > limitRibbonAmount * ribbonMoveTimes && autoMoveRibbons){
+
+
+        totalRibbons = ribbonObjects.Count;
+
+
+        if (ribbonObjects.Count > limitRibbonAmount * ribbonMoveTimes && autoMoveRibbons){
 			MoveRibbons ();
 			ribbonMoveTimes++;
 		}
