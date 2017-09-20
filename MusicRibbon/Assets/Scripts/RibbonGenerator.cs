@@ -29,7 +29,8 @@ public class RibbonGenerator : MonoBehaviour {
 
     public GameObject switchStems;
 
-	public float lifeTime;
+
+    public float lifeTime;
 	float fadeoutTime;
 
 	public bool fadingOut;
@@ -79,7 +80,6 @@ public class RibbonGenerator : MonoBehaviour {
 	void Update () {
 
 		lifeTime += Time.deltaTime;
-
 
 		if (lifeTime > RibbonGameManager.instance.autoKillLifetime  && RibbonGameManager.instance.autoKillRibbons) {
 

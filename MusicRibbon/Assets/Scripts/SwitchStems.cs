@@ -16,12 +16,12 @@ public class SwitchStems : MonoBehaviour {
 
 	public string currentInstrument = "Bass";
 
-
-    //public static Color drumColor = new Color((float)177/255, (float)235/255, 0f);
-    //public static Color bassColor = new Color((float)83/255, (float)187/255, (float)244/255);
-    //public static Color melodyColor = new Color((float)1, (float)103/255, (float)233/255) ;
-    //public static Color harmonyColor = new Color((float)1, (float)67/255, (float)46/255) ;
-
+    public GameObject LeftHand;
+    public GameObject RightHand;
+    public GameObject LeftSword;
+    public GameObject RightSword;
+    public GameObject LeftColorBall;
+    public GameObject RightColorBall;
 
     // Use this for initialization
     void Start () {
@@ -32,18 +32,68 @@ public class SwitchStems : MonoBehaviour {
         harmonyColor = Colors[3];
 
 
-}
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
 
-	public void DrawBassRibbon(){
+    void FindColorBall() {
+
+
+        LeftSword = LeftHand.GetComponent<EraseRibbon>().LeftSword;
+        RightSword = RightHand.GetComponent<EraseRibbon>().RightSword;
+        LeftColorBall = LeftSword.transform.Find("StemIndicator").gameObject;
+        RightColorBall = RightSword.transform.Find("StemIndicator").gameObject;
+
+    }
+
+    public void ChangeLeftBallColor() {
+
+        FindColorBall();
+
+        if(currentInstrument == "Bass") {
+            LeftColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
+        }
+        if (currentInstrument == "Drums") {
+            LeftColorBall.GetComponent<MeshRenderer>().material.color = drumColor;
+        }
+        if (currentInstrument == "Harmony") {
+            LeftColorBall.GetComponent<MeshRenderer>().material.color = harmonyColor;
+        }
+        if (currentInstrument == "Melody") {
+            LeftColorBall.GetComponent<MeshRenderer>().material.color = melodyColor;
+        }
+    }
+
+    public void ChangeRightBallColor() {
+
+        FindColorBall();
+
+        if (currentInstrument == "Bass") {
+            RightColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
+        }
+        if (currentInstrument == "Drums") {
+            RightColorBall.GetComponent<MeshRenderer>().material.color = drumColor;
+        }
+        if (currentInstrument == "Harmony") {
+            RightColorBall.GetComponent<MeshRenderer>().material.color = harmonyColor;
+        }
+        if (currentInstrument == "Melody") {
+            RightColorBall.GetComponent<MeshRenderer>().material.color = melodyColor;
+        }
+
+
+    }
+
+
+    public void DrawBassRibbon(){
 		Stemnum = 0;
 		currentInstrument = "Bass";
-		//Debug.Log ("Bass: "+ Stemnum);
-	}
+        //Debug.Log ("Bass: "+ Stemnum);
+
+    }
 
 	public void DrawDrumRibbon(){
 		Stemnum = 1;
