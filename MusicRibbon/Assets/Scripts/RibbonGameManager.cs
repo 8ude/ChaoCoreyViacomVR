@@ -45,24 +45,17 @@ public class RibbonGameManager : MonoBehaviour {
 	public GameObject[] bassRibbons;
     public GameObject[] melodyRibbons;
     public GameObject[] harmonyRibbons;
-<<<<<<< HEAD
+
     //public GameObject[] Ribbons;
 
 
-=======
+
     public GameObject[] Ribbons;
->>>>>>> origin/NewInteractions
+
 	 
 
     public int totalRibbons;
 
-<<<<<<< HEAD
-    //ribbonObjects refers to the Marker Parent, which is the root (top parent)
-    //of each ribbon's hierarchy 
-	//public GameObject[] ribbonObjects;
-=======
-	public GameObject[] ribbonObjects;
->>>>>>> origin/NewInteractions
 
 	[Space(20)]
 
@@ -185,25 +178,15 @@ public class RibbonGameManager : MonoBehaviour {
 
 
 
-<<<<<<< HEAD
-=======
-		/*
-		if (ribbonObjects.Length > 0) {
-			MoveRibbons ();
-		}
-		*/
->>>>>>> origin/NewInteractions
+
 
 
         totalRibbons = ribbonObjects.Count;
 
 
-<<<<<<< HEAD
+
         if (ribbonObjects.Count > limitRibbonAmount * ribbonMoveTimes && autoMoveRibbons){
-=======
-		if (Ribbons.Length > limitRibbonAmount * ribbonMoveTimes){
-			//Debug.Log (LimitRibbonAmount * RibbonMoveTimes);
->>>>>>> origin/NewInteractions
+
 			MoveRibbons ();
 			ribbonMoveTimes++;
 		}
