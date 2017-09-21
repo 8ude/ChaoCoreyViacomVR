@@ -26,8 +26,9 @@ public class MicroClipMaker : MonoBehaviour {
 
         }
         for (int i = 0; i < tenthLengthSamples; i++) {
-            newClipData[i] *= Mathf.Lerp(0, 1, (float)i / tenthLengthSamples);
-            newClipData[newClipData.Length - i] *= Mathf.Lerp(0, 1, (float)i / tenthLengthSamples);
+            newClipData[i] *= Mathf.Lerp(0f, 1f, (float)i / (float)tenthLengthSamples);
+            newClipData[newClipData.Length - i - 1] *= Mathf.Lerp(0f, 1f, (float)i / (float)tenthLengthSamples);
+            newClipData[newClipData.Length - 1] = 0;
         }
         newClip.SetData(newClipData, 0);
         return newClip;

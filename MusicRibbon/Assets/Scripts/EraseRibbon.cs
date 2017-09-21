@@ -179,13 +179,11 @@ public class EraseRibbon : MonoBehaviour {
 				eraserCube.GetComponent<EraseRibbonAnim> ().EraseRibbon (splinePoints, 1.0f);
 				otherParent.GetComponent<RibbonGenerator> ().FadeOutRibbon (0.5f);
 				otherParent.GetComponentInChildren<DrawRibbonSound> ().mySource.DOFade (0f, 0.6f);
+                RibbonGameManager.instance.ribbonObjects.Remove(otherParent);
 				Destroy (other.transform.parent.parent.gameObject, 1.0f);
 
 
 			}
-
-
-
 		}
 	}
 }

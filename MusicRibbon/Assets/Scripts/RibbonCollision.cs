@@ -19,6 +19,8 @@ public class RibbonCollision : MonoBehaviour {
 
     public float mixerLPFreq;
 
+    public Transform wandTip;
+
     //rate at which melody ribbons trigger - ideally the closer the ribbon,
     // the more they overlap
     public float melodyTriggerCooldown;
@@ -45,6 +47,7 @@ public class RibbonCollision : MonoBehaviour {
         audioMixer = mySource.outputAudioMixerGroup.audioMixer;
         playingMicroSample = false;
         melodyTriggerTimer = 0f;
+        melodyTriggerCooldown = 0f;
     }
     
     // Update is called once per frame
@@ -70,7 +73,9 @@ public class RibbonCollision : MonoBehaviour {
 
                 switch (collidedStemType) {
                     case RibbonGenerator.musicStem.Melody:
-                        MelodyRibbonCollision(other);
+                        if (melodyTriggerTimer >= melodyTriggerCooldown) {
+                            MelodyRibbonCollision(other);
+                        }
                         break;
                     case RibbonGenerator.musicStem.Bass:
                         BassRibbonCollision(other);
@@ -200,9 +205,9 @@ public class RibbonCollision : MonoBehaviour {
         ribbonSound.mySource.outputAudioMixerGroup = mutedGroup;
         melodyClip = ribbonSound.mySource.clip;
 		
-        AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(sizeAdjust, 0.1f, 1f));
+        AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(sizeAdjust, 0.5f, 1f));
         //reset the triggerCooldown and play the clip
-        melodyTriggerCooldown = sizeAdjust * microClip.length;
+        melodyTriggerCooldown = 0.8f * microClip.length;
         mySource.PlayOneShot(microClip);
         
     }
@@ -220,7 +225,7 @@ public class RibbonCollision : MonoBehaviour {
 		for (int i = 0; i < markers.Length; i++) {
             //populate an array with cutoff frequencies, corresponding to points along the ribbon
 			markerDistances[i] = Vector3.Distance(markers[i].gameObject.transform.position, transform.position);
-            lowPassFrequencies[i] = (float) 8000f / markers.Length * i;
+            lowPassFrequencies[i] = (float) 6000f / markers.Length * i;
 			if (markerDistances[i] < closestMarkerDistance) {
                 secondClosestMarkerIndex = closestMarkerIndex;
                 secondClosestMarkerDistance = closestMarkerDistance;
@@ -239,7 +244,7 @@ public class RibbonCollision : MonoBehaviour {
         float projection = markerBLine.magnitude * Mathf.Cos(Mathf.Deg2Rad * angle);
 
         //Adjust low pass filter to reflect how far wand is along the ribbon
-        audioMixer.SetFloat("GlobalLPFrequency", lowPassFrequencies[closestMarkerIndex] * (projection/markerDistance));
+        audioMixer.DOSetFloat("GlobalLPFrequency", lowPassFrequencies[closestMarkerIndex], 0.5f);
 
 		DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
 

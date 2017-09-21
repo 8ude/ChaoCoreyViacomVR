@@ -85,6 +85,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 			lifeTime = 0f;
 			FadeOutRibbon (fadeoutTime);
+            RibbonGameManager.instance.ribbonObjects.Remove(gameObject);
 			Destroy (gameObject, fadeoutTime);
 
 		}
