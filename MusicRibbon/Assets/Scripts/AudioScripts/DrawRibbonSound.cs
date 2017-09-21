@@ -29,6 +29,9 @@ public class DrawRibbonSound : MonoBehaviour {
 	AudioLowPassFilter lpFilter;
 	AudioHighPassFilter hpFilter;
 
+    //flip this to false to turn off the movement of the source along the ribbon
+    public bool autoMoveSound = true;
+
 	//need this for debugging Audio Sync issues
 	[SerializeField] double sourceStartTime;
 
@@ -178,8 +181,11 @@ public class DrawRibbonSound : MonoBehaviour {
 		while (true) {
 			for (int i = 0; i < sPoints.Length; i++) {
 				while (Vector3.Distance (transform.position, sPoints [i]) > 0.001f) {
-					transform.position += (sPoints[i] - transform.position) * Time.deltaTime * 2;
-					yield return null;
+                    if (autoMoveSound) {
+                        transform.position += (sPoints[i] - transform.position) * Time.deltaTime * 2;
+                        yield return null;
+                    }
+                    else yield return null;
 				}
 			}
 		}

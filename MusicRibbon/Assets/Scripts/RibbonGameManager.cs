@@ -45,14 +45,7 @@ public class RibbonGameManager : MonoBehaviour {
 	public GameObject[] bassRibbons;
     public GameObject[] melodyRibbons;
     public GameObject[] harmonyRibbons;
-
-    //public GameObject[] Ribbons;
-
-
-
-    public GameObject[] Ribbons;
-
-	 
+   	 
 
     public int totalRibbons;
 
@@ -72,6 +65,7 @@ public class RibbonGameManager : MonoBehaviour {
     public static RibbonGameManager instance = null;
 
 	public bool autoKillRibbons;
+    public bool autoMoveRibbons;
 	public float autoKillLifetime;
 	public float autoKillFadeOutTime;
 
@@ -174,10 +168,6 @@ public class RibbonGameManager : MonoBehaviour {
 
 		}
 
-        //Ribbons = GameObject.FindGameObjectsWithTag("SplinePrefab");
-
-
-
 
 
 
@@ -225,8 +215,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 			//using the sound prefab, because the other objects in the ribbon seem to have weird positions
 			Vector3 direction = ribbonParent.GetComponentInChildren<DrawRibbonSound>().transform.position - Camera.main.transform.position;
-			//adding an offset to compensate for the position of the transform (not sure why it is offset to begin with)
-			//direction.y += 1f;
+			
 
 			direction.Normalize ();
 			//direction.y *= Mathf.Sin (Time.time);
@@ -237,9 +226,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 			StartCoroutine(MoveAlongSineCurve(ribbonParent, direction, 8f));
 
-			//ribbonParent.transform.Translate(direction * Time.deltaTime);
-
-			//ribbonParent.transform.DOMove(endingPosition, 15f);
+			
 
 		}
 			
