@@ -109,7 +109,7 @@ public class RibbonGameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         FadeFromWhite();
-        Debug.Log("Output Sample Rate: " + AudioSettings.outputSampleRate);
+        //Debug.Log("Output Sample Rate: " + AudioSettings.outputSampleRate);
 	}
 	
 	// Update is called once per frame
