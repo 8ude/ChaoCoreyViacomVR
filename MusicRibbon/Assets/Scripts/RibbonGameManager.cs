@@ -24,6 +24,8 @@ public class RibbonGameManager : MonoBehaviour {
 	public AudioClip[] harmonyClips;
 	public AudioClip[] melodyClips;
 
+    
+
     [Space(20)]
     public AudioMixerSnapshot audioOutSnapshot, audioInSnapshot;
     public float gameFadeTime;
@@ -56,7 +58,7 @@ public class RibbonGameManager : MonoBehaviour {
 	public float endingHeight;
 
     public List<GameObject> ribbonObjects;
-    //public int maxRibbons = 4;
+    public int maxRibbons = 8;
     public float ribbonMoveDistance;
 	public float limitRibbonAmount;
 
@@ -64,7 +66,9 @@ public class RibbonGameManager : MonoBehaviour {
 
     public static RibbonGameManager instance = null;
 
-	public bool autoKillRibbons;
+    public bool newCollisionBehavior;
+
+    public bool autoKillRibbons;
     public bool autoMoveRibbons;
 	public float autoKillLifetime;
 	public float autoKillFadeOutTime;
@@ -105,6 +109,7 @@ public class RibbonGameManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         FadeFromWhite();
+        Debug.Log("Output Sample Rate: " + AudioSettings.outputSampleRate);
 	}
 	
 	// Update is called once per frame
@@ -134,7 +139,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 		foreach (GameObject go in bassRibbons) {
             if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) {
-                go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)0.7f / bassRibbons.Length);
+                go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)0.6f / bassRibbons.Length);
                 if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade)
                 {
                     go.transform.root.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
@@ -173,15 +178,21 @@ public class RibbonGameManager : MonoBehaviour {
 
         totalRibbons = ribbonObjects.Count;
 
+        CapRibbons();
 
 
+        //Obsolete - no longer moving ribbons based on ribbon count
+        /*
         if (ribbonObjects.Count > limitRibbonAmount * ribbonMoveTimes && autoMoveRibbons){
 
 			MoveRibbons ();
 			ribbonMoveTimes++;
 		}
+        
 
+        //NO LONGER WORKS
 		MoveSmallRibbons ();
+        */
 
         if (Input.GetKeyDown(KeyCode.R)) {
             FadeToWhite();
@@ -194,17 +205,20 @@ public class RibbonGameManager : MonoBehaviour {
 		return newMin + (value - oldMin) * (newMax - newMin) / (oldMax - oldMin);
 	}
     
-    /*
+    
 	public void CapRibbons() {
 
-		if (RibbonObjects.Count > maxRibbons) {
-			GameObject ribbonToDestroy = RibbonObjects [0];
-			RibbonObjects.RemoveAt (0);
-			Destroy (ribbonToDestroy);
+		if (ribbonObjects.Count > maxRibbons) {
+			GameObject ribbonToDestroy = ribbonObjects [0];
+			ribbonObjects.RemoveAt (0);
+            ribbonToDestroy.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
 		}
 
 	}
-    */
+    
+
+    //NOTE - MOVE RIBBONS NO LONGER WORKING SINCE CONVERTING ribbonObjects to a List<>() (i.e. not re-populating it during update)
+    /*
 	public void MoveRibbons(){
 
 
@@ -232,6 +246,7 @@ public class RibbonGameManager : MonoBehaviour {
 			
 
 	}
+    
 
 	void MoveSmallRibbons() {
 
@@ -279,6 +294,7 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 
 	}
+    */
 
     void ResetGame() {
 

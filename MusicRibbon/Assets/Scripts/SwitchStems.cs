@@ -44,9 +44,13 @@ public class SwitchStems : MonoBehaviour {
 
         LeftSword = LeftHand.GetComponent<EraseRibbon>().LeftSword;
         RightSword = RightHand.GetComponent<EraseRibbon>().RightSword;
-        LeftColorBall = LeftSword.transform.Find("StemIndicator").gameObject;
-        RightColorBall = RightSword.transform.Find("StemIndicator").gameObject;
-
+        //need to have null checks, otherwise game will crash every time we lose tracking
+        if (LeftSword != null) {
+            LeftColorBall = LeftSword.transform.Find("StemIndicator").gameObject;
+        } 
+        if (RightSword != null) { 
+            RightColorBall = RightSword.transform.Find("StemIndicator").gameObject;
+        }
     }
 
     public void ChangeLeftBallColor() {

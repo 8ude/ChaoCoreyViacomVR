@@ -71,22 +71,28 @@ public class RibbonCollision : MonoBehaviour {
 
                 //now different collision types for each instrument
 
-                switch (collidedStemType) {
-                    case RibbonGenerator.musicStem.Melody:
-                        if (melodyTriggerTimer >= melodyTriggerCooldown) {
-                            MelodyRibbonCollision(other);
-                        }
-                        break;
-                    case RibbonGenerator.musicStem.Bass:
-                        BassRibbonCollision(other);
-                        break;
-                    case RibbonGenerator.musicStem.Drum:
+                if (RibbonGameManager.instance.newCollisionBehavior) {
+                    switch (collidedStemType)
+                    {
+                        case RibbonGenerator.musicStem.Melody:
+                            if (melodyTriggerTimer >= melodyTriggerCooldown)
+                            {
+                                MelodyRibbonCollision(other);
+                            }
+                            break;
+                        case RibbonGenerator.musicStem.Bass:
+                            BassRibbonCollision(other);
+                            break;
+                        case RibbonGenerator.musicStem.Drum:
 
-                        DrumCollision(other);
-                        break;
-                    case RibbonGenerator.musicStem.Harmony:
-                        HarmonyCollision(other);
-                        break;
+                            DrumCollision(other);
+                            break;
+                        case RibbonGenerator.musicStem.Harmony:
+                            HarmonyCollision(other);
+                            break;
+                    }
+                } else {
+                    LegacyRibbonCollision(other, collidedStemType);
                 }
                 
             }
@@ -97,7 +103,7 @@ public class RibbonCollision : MonoBehaviour {
 
 
 
-        if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
+        if (RibbonGameManager.instance.newCollisionBehavior && other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
             
@@ -121,51 +127,87 @@ public class RibbonCollision : MonoBehaviour {
         }
         
     }
-    void OnTriggerExit(Collider other) {
-        if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
-            if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
+    void OnTriggerExit(Collider other)
+    {
+        if (RibbonGameManager.instance.newCollisionBehavior && other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing)
+        {
+            if (other.transform.parent.parent.gameObject.tag == "MarkerParent")
+            {
 
                 RibbonGenerator collidedGenerator = other.transform.root.GetComponent<RibbonGenerator>();
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
 
                 DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
 
-				switch (collidedStemType) {
-					case RibbonGenerator.musicStem.Melody:
-						
+                switch (collidedStemType)
+                {
+                    case RibbonGenerator.musicStem.Melody:
+
                         ribbonSound.autoMoveSound = true;
                         ribbonSound.mySource.outputAudioMixerGroup = origGroup;
-						break;
-					case RibbonGenerator.musicStem.Bass:
-						
-						ribbonSound.autoMoveSound = true;
-						break;
-					case RibbonGenerator.musicStem.Drum:
+                        break;
+                    case RibbonGenerator.musicStem.Bass:
 
-						break;
-					case RibbonGenerator.musicStem.Harmony:
-                        
-						break;
-				}
+                        ribbonSound.autoMoveSound = true;
+                        break;
+                    case RibbonGenerator.musicStem.Drum:
+
+                        break;
+                    case RibbonGenerator.musicStem.Harmony:
+
+                        break;
+                }
 
 
                 melodyClip = null;
                 mySource.Stop();
                 mySource.clip = null;
-                if (collidedStemType == RibbonGenerator.musicStem.Melody) {
+                if (collidedStemType == RibbonGenerator.musicStem.Melody)
+                {
                     other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.outputAudioMixerGroup = origGroup;
 
                 }
                 playingMicroSample = false;
-                audioMixer.SetFloat("GlobalLPFrequency", 22000);
-            } 
+                //Resetting LP
+                audioMixer.DOSetFloat("GlobalLPFreq", 22000, 0.5f);
+            }
         }
-        
+
     }
 
-    void OnAudioFilterRead(float[] data, int channels) {
-        if (!playingMicroSample)
-            return;
+    void LegacyRibbonCollision(Collider other, RibbonGenerator.musicStem stem) {
+
+        GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+        AudioSource aSource = newParticles.GetComponent<AudioSource>();
+
+        switch (stem)
+        {
+            case RibbonGenerator.musicStem.Bass:
+                aSource.clip = RibbonGameManager.instance.bassCollisionClips[clipIndex % RibbonGameManager.instance.bassCollisionClips.Length];
+                break;
+            case RibbonGenerator.musicStem.Drum:
+                aSource.clip = RibbonGameManager.instance.drumCollisionClips[clipIndex % RibbonGameManager.instance.drumCollisionClips.Length];
+                break;
+            case RibbonGenerator.musicStem.Harmony:
+                aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[clipIndex % RibbonGameManager.instance.harmonyCollisionClips.Length];
+                break;
+            case RibbonGenerator.musicStem.Melody:
+
+                aSource.clip = RibbonGameManager.instance.melodyCollisionClips[clipIndex % RibbonGameManager.instance.melodyCollisionClips.Length];
+                break;
+        }
+
+        
+        
+        aSource.Play();
+        ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
+        var main = ps.main;
+        //Particle color will be somewhere between white and the ribbon color
+        main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
+
+        Destroy(newParticles, 2.0f);
+        clipIndex++;
+
     }
 
     public void MelodyRibbonCollision(Collider other) {
@@ -244,7 +286,7 @@ public class RibbonCollision : MonoBehaviour {
         float projection = markerBLine.magnitude * Mathf.Cos(Mathf.Deg2Rad * angle);
 
         //Adjust low pass filter to reflect how far wand is along the ribbon
-        audioMixer.DOSetFloat("GlobalLPFrequency", lowPassFrequencies[closestMarkerIndex], 0.5f);
+        audioMixer.DOSetFloat("GlobalLPFreq", lowPassFrequencies[closestMarkerIndex], 0.5f);
 
 		DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
 

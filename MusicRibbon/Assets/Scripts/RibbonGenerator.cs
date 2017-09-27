@@ -85,8 +85,10 @@ public class RibbonGenerator : MonoBehaviour {
 
 			lifeTime = 0f;
 			FadeOutRibbon (fadeoutTime);
-            RibbonGameManager.instance.ribbonObjects.Remove(gameObject);
-			Destroy (gameObject, fadeoutTime);
+            
+            //Redundant?
+            //RibbonGameManager.instance.ribbonObjects.Remove(gameObject);
+			//Destroy (gameObject, fadeoutTime);
 
 		}
 
@@ -159,6 +161,7 @@ public class RibbonGenerator : MonoBehaviour {
 			fadingOut = true;
 			DOTween.To (() => transparency, x => transparency = x, 0, time);
 			drawRibbonSound.mySource.DOFade (0.01f, time);
+            RibbonGameManager.instance.ribbonObjects.Remove(gameObject);
 			Destroy (gameObject, time);
 		}
 	}
