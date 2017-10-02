@@ -19,6 +19,9 @@ public class MeshDeformer : MonoBehaviour {
 	SpectrumAnalysis soundAnalyzer;
 	float soundForceAttenuation = 0.1f;
 
+    float averageXVelocity, averageZVelocity, averageYVelocity;
+    Hv_testGrain_AudioLib pdPlugin;
+
 	void Start() {
 		soundAnalyzer = GetComponent<SpectrumAnalysis> ();
 		deformingMesh = GetComponent<MeshFilter> ().mesh;
@@ -28,18 +31,38 @@ public class MeshDeformer : MonoBehaviour {
 		for (int i = 0; i < originalVertices.Length; i++) {
 			displacedVertices [i] = originalVertices [i];
 		}
-
+        pdPlugin = GetComponent<Hv_testGrain_AudioLib>();
 		vertexVelocities = new Vector3[originalVertices.Length];
 	}
 
 	void Update() {
+        averageXVelocity = 0;
+        averageYVelocity = 0;
+        averageZVelocity = 0;
+
 		uniformScale = transform.localScale.x;
 		for (int i = 0; i < displacedVertices.Length; i++) {
 			UpdateVertex (i);
 		}
 		deformingMesh.vertices = displacedVertices;
 		deformingMesh.RecalculateNormals();
-	}
+
+        for(int i = 0; i <vertexVelocities.Length; i ++) {
+            averageXVelocity += vertexVelocities[i].magnitude;
+            averageYVelocity += vertexVelocities[i].magnitude;
+            averageZVelocity += vertexVelocities[i].magnitude;
+        }
+        averageXVelocity /= vertexVelocities.Length;
+        averageYVelocity /= vertexVelocities.Length;
+        averageZVelocity /= vertexVelocities.Length;
+
+        pdPlugin.SetFloatParameter(Hv_testGrain_AudioLib.Parameter.Grainadjust, Mathf.Abs(averageXVelocity)*100f);
+        pdPlugin.SetFloatParameter(Hv_testGrain_AudioLib.Parameter.Playback, Mathf.Abs(averageZVelocity)*10f);
+        pdPlugin.SetFloatParameter(Hv_testGrain_AudioLib.Parameter.Volume, Mathf.Abs(averageYVelocity/2f));
+
+
+
+    }
 
 	public void AddDeformingForce (Vector3 point, float force) {
 		//world --> local space
