@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MarkerObjectBehavior : MonoBehaviour {
 
@@ -15,12 +14,9 @@ public class MarkerObjectBehavior : MonoBehaviour {
 	public GameObject MelodyMesh;
 	public GameObject HarmonyMesh;
 
-
 	// Use this for initialization
 	void Start () {
-
-		Debug.Log (SceneManager.GetActiveScene().name);
-
+		
 	}
 
 	// Update is called once per frame
