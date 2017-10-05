@@ -9,6 +9,10 @@ public class MeshDeformer : MonoBehaviour {
 	Vector3[] originalVertices, displacedVertices;
 	Vector3[] vertexVelocities;
 
+    public int numSoundSpikes;
+    GameObject[] soundSpikes;
+    public GameObject soundSpikePrefab;
+
 	public float springForce = 20f;
 	public float damping = 5f;
 	public bool wavesOn = true;
@@ -20,19 +24,36 @@ public class MeshDeformer : MonoBehaviour {
 	float soundForceAttenuation = 0.1f;
 
     float averageXVelocity, averageZVelocity, averageYVelocity;
-    Hv_testGrain_AudioLib pdPlugin;
+
+
+    //Hv_testGrain_AudioLib pdPlugin;
 
 	void Start() {
 		soundAnalyzer = GetComponent<SpectrumAnalysis> ();
 		deformingMesh = GetComponent<MeshFilter> ().mesh;
 		originalVertices = deformingMesh.vertices;
+
+        soundSpikes = new GameObject[numSoundSpikes];
+        //sound spikes are points on the sphere that add percussive texture 
+        //when displacement is large enough
+        for (int i = 0; i < numSoundSpikes; i++){
+            int associatedVertex = Mathf.RoundToInt(deformingMesh.vertices.Length / (i + 1)) - 1;
+            Vector3 worldPos = transform.TransformPoint(originalVertices[associatedVertex]);
+            soundSpikes[i] = Instantiate(soundSpikePrefab, worldPos, Quaternion.identity);
+        }
+
+
 		//duplicate original vertices into displaced vertices
 		displacedVertices = new Vector3[originalVertices.Length];
 		for (int i = 0; i < originalVertices.Length; i++) {
 			displacedVertices [i] = originalVertices [i];
 		}
+
+
         pdPlugin = GetComponent<Hv_testGrain_AudioLib>();
-		vertexVelocities = new Vector3[originalVertices.Length];
+		
+
+        vertexVelocities = new Vector3[originalVertices.Length];
 	}
 
 	void Update() {
@@ -55,6 +76,13 @@ public class MeshDeformer : MonoBehaviour {
         averageXVelocity /= vertexVelocities.Length;
         averageYVelocity /= vertexVelocities.Length;
         averageZVelocity /= vertexVelocities.Length;
+
+		for (int i = 0; i < numSoundSpikes; i++) {
+			int associatedVertex = Mathf.RoundToInt(deformingMesh.vertices.Length / (i + 1)) - 1;
+            Vector3 worldPos = transform.TransformPoint(displacedVertices[associatedVertex]);
+			soundSpikes[i].transform.position = worldPos;
+		}
+
 
         pdPlugin.SetFloatParameter(Hv_testGrain_AudioLib.Parameter.Grainadjust, Mathf.Abs(averageXVelocity)*100f);
         pdPlugin.SetFloatParameter(Hv_testGrain_AudioLib.Parameter.Playback, Mathf.Abs(averageZVelocity)*10f);
@@ -102,6 +130,8 @@ public class MeshDeformer : MonoBehaviour {
 		velocity *= 1f - (damping * Time.deltaTime);
 		vertexVelocities [i] = velocity;
 		displacedVertices [i] += velocity * (Time.deltaTime / uniformScale);
+
+		
 		
 	}
 
