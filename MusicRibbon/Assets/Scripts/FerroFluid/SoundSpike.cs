@@ -24,8 +24,8 @@ public class SoundSpike : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        if (transform.position.magnitude/OriginalPosition.magnitude > soundSpikeScale && !mySource.isPlaying ) {
+		Vector3 displacement = transform.position - OriginalPosition;
+        if (displacement.magnitude > soundSpikeScale && !mySource.isPlaying ) {
             PlaySoundSpike();
         }
 
