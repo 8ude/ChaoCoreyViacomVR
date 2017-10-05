@@ -26,7 +26,7 @@ public class MeshDeformer : MonoBehaviour {
     float averageXVelocity, averageZVelocity, averageYVelocity;
 
 
-    //Hv_testGrain_AudioLib pdPlugin;
+    Hv_testGrain_AudioLib pdPlugin;
 
 	void Start() {
 		soundAnalyzer = GetComponent<SpectrumAnalysis> ();
