@@ -81,6 +81,52 @@ public class MarkerObjectBehavior : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
+		if(SceneManager.GetActiveScene().name == "Echo"){
+
+			drumColor = OriginalColors[0];
+			bassColor = OriginalColors[1];
+			melodyColor = OriginalColors[2];
+			harmonyColor = OriginalColors[3];
+
+		}
+
+		if(SceneManager.GetActiveScene().name == "Mountain"){
+
+			drumColor = MountainColors[0];
+			bassColor = MountainColors[1];
+			melodyColor = MountainColors[2];
+			harmonyColor = MountainColors[3];
+
+		}
+
+		if(SceneManager.GetActiveScene().name == "Desert"){
+
+			drumColor = DesertColors[0];
+			bassColor = DesertColors[1];
+			melodyColor = DesertColors[2];
+			harmonyColor = DesertColors[3];
+
+		}
+
+		if(SceneManager.GetActiveScene().name == "Snow"){
+
+			drumColor = SnowColors[0];
+			bassColor = SnowColors[1];
+			melodyColor = SnowColors[2];
+			harmonyColor = SnowColors[3];
+
+		}
+
+		if(SceneManager.GetActiveScene().name == "Sea"){
+
+			drumColor = SeaColors[0];
+			bassColor = SeaColors[1];
+			melodyColor = SeaColors[2];
+			harmonyColor = SeaColors[3];
+
+		}
+
 		
 	}
 
