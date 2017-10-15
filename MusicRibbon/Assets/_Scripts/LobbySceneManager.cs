@@ -18,7 +18,7 @@ public class LobbySceneManager : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other) {
 
-		if(other.transform.parent.parent.tag == "Controller") {
+        if (other.transform.parent.parent.tag == "Controller") {
 
 			if (this.gameObject.name == "Scene1") {
 				SceneManager.LoadScene (1);
@@ -27,10 +27,10 @@ public class LobbySceneManager : MonoBehaviour {
 				SceneManager.LoadScene (2);
 			}
 			else if (this.gameObject.name == "Scene3") {
-				SceneManager.LoadScene (3);
+				SceneManager.LoadScene (1);
 			}
 			else if (this.gameObject.name == "Scene4") {
-				SceneManager.LoadScene (4);
+				SceneManager.LoadScene (1);
 			}
 		}
 
