@@ -178,7 +178,9 @@ public class EraseRibbon : MonoBehaviour {
 				GameObject eraserCube = Instantiate (EraserCubePrefab, splinePoints [0], Quaternion.identity);
 				eraserCube.GetComponent<EraseRibbonAnim> ().EraseRibbon (splinePoints, 1.0f);
 				otherParent.GetComponent<RibbonGenerator> ().FadeOutRibbon (0.5f);
-				otherParent.GetComponentInChildren<DrawRibbonSound> ().mySource.DOFade (0f, 0.6f);
+                DOTween.To( () => otherParent.GetComponentInChildren<DrawRibbonSound> ().currentMaxVolume, 
+                          x => otherParent.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume = x,
+                           0f, 0.6f);
                 RibbonGameManager.instance.ribbonObjects.Remove(otherParent);
 				Destroy (other.transform.parent.parent.gameObject, 1.0f);
 

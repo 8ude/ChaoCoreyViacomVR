@@ -33,7 +33,8 @@ public class DrawRibbon: MonoBehaviour {
 
 	public MeshFilter currentMesh;
 
-	AudioClip nextClip;
+	AudioClip nextHighClip;
+    AudioClip nextLowClip;
 
 
 	//public int numRibbons = 0;
@@ -68,7 +69,8 @@ public class DrawRibbon: MonoBehaviour {
 
 			}
 
-			nextClip = null;
+            nextHighClip = null;
+            nextLowClip = null;
 
 
 			currentRibbonSound = Instantiate (ribbonSoundPrefab, transform.position, Quaternion.identity);
@@ -80,31 +82,43 @@ public class DrawRibbon: MonoBehaviour {
 			//Debug.Log (switchStems.currentInstrument);
 			switch (switchStems.currentInstrument) {
 			    case "Bass":
-				    nextClip = RibbonGameManager.instance.bassClips [
+				    nextHighClip = RibbonGameManager.instance.bassClips [
 					    RibbonGameManager.instance.bassRibbonsDrawn % RibbonGameManager.instance.bassClips.Length
 				    ];
-				    RibbonGameManager.instance.bassRibbonsDrawn++;
+					nextLowClip = RibbonGameManager.instance.bassClips[
+						RibbonGameManager.instance.bassRibbonsDrawn + 1 % RibbonGameManager.instance.bassClips.Length
+					]; 
+				    RibbonGameManager.instance.bassRibbonsDrawn += 2;
                     currentRibbonSound.gameObject.tag = "BassStem";
 				break;
 			    case "Drums":
-				    nextClip = RibbonGameManager.instance.drumClips [
+				    nextHighClip = RibbonGameManager.instance.drumClips [
 					    RibbonGameManager.instance.drumRibbonsDrawn % RibbonGameManager.instance.drumClips.Length
 				    ];
-                    RibbonGameManager.instance.drumRibbonsDrawn++;
+					nextLowClip = RibbonGameManager.instance.drumClips[
+						RibbonGameManager.instance.drumRibbonsDrawn + 1 % RibbonGameManager.instance.drumClips.Length
+					];
+                    RibbonGameManager.instance.drumRibbonsDrawn += 2;
                     currentRibbonSound.gameObject.tag = "DrumStem";
                     break;
 			    case "Harmony":
-				    nextClip = RibbonGameManager.instance.harmonyClips [
+				    nextHighClip = RibbonGameManager.instance.harmonyClips [
 				    	RibbonGameManager.instance.harmonyRibbonsDrawn % RibbonGameManager.instance.harmonyClips.Length
 			    	];
-                    RibbonGameManager.instance.harmonyRibbonsDrawn++;
+					nextLowClip = RibbonGameManager.instance.harmonyClips[
+						RibbonGameManager.instance.harmonyRibbonsDrawn + 1 % RibbonGameManager.instance.harmonyClips.Length
+					];
+                    RibbonGameManager.instance.harmonyRibbonsDrawn+=2;
                     currentRibbonSound.gameObject.tag = "HarmonyStem";
                     break;
 			    case "Melody":
-			    	nextClip = RibbonGameManager.instance.melodyClips [
+			    	nextHighClip = RibbonGameManager.instance.melodyClips [
 				    	RibbonGameManager.instance.melodyRibbonsDrawn % RibbonGameManager.instance.melodyClips.Length
 				    ];
-                    RibbonGameManager.instance.melodyRibbonsDrawn++;
+					nextLowClip = RibbonGameManager.instance.harmonyClips[
+						RibbonGameManager.instance.harmonyRibbonsDrawn + 1 % RibbonGameManager.instance.harmonyClips.Length
+					];
+                    RibbonGameManager.instance.melodyRibbonsDrawn+=2;
                     currentRibbonSound.gameObject.tag = "MelodyStem";
                     break;
 			}
@@ -113,7 +127,7 @@ public class DrawRibbon: MonoBehaviour {
 
 			//Debug.Log (nextClip.name);
             
-            currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon (nextClip);
+            currentRibbonSound.GetComponent<DrawRibbonSound> ().StartDrawingRibbon (nextHighClip, nextLowClip);
 		}
 
 
@@ -125,7 +139,7 @@ public class DrawRibbon: MonoBehaviour {
 
 		if (!eraseRibbon.isErasing) {
 
-			currentRibbonSound.GetComponent<DrawRibbonSound> ().StopDrawingRibbon (nextClip);
+			currentRibbonSound.GetComponent<DrawRibbonSound> ().StopDrawingRibbon (nextHighClip);
 
 			if (markerChain.Count > 1) {
 

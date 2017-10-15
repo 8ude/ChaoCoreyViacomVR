@@ -4,8 +4,16 @@ using UnityEngine;
 using Beat;
 
 public class DrawRibbonSound : MonoBehaviour {
+    /// <summary>
+    /// Responsible for creating clips that correspond with drawing motion
+    /// </summary>
 
-	public AudioSource mySource;
+    AudioSource[] myAudioSources;
+
+	public AudioSource myHighSource;
+    public AudioSource myLowSource;
+
+    public float currentMaxVolume = 1f;
 
 	public string instrumentType;
 
@@ -16,18 +24,17 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	int sampleOffset = 0;
 
-	//time to fadeout after 
+	//time to fadeout at end of clip
 	public float fadeOutTime = 0.2f;
 
-	//float[] audioData;
-	float[] origAudioData;
+	
+    float[] origHighAudioData;
+    float[] origLowAudioData;
 
 	public Vector3[] splinePoints;
 
 	int splinePointIndex;
 
-	AudioLowPassFilter lpFilter;
-	AudioHighPassFilter hpFilter;
 
     //flip this to false to turn off the movement of the source along the ribbon
     public bool autoMoveSound = true;
@@ -36,81 +43,35 @@ public class DrawRibbonSound : MonoBehaviour {
 	[SerializeField] double sourceStartTime;
 
 	void Start() {
-
-		lpFilter = GetComponent<AudioLowPassFilter> ();
-		hpFilter = GetComponent<AudioHighPassFilter> ();
-
-        float hpCutoff;
-        float lpCutoff;
-
-
-        if (transform.position.y > 1.5f)
-        {
-            hpCutoff = RibbonGameManager.instance.RemapRange(transform.position.y, 1.5f, 2.5f, 10, 4000);
+        myAudioSources = GetComponents<AudioSource>();
+        if (myAudioSources.Length == 2) {
+            myHighSource = myAudioSources[0];
+            myLowSource = myAudioSources[1];
         }
-        else
-            hpCutoff = 10f;
-
-        if (transform.position.y < 1.5f)
-        {
-            lpCutoff = RibbonGameManager.instance.RemapRange(transform.position.y, 0.3f, 1.5f, 100, 22000);
-        }
-        else
-            lpCutoff = 22000;
-
-        hpFilter.cutoffFrequency = hpCutoff;
-        lpFilter.cutoffFrequency = lpCutoff;
-
+        else Debug.Log("Error - Ribbon doesn't have 2 audio sources");
 
     }
 
 	void Update() {
 
-
-
-		float lowPassCutoff = lpFilter.cutoffFrequency;
-		float hiPassCutoff = hpFilter.cutoffFrequency;
-
-		float newHPCutoff;
-		float newLPCutoff;
-
-		if (transform.position.y > 1.5f) {
-			newHPCutoff = RibbonGameManager.instance.RemapRange (transform.position.y, 1.5f, 2.5f, 10, 4000);
-		} else
-			newHPCutoff = 10f;
-
-		if (transform.position.y < 1.5f) {
-			newLPCutoff = RibbonGameManager.instance.RemapRange (transform.position.y, 0.3f, 1.5f, 100, 22000);
-		} else
-			newLPCutoff = 22000;
-
-
-		lpFilter.cutoffFrequency = 
-			Mathf.Lerp (lowPassCutoff, newLPCutoff, Time.deltaTime);
-
-		//HIGH PASS FILTER IS GIVING WEIRD POPPING NOISES
-	    hpFilter.cutoffFrequency = 
-			Mathf.Lerp (hiPassCutoff, newHPCutoff, Time.deltaTime);
-			
+        BalanceAudioSources(RibbonGameManager.instance.RemapRange(transform.position.y, 0f, 2.5f, -1f, 1f), currentMaxVolume);
+	
 	}
 
-	public void StartDrawingRibbon(AudioClip origClip) {
-
-		//Debug.Log (origClip.name);
-		mySource = gameObject.GetComponent<AudioSource> ();
+    public void StartDrawingRibbon(AudioClip origHighClip, AudioClip origLowClip) {
 
 
-		mySource.clip = origClip;
+		myHighSource.clip = origHighClip;
+        myLowSource.clip = origLowClip;
 
 
 		startTime = Clock.Instance.AtNextHalf();
 
-		//mySource.PlayScheduled (startTime);
+		origHighAudioData = new float[myHighSource.clip.samples * myHighSource.clip.channels];
+        origLowAudioData = new float[myLowSource.clip.samples * myLowSource.clip.channels];
 
-
-		origAudioData = new float[mySource.clip.samples*mySource.clip.channels];
-
-		mySource.clip.GetData (origAudioData, 0);
+		myHighSource.clip.GetData (origHighAudioData, 0);
+        myLowSource.clip.GetData(origLowAudioData, 0);
 
 
 
@@ -130,39 +91,46 @@ public class DrawRibbonSound : MonoBehaviour {
 		int newClipSamples = Mathf.RoundToInt (newClipLength * origClip.frequency);
         
 
-		float[] audioData = new float[newClipSamples*mySource.clip.channels];
+        float[] highAudioData = new float[newClipSamples * myHighSource.clip.channels];
+        float[] lowAudioData = new float[newClipSamples * myLowSource.clip.channels];
         
 
-		AudioClip newClip = AudioClip.Create ("RibbonClip", newClipSamples, origClip.channels, origClip.frequency, false);
+		AudioClip newHighClip = AudioClip.Create ("RibbonHighClip", newClipSamples, origClip.channels, origClip.frequency, false);
+        AudioClip newLowClip = AudioClip.Create("RibbonLowClip", newClipSamples, origClip.channels, origClip.frequency, false);
 
 
+		for (int i = 0; i < (newClipSamples*myHighSource.clip.channels); i++) {
 
-		for (int i = 0; i < (newClipSamples*mySource.clip.channels); i++) {
+			highAudioData [i] = origHighAudioData [i];
+            lowAudioData[i] = origLowAudioData[i];
 
-			audioData [i] = origAudioData [i];
+            // fade out last 10000 samples (roughly 1/4 sec);
 
-			if (i > (newClipSamples * mySource.clip.channels) - 10000) {
+			if (i > (newClipSamples * myHighSource.clip.channels) - 10000) {
 
-				int j = i - ((newClipSamples * mySource.clip.channels) - 10000);
+				int j = i - ((newClipSamples * myHighSource.clip.channels) - 10000);
 
-				audioData[i] *= Mathf.Lerp(1f, 0f, (float) j / 10000); 
+				highAudioData[i] *= Mathf.Lerp(1f, 0f, (float) j / 10000);
+                lowAudioData[i] *= Mathf.Lerp(1f, 0f, (float)j / 10000);
 			}
 
 
 
 		}
 
-		//Debug.Log ("10000th sample:" + audioData[10000]);
 
-		newClip.SetData (audioData, 0);
+		newHighClip.SetData (highAudioData, 0);
+        newLowClip.SetData(lowAudioData, 0);
 
 
 
-		mySource.clip = newClip;
+		myHighSource.clip = newHighClip;
+        myLowSource.clip = newLowClip;
 
 
 		sourceStartTime = Clock.Instance.AtNextMeasure ();
-		mySource.PlayScheduled (sourceStartTime);
+		myHighSource.PlayScheduled (sourceStartTime);
+        myLowSource.PlayScheduled (sourceStartTime);
 
 	}
 
@@ -182,7 +150,7 @@ public class DrawRibbonSound : MonoBehaviour {
 			for (int i = 0; i < sPoints.Length; i++) {
 				while (Vector3.Distance (transform.position, sPoints [i]) > 0.001f) {
                     if (autoMoveSound) {
-                        transform.position += (sPoints[i] - transform.position) * Time.deltaTime * 2;
+                        transform.position += (sPoints[i] - transform.position) * Time.deltaTime * 4f;
                         yield return null;
                     }
                     else yield return null;
@@ -190,5 +158,19 @@ public class DrawRibbonSound : MonoBehaviour {
 			}
 		}
 	}
+
+    public void BalanceAudioSources (float heightValue, float maxVolume) {
+        ///<summary>
+        /// Balance between the two different audio loops according
+        /// to constant power curve
+        ///</summary>
+
+        //heightValue is mapped from -1 to 1
+        myHighSource.volume = Mathf.Sqrt(0.5f * (1f + heightValue)) * maxVolume;
+        myLowSource.volume = Mathf.Sqrt(0.5f * (1f - heightValue)) * maxVolume;
+
+
+
+    }
 		
 }

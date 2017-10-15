@@ -134,7 +134,7 @@ public class RibbonCollision : MonoBehaviour {
 					case RibbonGenerator.musicStem.Melody:
 						
                         ribbonSound.autoMoveSound = true;
-                        ribbonSound.mySource.outputAudioMixerGroup = origGroup;
+                        ribbonSound.myHighSource.outputAudioMixerGroup = origGroup;
 						break;
 					case RibbonGenerator.musicStem.Bass:
 						
@@ -153,7 +153,7 @@ public class RibbonCollision : MonoBehaviour {
                 mySource.Stop();
                 mySource.clip = null;
                 if (collidedStemType == RibbonGenerator.musicStem.Melody) {
-                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().mySource.outputAudioMixerGroup = origGroup;
+                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().myHighSource.outputAudioMixerGroup = origGroup;
 
                 }
                 playingMicroSample = false;
@@ -202,8 +202,8 @@ public class RibbonCollision : MonoBehaviour {
         ribbonSound.transform.position = transform.position;
 
         //mute the main stem while we do the micro thingy
-        ribbonSound.mySource.outputAudioMixerGroup = mutedGroup;
-        melodyClip = ribbonSound.mySource.clip;
+        ribbonSound.myHighSource.outputAudioMixerGroup = mutedGroup;
+        melodyClip = ribbonSound.myHighSource.clip;
 		
         AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(sizeAdjust, 0.5f, 1f));
         //reset the triggerCooldown and play the clip

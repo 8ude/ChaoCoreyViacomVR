@@ -119,7 +119,7 @@ public class RibbonGameManager : MonoBehaviour {
 
             if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) {
 
-                go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)1f / drumRibbons.Length);
+                go.transform.root.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume = Mathf.Sqrt((float)1f / drumRibbons.Length);
 
                 if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade)
                 {
@@ -134,7 +134,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 		foreach (GameObject go in bassRibbons) {
             if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) {
-                go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)0.7f / bassRibbons.Length);
+                go.transform.root.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume = Mathf.Sqrt((float)0.7f / bassRibbons.Length);
                 if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade)
                 {
                     go.transform.root.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
@@ -147,7 +147,7 @@ public class RibbonGameManager : MonoBehaviour {
 		foreach (GameObject go in harmonyRibbons) {
                 if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) {
 
-                    go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)1f / harmonyRibbons.Length);
+                    go.transform.root.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume = Mathf.Sqrt((float)1f / harmonyRibbons.Length);
                     if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade)
                     {
                         go.transform.root.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
@@ -160,7 +160,7 @@ public class RibbonGameManager : MonoBehaviour {
         foreach (GameObject go in melodyRibbons) {
             if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) { 
 
-                go.GetComponent<AudioSource>().volume = Mathf.Sqrt((float)1f / melodyRibbons.Length);
+                go.transform.root.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume = Mathf.Sqrt((float)1f / melodyRibbons.Length);
                 if (Vector3.Distance(Camera.main.transform.position, go.transform.position) > maxDistanceBeforeFade) {
                     go.transform.root.GetComponent<RibbonGenerator>().FadeOutRibbon(10f);
                 }
