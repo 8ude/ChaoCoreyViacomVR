@@ -86,7 +86,7 @@ public class DrawRibbon: MonoBehaviour {
 					    RibbonGameManager.instance.bassRibbonsDrawn % RibbonGameManager.instance.bassClips.Length
 				    ];
 					nextLowClip = RibbonGameManager.instance.bassClips[
-						RibbonGameManager.instance.bassRibbonsDrawn + 1 % RibbonGameManager.instance.bassClips.Length
+						(RibbonGameManager.instance.bassRibbonsDrawn + 1) % RibbonGameManager.instance.bassClips.Length
 					]; 
 				    RibbonGameManager.instance.bassRibbonsDrawn += 2;
                     currentRibbonSound.gameObject.tag = "BassStem";
@@ -96,7 +96,7 @@ public class DrawRibbon: MonoBehaviour {
 					    RibbonGameManager.instance.drumRibbonsDrawn % RibbonGameManager.instance.drumClips.Length
 				    ];
 					nextLowClip = RibbonGameManager.instance.drumClips[
-						RibbonGameManager.instance.drumRibbonsDrawn + 1 % RibbonGameManager.instance.drumClips.Length
+						(RibbonGameManager.instance.drumRibbonsDrawn + 1) % RibbonGameManager.instance.drumClips.Length
 					];
                     RibbonGameManager.instance.drumRibbonsDrawn += 2;
                     currentRibbonSound.gameObject.tag = "DrumStem";
@@ -106,7 +106,7 @@ public class DrawRibbon: MonoBehaviour {
 				    	RibbonGameManager.instance.harmonyRibbonsDrawn % RibbonGameManager.instance.harmonyClips.Length
 			    	];
 					nextLowClip = RibbonGameManager.instance.harmonyClips[
-						RibbonGameManager.instance.harmonyRibbonsDrawn + 1 % RibbonGameManager.instance.harmonyClips.Length
+						(RibbonGameManager.instance.harmonyRibbonsDrawn + 1) % RibbonGameManager.instance.harmonyClips.Length
 					];
                     RibbonGameManager.instance.harmonyRibbonsDrawn+=2;
                     currentRibbonSound.gameObject.tag = "HarmonyStem";
@@ -115,8 +115,8 @@ public class DrawRibbon: MonoBehaviour {
 			    	nextHighClip = RibbonGameManager.instance.melodyClips [
 				    	RibbonGameManager.instance.melodyRibbonsDrawn % RibbonGameManager.instance.melodyClips.Length
 				    ];
-					nextLowClip = RibbonGameManager.instance.harmonyClips[
-						RibbonGameManager.instance.harmonyRibbonsDrawn + 1 % RibbonGameManager.instance.harmonyClips.Length
+					nextLowClip = RibbonGameManager.instance.melodyClips[
+						(RibbonGameManager.instance.melodyRibbonsDrawn + 1) % RibbonGameManager.instance.melodyClips.Length
 					];
                     RibbonGameManager.instance.melodyRibbonsDrawn+=2;
                     currentRibbonSound.gameObject.tag = "MelodyStem";

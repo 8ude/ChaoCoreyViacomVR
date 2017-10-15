@@ -42,9 +42,10 @@ public class DrawRibbonSound : MonoBehaviour {
 	//need this for debugging Audio Sync issues
 	[SerializeField] double sourceStartTime;
 
-	void Start() {
-        myAudioSources = GetComponents<AudioSource>();
-        if (myAudioSources.Length == 2) {
+	void Awake() {
+        myAudioSources = gameObject.GetComponents<AudioSource>();
+        //Debug.Log(myAudioSources.Length);
+        if (myAudioSources.Length > 1) {
             myHighSource = myAudioSources[0];
             myLowSource = myAudioSources[1];
         }

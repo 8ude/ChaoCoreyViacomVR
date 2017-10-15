@@ -157,7 +157,7 @@ public class RibbonCollision : MonoBehaviour {
 
                 }
                 playingMicroSample = false;
-                audioMixer.SetFloat("GlobalLPFrequency", 22000);
+                audioMixer.SetFloat("GlobalLPFreq", 22000);
             } 
         }
         

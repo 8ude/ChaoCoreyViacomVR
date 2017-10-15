@@ -159,9 +159,14 @@ public class RibbonGenerator : MonoBehaviour {
 			fadingOut = true;
 			DOTween.To (() => transparency, x => transparency = x, 0, time);
 			drawRibbonSound.myHighSource.DOFade (0.01f, time);
+            Invoke("RemoveRibbon", time - 0.5f);
 			Destroy (gameObject, time);
 		}
 	}
+
+    public void RemoveRibbon() {
+        RibbonGameManager.instance.ribbonObjects.Remove(gameObject);
+    }
 
 
 
