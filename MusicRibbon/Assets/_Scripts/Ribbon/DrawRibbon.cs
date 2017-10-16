@@ -60,7 +60,9 @@ public class DrawRibbon: MonoBehaviour {
 
 	void Trigger (object sender, ClickedEventArgs e)
 	{
-		//Debug.Log (eraseRibbon.isErasing);
+        //Debug.Log (eraseRibbon.isErasing);
+
+        
 
 		if (!eraseRibbon.isErasing) {
 
@@ -72,7 +74,7 @@ public class DrawRibbon: MonoBehaviour {
             nextHighClip = null;
             nextLowClip = null;
 
-
+            //return;
 			currentRibbonSound = Instantiate (ribbonSoundPrefab, transform.position, Quaternion.identity);
 			currentRibbonSound.transform.SetParent (gameObject.transform);
 
