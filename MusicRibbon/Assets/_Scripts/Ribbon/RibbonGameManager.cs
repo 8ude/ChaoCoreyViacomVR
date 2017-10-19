@@ -299,6 +299,11 @@ public class RibbonGameManager : MonoBehaviour {
 
     }
 
+    public void ToLobby()
+    {
+        SceneManager.LoadScene(0);
+    }
+
 
 
 
