@@ -5,6 +5,9 @@ using VRTK;
 
 public class SkyGameManager : MonoBehaviour {
 
+	public GameObject LeftController;
+	public GameObject RightController;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -15,9 +18,9 @@ public class SkyGameManager : MonoBehaviour {
 		
 	}
 
-//
-//	public virtual void OnTriggerPressed(){
-//	
-//	}
+	public void AddPoints(){
+	
+		Debug.Log (this.gameObject.transform.position);
+	}
 
 }
