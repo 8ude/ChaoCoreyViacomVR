@@ -5,15 +5,19 @@ using VRTK;
 
 public class SkyGameManager : MonoBehaviour {
 
-	public GameObject SkyLineRender;
-	public int i;
+	public GameObject SkyLine;
+    public float Distance;
+    private LineRenderer skylinerender;
+    
+
+    public int i;
 
 	// Use this for initialization
 	void Start () {
 
+       skylinerender = SkyLine.GetComponent<LineRenderer>();
 
-		
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -22,9 +26,14 @@ public class SkyGameManager : MonoBehaviour {
 
 	public void AddPoints(){
 
-		SkyLineRender.GetComponent<LineRenderer> ().SetPosition (i, this.gameObject.transform.position);
-		i = i + 1;
-		Debug.Log ("i:" + i + " position:" + this.gameObject.transform.position);
+        i = i + 1;
+        skylinerender.positionCount = i;
+
+        Vector3 newPosition = this.gameObject.transform.position + (Distance * transform.forward);
+        skylinerender.SetPosition (i-1, newPosition);
+		
+        
+		Debug.Log ("i:" + i + " position:" + newPosition);
 	}
 
 }
