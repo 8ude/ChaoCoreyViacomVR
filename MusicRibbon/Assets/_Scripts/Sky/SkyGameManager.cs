@@ -36,4 +36,11 @@ public class SkyGameManager : MonoBehaviour {
 		Debug.Log ("i:" + i + " position:" + newPosition);
 	}
 
+	public void Reset(){
+
+		skylinerender.positionCount = 0;
+
+	
+	}
+
 }
