@@ -5,8 +5,13 @@ using VRTK;
 
 public class SkyGameManager : MonoBehaviour {
 
+	public GameObject SkyLineRender;
+	public int i;
+
 	// Use this for initialization
 	void Start () {
+
+
 		
 	}
 	
@@ -16,8 +21,10 @@ public class SkyGameManager : MonoBehaviour {
 	}
 
 	public void AddPoints(){
-	
-		Debug.Log (this.gameObject.transform.position);
+
+		SkyLineRender.GetComponent<LineRenderer> ().SetPosition (i, this.gameObject.transform.position);
+		i = i + 1;
+		Debug.Log ("i:" + i + " position:" + this.gameObject.transform.position);
 	}
 
 }
