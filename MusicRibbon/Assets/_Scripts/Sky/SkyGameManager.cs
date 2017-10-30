@@ -39,6 +39,7 @@ public class SkyGameManager : MonoBehaviour {
 	public void Reset(){
 
 		skylinerender.positionCount = 0;
+        i = 0;
 
 	
 	}
