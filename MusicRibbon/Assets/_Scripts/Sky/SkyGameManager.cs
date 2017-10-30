@@ -5,9 +5,6 @@ using VRTK;
 
 public class SkyGameManager : MonoBehaviour {
 
-	public GameObject LeftController;
-	public GameObject RightController;
-
 	// Use this for initialization
 	void Start () {
 		
