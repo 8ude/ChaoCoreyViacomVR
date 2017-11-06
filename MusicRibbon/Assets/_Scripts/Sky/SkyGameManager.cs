@@ -8,6 +8,7 @@ public class SkyGameManager : MonoBehaviour {
 	public GameObject SkyLine;
     public float Distance;
     private LineRenderer skylinerender;
+	public SteamVR_TrackedController device;
     
 
     public int i;
@@ -17,10 +18,15 @@ public class SkyGameManager : MonoBehaviour {
 
        skylinerender = SkyLine.GetComponent<LineRenderer>();
 
+
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (device.triggerPressed == true) {
+			Debug.Log ("trigger pressed");
+		}
 		
 	}
 
