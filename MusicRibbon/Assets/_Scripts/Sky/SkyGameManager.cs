@@ -9,6 +9,7 @@ public class SkyGameManager : MonoBehaviour {
     public float Distance;
     private LineRenderer skylinerender;
 	public SteamVR_TrackedController device;
+	public SwitchStems SwitchStem;
     
 
     public int i;
@@ -47,6 +48,23 @@ public class SkyGameManager : MonoBehaviour {
 		skylinerender.positionCount = 0;
         i = 0;
 
+	
+	}
+
+	public void ChangeLineColor(){
+
+		if (SwitchStem.currentInstrument == "Bass") {
+			skylinerender.material.color = SwitchStem.bassColor;
+		}
+		if (SwitchStem.currentInstrument == "Drums") {
+			skylinerender.material.color = SwitchStem.drumColor;
+		}
+		if (SwitchStem.currentInstrument == "Harmony") {
+			skylinerender.material.color = SwitchStem.harmonyColor;
+		}
+		if (SwitchStem.currentInstrument == "Melody") {
+			skylinerender.material.color = SwitchStem.melodyColor;
+		}
 	
 	}
 
