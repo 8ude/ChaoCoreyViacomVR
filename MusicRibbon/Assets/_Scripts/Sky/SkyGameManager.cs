@@ -25,7 +25,7 @@ public class SkyGameManager : MonoBehaviour {
 	void Update () {
 
 		if (device.triggerPressed == true) {
-			Debug.Log ("trigger pressed");
+            AddPoints();
 		}
 		
 	}
