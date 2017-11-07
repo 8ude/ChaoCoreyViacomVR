@@ -93,8 +93,6 @@ public class SwitchStems : MonoBehaviour {
 
     public void ChangeLeftBallColor() {
 
-        Debug.Log("called");
-
         if(currentInstrument == "Bass") {
             LeftColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
         }
@@ -111,7 +109,6 @@ public class SwitchStems : MonoBehaviour {
 
     public void ChangeRightBallColor() {
 
-        Debug.Log("called");
 
         if (currentInstrument == "Bass") {
             RightColorBall.GetComponent<MeshRenderer>().material.color = bassColor;

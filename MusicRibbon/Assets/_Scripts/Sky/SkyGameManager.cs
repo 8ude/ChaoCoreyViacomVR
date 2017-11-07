@@ -53,18 +53,24 @@ public class SkyGameManager : MonoBehaviour {
 
 	public void ChangeLineColor(){
 
+        Debug.Log("called");
+
 		if (SwitchStem.currentInstrument == "Bass") {
 			skylinerender.material.color = SwitchStem.bassColor;
-		}
+            Debug.Log(skylinerender.material.color);
+        }
 		if (SwitchStem.currentInstrument == "Drums") {
 			skylinerender.material.color = SwitchStem.drumColor;
-		}
+            Debug.Log(skylinerender.material.color);
+        }
 		if (SwitchStem.currentInstrument == "Harmony") {
 			skylinerender.material.color = SwitchStem.harmonyColor;
-		}
+            Debug.Log(skylinerender.material.color);
+        }
 		if (SwitchStem.currentInstrument == "Melody") {
 			skylinerender.material.color = SwitchStem.melodyColor;
-		}
+            Debug.Log(skylinerender.material.color);
+        }
 	
 	}
 
