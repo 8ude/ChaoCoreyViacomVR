@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK.Examples;
 
 public class SwitchStems : MonoBehaviour {
 
@@ -16,12 +17,24 @@ public class SwitchStems : MonoBehaviour {
 
 	public string currentInstrument = "Bass";
 
-    public GameObject LeftHand;
-    public GameObject RightHand;
-    public GameObject LeftSword;
-    public GameObject RightSword;
-    public GameObject LeftColorBall;
-    public GameObject RightColorBall;
+	public GameObject LeftHand;
+	public GameObject RightHand;
+	public GameObject LeftSword;
+	public GameObject RightSword;
+	public GameObject LeftWand;
+	public GameObject LeftRubber;
+	public GameObject RightWand;
+	public GameObject RightRubber;
+	public GameObject LeftColorBall;
+	public GameObject RightColorBall;
+
+	public float initTimeDelay = 4f;
+
+	bool bothControllersFound = false;
+
+	public enum controllerFoundStatus {NeitherFound = 0, LeftFound = 1, RightFound = 2, BothFound = 3};
+
+	controllerFoundStatus currentStatus;
 
     // Use this for initialization
     void Start () {
@@ -31,27 +44,54 @@ public class SwitchStems : MonoBehaviour {
     	melodyColor = Colors[2];
         harmonyColor = Colors[3];
 
+		currentStatus = controllerFoundStatus.NeitherFound;
+		bothControllersFound = false;
+
 
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (Time.time > initTimeDelay && currentStatus != controllerFoundStatus.BothFound) {
+			FindController ();
+		}
 		
 	}
 
-    void FindColorBall() {
 
+	void FindController(){
 
-        LeftSword = LeftHand.GetComponent<EraseRibbon>().LeftSword;
-        RightSword = RightHand.GetComponent<EraseRibbon>().RightSword;
-        LeftColorBall = LeftSword.transform.Find("StemIndicator").gameObject;
-        RightColorBall = RightSword.transform.Find("StemIndicator").gameObject;
+		//Seperating out finding L controller and finding R controller
+		if (LeftHand.GetComponentInChildren<Sword> ()) {
+			LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
+			LeftWand = LeftSword.transform.Find ("Wand").gameObject;
+			LeftRubber = LeftSword.transform.Find("Capsule").gameObject;
+			LeftColorBall = LeftSword.transform.Find("StemIndicator").gameObject;
+			currentStatus = controllerFoundStatus.LeftFound;
+		}
 
-    }
+		if (RightHand.GetComponentInChildren<Sword> ()) {
+			RightSword = RightHand.GetComponentInChildren<Sword>().gameObject;
+			RightWand = RightSword.transform.Find("Wand").gameObject;
+			RightRubber = RightSword.transform.Find("Capsule").gameObject;
+			RightColorBall = RightSword.transform.Find("StemIndicator").gameObject;
+
+			if (currentStatus == controllerFoundStatus.LeftFound) {
+				//if we've already found the other controller, set current status accordingly and stop searching
+				currentStatus = controllerFoundStatus.BothFound;
+			} else
+				currentStatus = controllerFoundStatus.RightFound;
+		}
+
+		if (currentStatus == controllerFoundStatus.BothFound) {
+			bothControllersFound = true;
+			Debug.Log ("both controllers found");
+		}
+
+	}
 
     public void ChangeLeftBallColor() {
-
-        FindColorBall();
 
         if(currentInstrument == "Bass") {
             LeftColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
@@ -69,7 +109,6 @@ public class SwitchStems : MonoBehaviour {
 
     public void ChangeRightBallColor() {
 
-        FindColorBall();
 
         if (currentInstrument == "Bass") {
             RightColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
