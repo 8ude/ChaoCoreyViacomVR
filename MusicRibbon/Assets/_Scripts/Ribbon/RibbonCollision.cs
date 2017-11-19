@@ -57,12 +57,10 @@ public class RibbonCollision : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
 
-        //Debug.Log("collision occured");
+
 
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
-
-                //Debug.Log("wand-ribbon collision occured");
 
                 //set the audio clip in accordance with the collision audio in the game manager
 
@@ -93,8 +91,6 @@ public class RibbonCollision : MonoBehaviour {
         }
     }
     void OnTriggerStay(Collider other) {
-
-
 
 
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
@@ -213,7 +209,9 @@ public class RibbonCollision : MonoBehaviour {
     }
 
     public void BassRibbonCollision(Collider other) {
-		MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
+        //TODO check on VR to see if bug is fixed (renamed LP filter to be the same as exposed parameter)
+
+        MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
 
 		//find closest marker and second closest marker
 		float[] markerDistances = new float[markers.Length];
@@ -244,12 +242,13 @@ public class RibbonCollision : MonoBehaviour {
         float projection = markerBLine.magnitude * Mathf.Cos(Mathf.Deg2Rad * angle);
 
         //Adjust low pass filter to reflect how far wand is along the ribbon
-        audioMixer.DOSetFloat("GlobalLPFrequency", lowPassFrequencies[closestMarkerIndex], 0.5f);
+        audioMixer.DOSetFloat("GlobalLPFreq", lowPassFrequencies[closestMarkerIndex], 0.5f);
 
 		DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
 
 		//trying to get the mesh displacement to occur where the collision is occuring
 		ribbonSound.autoMoveSound = false;
+
 		ribbonSound.transform.position = transform.position;
 
     }
