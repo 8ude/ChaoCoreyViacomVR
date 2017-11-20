@@ -23,8 +23,8 @@ public class RibbonCollision : MonoBehaviour {
 
     //rate at which melody ribbons trigger - ideally the closer the ribbon,
     // the more they overlap
-    public float melodyTriggerCooldown;
-    float melodyTriggerTimer;
+    public float TriggerCooldown;
+    float TriggerTimer;
  
     
     //the distance along the wand where the particles will spawn
@@ -46,8 +46,8 @@ public class RibbonCollision : MonoBehaviour {
         mySource = GetComponent<AudioSource>();
         audioMixer = mySource.outputAudioMixerGroup.audioMixer;
         playingMicroSample = false;
-        melodyTriggerTimer = 0f;
-        melodyTriggerCooldown = 0f;
+        TriggerTimer = 0f;
+        TriggerCooldown = 0f;
     }
     
     // Update is called once per frame
@@ -71,19 +71,16 @@ public class RibbonCollision : MonoBehaviour {
 
                 switch (collidedStemType) {
                     case RibbonGenerator.musicStem.Melody:
-                        if (melodyTriggerTimer >= melodyTriggerCooldown) {
-                            MelodyRibbonCollision(other);
-                        }
+                        MelodyRibbonCollisionEnter(other);
                         break;
                     case RibbonGenerator.musicStem.Bass:
-                        BassRibbonCollision(other);
+						BassRibbonCollisionEnter(other);
                         break;
                     case RibbonGenerator.musicStem.Drum:
-
-                        DrumCollision(other);
+						DrumRibbonCollisionEnter(other);
                         break;
                     case RibbonGenerator.musicStem.Harmony:
-                        HarmonyCollision(other);
+						HarmonyRibbonCollisionEnter(other);
                         break;
                 }
                 
@@ -104,15 +101,12 @@ public class RibbonCollision : MonoBehaviour {
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
 
                 //if trigger is in the melody or bass stem, we want a different kind of interaction
-
-                if (collidedStemType == RibbonGenerator.musicStem.Melody) {
-                    melodyTriggerTimer += Time.fixedDeltaTime;
-                    if (melodyTriggerTimer >= melodyTriggerCooldown) {
-                        MelodyRibbonCollision(other);
-                    }
-                } else if (collidedStemType == RibbonGenerator.musicStem.Bass) {
-                    BassRibbonCollision(other);
-                }
+                TriggerTimer += Time.fixedDeltaTime;
+                    
+				if (TriggerTimer >= TriggerCooldown) 
+				{
+                    RibbonCollisionStay(other);
+                } 
             }
         }
         
@@ -164,7 +158,8 @@ public class RibbonCollision : MonoBehaviour {
             return;
     }
 
-    public void MelodyRibbonCollision(Collider other) {
+
+    public void RibbonCollisionStay(Collider other) {
         
 		//melody ribbon - touching ribbon will create microsampled fragment
 		
@@ -208,67 +203,53 @@ public class RibbonCollision : MonoBehaviour {
         
     }
 
-    public void BassRibbonCollision(Collider other) {
-        //TODO check on VR to see if bug is fixed (renamed LP filter to be the same as exposed parameter)
+//    public void BassRibbonCollision(Collider other) {
+//        //TODO check on VR to see if bug is fixed (renamed LP filter to be the same as exposed parameter)
+//
+//        MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
+//
+//		//find closest marker and second closest marker
+//		float[] markerDistances = new float[markers.Length];
+//        float[] lowPassFrequencies = new float[markers.Length];
+//		int closestMarkerIndex = 0;
+//        int secondClosestMarkerIndex = 0;
+//		float closestMarkerDistance = 1f;
+//        float secondClosestMarkerDistance = 1f;
+//		for (int i = 0; i < markers.Length; i++) {
+//            //populate an array with cutoff frequencies, corresponding to points along the ribbon
+//			markerDistances[i] = Vector3.Distance(markers[i].gameObject.transform.position, transform.position);
+//            lowPassFrequencies[i] = (float) 6000f / markers.Length * i;
+//			if (markerDistances[i] < closestMarkerDistance) {
+//                secondClosestMarkerIndex = closestMarkerIndex;
+//                secondClosestMarkerDistance = closestMarkerDistance;
+//                    
+//				closestMarkerIndex = i;
+//				closestMarkerDistance = markerDistances[i];
+//			}
+//		}
+//
+//        //Vector math to (theoretically) find wand's relative location along the ribbon
+//        Vector3 markerVectorLine = markers[closestMarkerIndex].transform.position - markers[secondClosestMarkerIndex].transform.position;
+//        float markerDistance = markerVectorLine.magnitude;
+//        Vector3 markerALine = markers[closestMarkerIndex].transform.position - transform.position;
+//        Vector3 markerBLine = markers[secondClosestMarkerIndex].transform.position - transform.position;
+//        float angle = Vector3.Angle(markerVectorLine, markerBLine);
+//        float projection = markerBLine.magnitude * Mathf.Cos(Mathf.Deg2Rad * angle);
+//
+//        //Adjust low pass filter to reflect how far wand is along the ribbon
+//        audioMixer.DOSetFloat("GlobalLPFreq", lowPassFrequencies[closestMarkerIndex], 0.5f);
+//
+//		DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
+//
+//		//trying to get the mesh displacement to occur where the collision is occuring
+//		ribbonSound.autoMoveSound = false;
+//
+//		ribbonSound.transform.position = transform.position;
+//
+//    }
 
-        MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
-
-		//find closest marker and second closest marker
-		float[] markerDistances = new float[markers.Length];
-        float[] lowPassFrequencies = new float[markers.Length];
-		int closestMarkerIndex = 0;
-        int secondClosestMarkerIndex = 0;
-		float closestMarkerDistance = 1f;
-        float secondClosestMarkerDistance = 1f;
-		for (int i = 0; i < markers.Length; i++) {
-            //populate an array with cutoff frequencies, corresponding to points along the ribbon
-			markerDistances[i] = Vector3.Distance(markers[i].gameObject.transform.position, transform.position);
-            lowPassFrequencies[i] = (float) 6000f / markers.Length * i;
-			if (markerDistances[i] < closestMarkerDistance) {
-                secondClosestMarkerIndex = closestMarkerIndex;
-                secondClosestMarkerDistance = closestMarkerDistance;
-                    
-				closestMarkerIndex = i;
-				closestMarkerDistance = markerDistances[i];
-			}
-		}
-
-        //Vector math to (theoretically) find wand's relative location along the ribbon
-        Vector3 markerVectorLine = markers[closestMarkerIndex].transform.position - markers[secondClosestMarkerIndex].transform.position;
-        float markerDistance = markerVectorLine.magnitude;
-        Vector3 markerALine = markers[closestMarkerIndex].transform.position - transform.position;
-        Vector3 markerBLine = markers[secondClosestMarkerIndex].transform.position - transform.position;
-        float angle = Vector3.Angle(markerVectorLine, markerBLine);
-        float projection = markerBLine.magnitude * Mathf.Cos(Mathf.Deg2Rad * angle);
-
-        //Adjust low pass filter to reflect how far wand is along the ribbon
-        audioMixer.DOSetFloat("GlobalLPFreq", lowPassFrequencies[closestMarkerIndex], 0.5f);
-
-		DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
-
-		//trying to get the mesh displacement to occur where the collision is occuring
-		ribbonSound.autoMoveSound = false;
-
-		ribbonSound.transform.position = transform.position;
-
-    }
-
-    public void HarmonyCollision(Collider other) {
-		//not really sure what to do here ... keep the same as drum for now
-		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
-		AudioSource aSource = newParticles.GetComponent<AudioSource>();
-        aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[clipIndex % RibbonGameManager.instance.harmonyCollisionClips.Length];
-		aSource.Play();
-		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
-		var main = ps.main;
-		//Particle color will be somewhere between white and the ribbon color
-		main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
-
-		Destroy(newParticles, 2.0f);
-		clipIndex++;
-    }
-
-    public void DrumCollision(Collider other) {
+    public void DrumRibbonCollisionEnter(Collider other) {
+		
 		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
 		AudioSource aSource = newParticles.GetComponent<AudioSource>();
 		aSource.clip = RibbonGameManager.instance.drumCollisionClips[clipIndex % RibbonGameManager.instance.drumCollisionClips.Length];
@@ -282,4 +263,53 @@ public class RibbonCollision : MonoBehaviour {
 		clipIndex++;
         
     }
+
+	public void BassRibbonCollisionEnter(Collider other) {
+
+		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+		AudioSource aSource = newParticles.GetComponent<AudioSource>();
+		aSource.clip = RibbonGameManager.instance.bassCollisionClips[clipIndex % RibbonGameManager.instance.bassCollisionClips.Length];
+		aSource.Play();
+		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
+		var main = ps.main;
+		//Particle color will be somewhere between white and the ribbon color
+		main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
+
+		Destroy(newParticles, 2.0f);
+		clipIndex++;
+
+	}
+
+	public void MelodyRibbonCollisionEnter(Collider other) {
+
+		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+		AudioSource aSource = newParticles.GetComponent<AudioSource>();
+		aSource.clip = RibbonGameManager.instance.melodyCollisionClips[clipIndex % RibbonGameManager.instance.melodyCollisionClips.Length];
+		aSource.Play();
+		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
+		var main = ps.main;
+		//Particle color will be somewhere between white and the ribbon color
+		main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
+
+		Destroy(newParticles, 2.0f);
+		clipIndex++;
+
+	}
+
+	public void HarmonyRibbonCollisionEnter(Collider other) {
+		//not really sure what to do here ... keep the same as drum for now
+		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+		AudioSource aSource = newParticles.GetComponent<AudioSource>();
+		aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[clipIndex % RibbonGameManager.instance.harmonyCollisionClips.Length];
+		aSource.Play();
+		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
+		var main = ps.main;
+		//Particle color will be somewhere between white and the ribbon color
+		main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
+
+		Destroy(newParticles, 2.0f);
+		clipIndex++;
+	}
+
+
 }
