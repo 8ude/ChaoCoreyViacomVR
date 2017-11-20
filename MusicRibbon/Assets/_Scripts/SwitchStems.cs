@@ -13,9 +13,15 @@ public class SwitchStems : MonoBehaviour {
     public Color melodyColor;
     public Color harmonyColor;
 
+	public Material DrumRibbonMaterial;
+	public Material BassRibbonMaterial;
+	public Material MelodyRibbonMaterial;
+	public Material HarmonyRibbonMaterial;
+
+
     public int Stemnum = 0;
 
-	public string currentInstrument = "Bass";
+	public string currentInstrument = "Drums";
 
 	public GameObject LeftHand;
 	public GameObject RightHand;
@@ -95,15 +101,19 @@ public class SwitchStems : MonoBehaviour {
 
         if(currentInstrument == "Bass") {
             LeftColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
+			LeftColorBall.GetComponent<MeshRenderer> ().material = BassRibbonMaterial;
         }
         if (currentInstrument == "Drums") {
             LeftColorBall.GetComponent<MeshRenderer>().material.color = drumColor;
+			LeftColorBall.GetComponent<MeshRenderer> ().material = DrumRibbonMaterial;
         }
         if (currentInstrument == "Harmony") {
             LeftColorBall.GetComponent<MeshRenderer>().material.color = harmonyColor;
+			LeftColorBall.GetComponent<MeshRenderer> ().material = HarmonyRibbonMaterial;
         }
         if (currentInstrument == "Melody") {
             LeftColorBall.GetComponent<MeshRenderer>().material.color = melodyColor;
+			LeftColorBall.GetComponent<MeshRenderer> ().material = MelodyRibbonMaterial;
         }
     }
 
@@ -112,15 +122,19 @@ public class SwitchStems : MonoBehaviour {
 
         if (currentInstrument == "Bass") {
             RightColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
+			RightColorBall.GetComponent<MeshRenderer> ().material = BassRibbonMaterial;
         }
         if (currentInstrument == "Drums") {
             RightColorBall.GetComponent<MeshRenderer>().material.color = drumColor;
+			RightColorBall.GetComponent<MeshRenderer> ().material = DrumRibbonMaterial;
         }
         if (currentInstrument == "Harmony") {
             RightColorBall.GetComponent<MeshRenderer>().material.color = harmonyColor;
+			RightColorBall.GetComponent<MeshRenderer> ().material = HarmonyRibbonMaterial;
         }
         if (currentInstrument == "Melody") {
             RightColorBall.GetComponent<MeshRenderer>().material.color = melodyColor;
+			RightColorBall.GetComponent<MeshRenderer> ().material = MelodyRibbonMaterial;
         }
 
 
