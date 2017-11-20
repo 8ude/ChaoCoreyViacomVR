@@ -175,13 +175,13 @@ public class RibbonGameManager : MonoBehaviour {
 
 
 
-        if (ribbonObjects.Count > limitRibbonAmount * ribbonMoveTimes && autoMoveRibbons){
+        //if (ribbonObjects.Count > limitRibbonAmount * ribbonMoveTimes && autoMoveRibbons){
 
-			MoveRibbons ();
-			ribbonMoveTimes++;
-		}
+			//MoveRibbons ();
+			//ribbonMoveTimes++;
+		//}
 
-		MoveSmallRibbons ();
+		//MoveSmallRibbons ();
 
         if (Input.GetKeyDown(KeyCode.R)) {
             FadeToWhite();
@@ -233,6 +233,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 	}
 
+    /*
 	void MoveSmallRibbons() {
 
 		foreach (GameObject ribbonParent in ribbonObjects) {
@@ -262,7 +263,8 @@ public class RibbonGameManager : MonoBehaviour {
 		}
 
 	}
-		
+	*/
+
 	IEnumerator MoveAlongSineCurve(GameObject go, Vector3 direction, float timeToComplete) {
 		float timeElapsed = 0;
 
