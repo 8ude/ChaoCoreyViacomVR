@@ -198,7 +198,7 @@ public class RibbonCollision : MonoBehaviour {
 		
         AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(sizeAdjust, 0.5f, 1f));
         //reset the triggerCooldown and play the clip
-        melodyTriggerCooldown = 0.8f * microClip.length;
+        TriggerCooldown = 0.8f * microClip.length;
         mySource.PlayOneShot(microClip);
         
     }
