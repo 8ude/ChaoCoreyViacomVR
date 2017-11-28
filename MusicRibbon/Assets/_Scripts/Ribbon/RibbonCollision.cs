@@ -182,9 +182,6 @@ public class RibbonCollision : MonoBehaviour {
         float sizeAdjust = Mathf.Clamp(closestMarkerDistance, 0.1f, 1f);
 
 
-		//Debug.Log("Closest Marker Distance: " + closestMarkerDistance);
-		//Debug.Log("size adjust: " + sizeAdjust);
-
 
         DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
 
