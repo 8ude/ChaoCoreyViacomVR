@@ -63,10 +63,13 @@ public class DrawRibbonSound : MonoBehaviour {
 
 
 		myHighSource.clip = origHighClip;
+        Debug.Log("high clip " + origHighClip.name);
+
         myLowSource.clip = origLowClip;
+        Debug.Log("low clip " + origLowClip.name);
 
 
-		startTime = Clock.Instance.AtNextHalf();
+        startTime = Clock.Instance.AtNextHalf();
 
 		origHighAudioData = new float[myHighSource.clip.samples * myHighSource.clip.channels];
         origLowAudioData = new float[myLowSource.clip.samples * myLowSource.clip.channels];
@@ -130,6 +133,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 
 		sourceStartTime = Clock.Instance.AtNextMeasure ();
+        Debug.Log("source start time: " + sourceStartTime);
 		myHighSource.PlayScheduled (sourceStartTime);
         myLowSource.PlayScheduled (sourceStartTime);
 
@@ -166,10 +170,9 @@ public class DrawRibbonSound : MonoBehaviour {
         /// to constant power curve
         ///</summary>
 
-        //heightValue is mapped from -1 to 1
         myHighSource.volume = Mathf.Sqrt(0.5f * (1f + heightValue)) * maxVolume;
         myLowSource.volume = Mathf.Sqrt(0.5f * (1f - heightValue)) * maxVolume;
-
+        
 
 
     }
