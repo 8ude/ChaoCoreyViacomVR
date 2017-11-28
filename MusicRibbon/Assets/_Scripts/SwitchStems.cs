@@ -19,9 +19,9 @@ public class SwitchStems : MonoBehaviour {
 	public Material HarmonyRibbonMaterial;
 
 
-    public int Stemnum = 0;
+    public int Stemnum;
 
-	public string currentInstrument = "Drums";
+	public string currentInstrument;
 
 	public GameObject LeftHand;
 	public GameObject RightHand;
