@@ -157,6 +157,7 @@ public class DrawRibbon: MonoBehaviour {
 				GameObject splineObject = Instantiate (curvySplinePrefab, transform.position, Quaternion.identity);
 				CurvySpline spline = splineObject.GetComponent<CurvySpline> ();
 
+
 				//reference to spline path that will be used to create the ribbon
 				InputSplinePath isp = ribbonGenerator.gameObject.GetComponentInChildren<InputSplinePath> ();
 
@@ -221,6 +222,9 @@ public class DrawRibbon: MonoBehaviour {
 	
 		timeInterval += Time.deltaTime;
 		if (device.triggerPressed && timeInterval > pointGenTime && !eraseRibbon.isErasing) {
+
+           //Drawing function
+
 			Vector3 newPosition = transform.position + (wandTipOffset * transform.forward);
 			GameObject newMarker = Instantiate (markerPrefab, newPosition, Quaternion.identity);
 			newMarker.GetComponent<PreRibbon> ().stemIndex = switchStems.Stemnum;

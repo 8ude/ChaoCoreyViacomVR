@@ -55,7 +55,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	void Update() {
 
-        BalanceAudioSources(RibbonGameManager.instance.RemapRange(transform.position.y, 0f, 2.5f, -1f, 1f), currentMaxVolume);
+        BalanceAudioSources(RibbonGameManager.instance.RemapRange(transform.position.y, 0f, 2f, -1f, 1f), currentMaxVolume);
 	
 	}
 

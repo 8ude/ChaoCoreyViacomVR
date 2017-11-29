@@ -17,7 +17,7 @@ public class AudioShaderReact : MonoBehaviour {
 
 	[SerializeField] RibbonGenerator parentRibbonGenerator;
 
-	RibbonGenerator.musicStem myStem;
+	[SerializeField] RibbonGenerator.musicStem myStem;
 
 
 
@@ -51,21 +51,21 @@ public class AudioShaderReact : MonoBehaviour {
 			switch (myStem) {
 
 			case RibbonGenerator.musicStem.Bass:
-				normalizedEnergy = analyzer.GetEnergyFrequencyRange(100f,350f)*0.1f;
+				normalizedEnergy = analyzer.GetEnergyFrequencyRange(0f,8000f) * 0.1f;
 				break;
 			case RibbonGenerator.musicStem.Drum:
 				energyGate = 0.15f;
-				float newEnergy = analyzer.GetEnergyFrequencyRange (50f, 250f) * 0.1f;
-				newEnergy += analyzer.GetEnergyFrequencyRange (4000f, 8000f) * 0.1f;
+				float newEnergy = analyzer.GetEnergyFrequencyRange (0f, 8000f) * 0.1f;
+				//newEnergy += analyzer.GetEnergyFrequencyRange (4000f, 8000f) * 0.1f;
 				if (newEnergy >= energyGate) {
 					normalizedEnergy = newEnergy;
 				}
 				break;
 			case RibbonGenerator.musicStem.Harmony:
-				normalizedEnergy = analyzer.GetEnergyFrequencyRange (300f, 1000f) * 0.3f;
+				normalizedEnergy = analyzer.GetEnergyFrequencyRange (0, 8000f) * 0.3f;
 				break;
 			case RibbonGenerator.musicStem.Melody:
-				normalizedEnergy = analyzer.GetEnergyFrequencyRange (400f, 2000f) * 0.3f;
+				normalizedEnergy = analyzer.GetEnergyFrequencyRange (0, 8000f) * 0.3f;
 				break;
 			}
 
