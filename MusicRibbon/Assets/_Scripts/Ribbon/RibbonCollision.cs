@@ -47,7 +47,7 @@ public class RibbonCollision : MonoBehaviour {
         audioMixer = mySource.outputAudioMixerGroup.audioMixer;
         playingMicroSample = false;
         TriggerTimer = 0f;
-        TriggerCooldown = 0f;
+        TriggerCooldown = 1f;
     }
     
     // Update is called once per frame
@@ -114,6 +114,8 @@ public class RibbonCollision : MonoBehaviour {
     void OnTriggerExit(Collider other) {
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
+
+                TriggerTimer = 0f; //clear timer
 
                 RibbonGenerator collidedGenerator = other.transform.root.GetComponent<RibbonGenerator>();
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;

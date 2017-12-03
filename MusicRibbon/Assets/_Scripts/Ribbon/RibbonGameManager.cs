@@ -5,9 +5,10 @@ using UnityEngine.Audio;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Adjust ribbon volume and position and reset
+/// </summary>
 public class RibbonGameManager : MonoBehaviour {
-
-  
 
 	public AudioClip preDrumClip;
 	public AudioClip preBassClip;
@@ -300,14 +301,5 @@ public class RibbonGameManager : MonoBehaviour {
 
 
     }
-
-    public void ToLobby()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-
-
-
 
 }
