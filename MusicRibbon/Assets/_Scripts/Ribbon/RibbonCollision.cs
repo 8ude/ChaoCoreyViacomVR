@@ -15,6 +15,7 @@ public class RibbonCollision : MonoBehaviour {
     public GameObject BassParticlePrefab;
     public GameObject MelodyParticlePrefab;
     public GameObject HarmonyParticlePrefab;
+    public Material AudioReactiveMaterial;
     public AudioSource mySource;
     AudioClip melodyClip;
     public AudioMixerGroup mutedGroup, origGroup;
@@ -95,9 +96,8 @@ public class RibbonCollision : MonoBehaviour {
 
 
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
-            if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
-            
+            if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
                 //set the audio clip in accordance with the collision audio in the game manager
 
@@ -110,6 +110,12 @@ public class RibbonCollision : MonoBehaviour {
 				if (TriggerTimer >= TriggerCooldown) 
 				{
                     RibbonCollisionStay(other);
+                    if(other.gameObject.name == "Create Mesh_5_Mesh000")
+                    {
+                        Debug.Log(other.gameObject.name);
+                        //AudioReactiveMaterial.
+                    }
+                   
                 } 
             }
         }
