@@ -32,6 +32,11 @@ public class RibbonGameManager : MonoBehaviour {
 	public GameObject particlePrefab;
 	[Space(20)]
 
+    public Color drumColor;
+    public Color bassColor;
+    public Color melodyColor;
+    public Color harmonyColor;
+
 
 
 	[HideInInspector]

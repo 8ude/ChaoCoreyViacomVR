@@ -11,6 +11,7 @@ Shader "Custom/AudioDisplacement" {
 		_InputAlpha("Input Alpha", Float) = 0.0
 
 		_MaxAudioDistance("Max Audio Distance", Float) = 0.4
+        
 
 		A ("Amplitude", Float) = 0.5 //amplitude
 		L ("Wavelength", Float) = 1 //wavelength
@@ -128,6 +129,8 @@ Shader "Custom/AudioDisplacement" {
 			float3 wsVertexOut = gerstnerWave(v.vertex.xyz);
 
 			v.vertex.xyz = wsVertexOut;
+
+            
 			 
 			if (distPointToSound < _MaxAudioDistance) {
 
@@ -143,6 +146,9 @@ Shader "Custom/AudioDisplacement" {
 				((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance) * displacement));
 
 				v.vertex.xyz += subWave * 0.3;
+
+                //NEED TO CHECK THIS!!!! getting color to change based on audio
+                //v.color.r *= (distPointToSound / _MaxAudioDistance)
 
 				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
 				//v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));

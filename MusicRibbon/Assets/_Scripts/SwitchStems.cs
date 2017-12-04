@@ -45,6 +45,7 @@ public class SwitchStems : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
+
     	drumColor = Colors[0];
     	bassColor = Colors[1];
     	melodyColor = Colors[2];
