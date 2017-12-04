@@ -11,6 +11,11 @@ using DG.Tweening;
 public class RibbonCollision : MonoBehaviour {
 
     public GameObject particlePrefab;
+    public GameObject DrumParticlePrefab;
+    public GameObject BassParticlePrefab;
+    public GameObject MelodyParticlePrefab;
+    public GameObject HarmonyParticlePrefab;
+    public Material AudioReactiveMaterial;
     public AudioSource mySource;
     AudioClip melodyClip;
     public AudioMixerGroup mutedGroup, origGroup;
@@ -47,7 +52,7 @@ public class RibbonCollision : MonoBehaviour {
         audioMixer = mySource.outputAudioMixerGroup.audioMixer;
         playingMicroSample = false;
         TriggerTimer = 0f;
-        TriggerCooldown = 0f;
+        TriggerCooldown = 1f;
     }
     
     // Update is called once per frame
@@ -91,9 +96,8 @@ public class RibbonCollision : MonoBehaviour {
 
 
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
-            if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
-            
+            if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
                 //set the audio clip in accordance with the collision audio in the game manager
 
@@ -106,6 +110,12 @@ public class RibbonCollision : MonoBehaviour {
 				if (TriggerTimer >= TriggerCooldown) 
 				{
                     RibbonCollisionStay(other);
+                    if(other.gameObject.name == "Create Mesh_5_Mesh000")
+                    {
+                        Debug.Log(other.gameObject.name);
+                        //AudioReactiveMaterial.
+                    }
+                   
                 } 
             }
         }
@@ -114,6 +124,8 @@ public class RibbonCollision : MonoBehaviour {
     void OnTriggerExit(Collider other) {
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
+
+                TriggerTimer = 0f; //clear timer
 
                 RibbonGenerator collidedGenerator = other.transform.root.GetComponent<RibbonGenerator>();
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
@@ -247,7 +259,7 @@ public class RibbonCollision : MonoBehaviour {
 
     public void DrumRibbonCollisionEnter(Collider other) {
 		
-		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+		GameObject newParticles = Instantiate(DrumParticlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
 		AudioSource aSource = newParticles.GetComponent<AudioSource>();
 		aSource.clip = RibbonGameManager.instance.drumCollisionClips[clipIndex % RibbonGameManager.instance.drumCollisionClips.Length];
 		aSource.Play();
@@ -263,7 +275,7 @@ public class RibbonCollision : MonoBehaviour {
 
 	public void BassRibbonCollisionEnter(Collider other) {
 
-		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+		GameObject newParticles = Instantiate(BassParticlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
 		AudioSource aSource = newParticles.GetComponent<AudioSource>();
 		aSource.clip = RibbonGameManager.instance.bassCollisionClips[clipIndex % RibbonGameManager.instance.bassCollisionClips.Length];
 		aSource.Play();
@@ -279,7 +291,7 @@ public class RibbonCollision : MonoBehaviour {
 
 	public void MelodyRibbonCollisionEnter(Collider other) {
 
-		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+		GameObject newParticles = Instantiate(MelodyParticlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
 		AudioSource aSource = newParticles.GetComponent<AudioSource>();
 		aSource.clip = RibbonGameManager.instance.melodyCollisionClips[clipIndex % RibbonGameManager.instance.melodyCollisionClips.Length];
 		aSource.Play();
@@ -295,7 +307,7 @@ public class RibbonCollision : MonoBehaviour {
 
 	public void HarmonyRibbonCollisionEnter(Collider other) {
 		//not really sure what to do here ... keep the same as drum for now
-		GameObject newParticles = Instantiate(particlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
+		GameObject newParticles = Instantiate(HarmonyParticlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
 		AudioSource aSource = newParticles.GetComponent<AudioSource>();
 		aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[clipIndex % RibbonGameManager.instance.harmonyCollisionClips.Length];
 		aSource.Play();
