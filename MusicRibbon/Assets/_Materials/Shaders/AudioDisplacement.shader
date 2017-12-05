@@ -148,7 +148,7 @@ Shader "Custom/AudioDisplacement" {
 				v.vertex.xyz += subWave * 0.3;
 
                 //NEED TO CHECK THIS!!!! getting color to change based on audio
-                //v.color.r *= (distPointToSound / _MaxAudioDistance)
+                v.color.r = ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance);
 
 				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
 				//v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));

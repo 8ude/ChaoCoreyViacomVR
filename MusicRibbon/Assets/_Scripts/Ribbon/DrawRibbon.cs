@@ -29,7 +29,7 @@ public class DrawRibbon: MonoBehaviour {
 	public SwitchStems switchStems;
 
     
-	GameObject currentRibbonSound;
+    [SerializeField] GameObject currentRibbonSound;
 
 	public MeshFilter currentMesh;
 
@@ -71,7 +71,7 @@ public class DrawRibbon: MonoBehaviour {
 
 		if (!eraseRibbon.isErasing) {
             StartDrawing();
-			
+            isDrawing = true;
 		}
 
 		//numRibbons++;
@@ -100,11 +100,11 @@ public class DrawRibbon: MonoBehaviour {
         if (Input.GetMouseButtonDown(0) && !isDrawing) {
             StartDrawing();
             isDrawing = true;
-        } else if (Input.GetMouseButton(0) && isDrawing) {
+        } else if (Input.GetMouseButton(0) && isDrawing && timeInterval > pointGenTime) {
             ContinueDrawing();
         } else if (Input.GetMouseButtonUp(0) && isDrawing) {
             StopDrawing();
-            isDrawing = true;
+            isDrawing = false;
         }
 
 	}
@@ -167,7 +167,7 @@ public class DrawRibbon: MonoBehaviour {
         nextHighClip = null;
         nextLowClip = null;
 
-        //return;
+       
         currentRibbonSound = Instantiate(ribbonSoundPrefab, transform.position, Quaternion.identity);
         currentRibbonSound.transform.SetParent(gameObject.transform);
 
@@ -283,84 +283,84 @@ public class DrawRibbon: MonoBehaviour {
     }
 
     void StopDrawing() {
-        if (!eraseRibbon.isErasing) {
+        
 
-            currentRibbonSound.GetComponent<DrawRibbonSound>().StopDrawingRibbon(nextHighClip);
+        currentRibbonSound.GetComponent<DrawRibbonSound>().StopDrawingRibbon(nextHighClip);
 
-            if (markerChain.Count > 1) {
+        if (markerChain.Count > 1) {
 
-                GameObject parentObject = Instantiate(markerParentPrefab, Vector3.zero, Quaternion.identity);
-                RibbonGenerator ribbonGenerator = parentObject.GetComponent<RibbonGenerator>();
+            GameObject parentObject = Instantiate(markerParentPrefab, Vector3.zero, Quaternion.identity);
+            RibbonGenerator ribbonGenerator = parentObject.GetComponent<RibbonGenerator>();
 
-                if (switchStems != null) {
-                    ribbonGenerator.stemIntValue = switchStems.Stemnum;
-                } else {
-                    ribbonGenerator.stemIntValue = 0;
-                }
-                //ribbonGenerator.curvyGenerator = parentObject.GetComponent<CurvyGenerator> ();
-                ribbonGenerator.drawRibbonSound = currentRibbonSound.GetComponent<DrawRibbonSound>();
-
-                currentRibbonSound.transform.SetParent(parentObject.transform);
-
-                GameObject splineObject = Instantiate(curvySplinePrefab, transform.position, Quaternion.identity);
-                CurvySpline spline = splineObject.GetComponent<CurvySpline>();
-
-                //reference to spline path that will be used to create the ribbon
-                InputSplinePath isp = ribbonGenerator.gameObject.GetComponentInChildren<InputSplinePath>();
-
-                //reference to volume mesh material - set appropriate color
-
-
-                //turn the List into an array, to be fed to the spline generator
-                Vector3[] newPoints = new Vector3[markerChain.Count];
-                int i = 0;
-                ribbonGenerator.ribbonLength = 0;
-                foreach (GameObject go in markerChain) {
-
-                    newPoints[i] = go.transform.position;
-                    i++;
-                    ribbonGenerator.ribbonLength += 1f;
-                    go.transform.SetParent(spline.transform);
-
-
-                }
-
-                //For now, feed the point array to the sound object, which runs a coroutine to (mostly) follow the path
-                currentRibbonSound.GetComponent<DrawRibbonSound>().splinePoints = newPoints;
-                currentRibbonSound.GetComponent<DrawRibbonSound>().FollowRibbon();
-
-                //generate our spline, set it's parent (just for organization for now)
-                spline.Add(newPoints);
-                isp.Spline = spline;
-
-                spline.transform.SetParent(parentObject.transform);
-
-                //feed this spline to the 
-                ribbonGenerator.ribbonSpline = spline;
-
-                //ribbonSpline.Add (newPoints);
-
-                //InputSplinePath inputSpline = parentObject.GetComponentInChildren<InputSplinePath> ();
-                //inputSpline.Spline = ribbonSpline;
-
-                markerChain.Clear();
-                //Debug.Log("trigger released?");
-                timeInterval = 0f;
-
-                //RibbonGameManager.instance.RibbonObjects.Add (parentObject);
+            if (switchStems != null) {
+                ribbonGenerator.stemIntValue = switchStems.Stemnum;
+            } else {
+                ribbonGenerator.stemIntValue = 0;
             }
-            else {
-                //ribbon length is less than one, so we'll just shoot out some particles?
-                Destroy(currentRibbonSound);
-                if (markerChain.Count > 0) {
-                    ShortStem(markerChain[0]);
-                }
-                markerChain.Clear();
-                timeInterval = 0f;
+            //ribbonGenerator.curvyGenerator = parentObject.GetComponent<CurvyGenerator> ();
+            ribbonGenerator.drawRibbonSound = currentRibbonSound.GetComponent<DrawRibbonSound>();
+
+            currentRibbonSound.transform.SetParent(parentObject.transform);
+
+            GameObject splineObject = Instantiate(curvySplinePrefab, transform.position, Quaternion.identity);
+            CurvySpline spline = splineObject.GetComponent<CurvySpline>();
+
+            //reference to spline path that will be used to create the ribbon
+            InputSplinePath isp = ribbonGenerator.gameObject.GetComponentInChildren<InputSplinePath>();
+
+            //reference to volume mesh material - set appropriate color
+
+
+            //turn the List into an array, to be fed to the spline generator
+            Vector3[] newPoints = new Vector3[markerChain.Count];
+            int i = 0;
+            ribbonGenerator.ribbonLength = 0;
+            foreach (GameObject go in markerChain) {
+
+                newPoints[i] = go.transform.position;
+                i++;
+                ribbonGenerator.ribbonLength += 1f;
+                go.transform.SetParent(spline.transform);
+
+
             }
 
+            //For now, feed the point array to the sound object, which runs a coroutine to (mostly) follow the path
+            currentRibbonSound.GetComponent<DrawRibbonSound>().splinePoints = newPoints;
+            currentRibbonSound.GetComponent<DrawRibbonSound>().FollowRibbon();
+
+            //generate our spline, set it's parent (just for organization for now)
+            spline.Add(newPoints);
+            isp.Spline = spline;
+
+            spline.transform.SetParent(parentObject.transform);
+
+            //feed this spline to the 
+            ribbonGenerator.ribbonSpline = spline;
+
+            //ribbonSpline.Add (newPoints);
+
+            //InputSplinePath inputSpline = parentObject.GetComponentInChildren<InputSplinePath> ();
+            //inputSpline.Spline = ribbonSpline;
+
+            markerChain.Clear();
+            //Debug.Log("trigger released?");
+            timeInterval = 0f;
+
+            //RibbonGameManager.instance.RibbonObjects.Add (parentObject);
         }
+        else {
+            //ribbon length is less than one, so we'll just shoot out some particles?
+            Destroy(currentRibbonSound);
+            if (markerChain.Count > 0) {
+                ShortStem(markerChain[0]);
+            }
+            markerChain.Clear();
+            timeInterval = 0f;
+        }
+
     }
+
 
 
     //fallback for testing on laptop
