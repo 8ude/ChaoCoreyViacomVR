@@ -96,8 +96,13 @@ public class RibbonCollision : MonoBehaviour {
 
 
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
+            //check to see if this object is a child and we're not erasing
 
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
+                //check the tag on the root-level parent 
+                //(marker parent contains ribbon generator script as well as the 
+                // spline generator)
+
 
                 //set the audio clip in accordance with the collision audio in the game manager
 
@@ -132,34 +137,17 @@ public class RibbonCollision : MonoBehaviour {
 
                 DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
 
-				switch (collidedStemType) {
-					case RibbonGenerator.musicStem.Melody:
-						
-                        ribbonSound.autoMoveSound = true;
-                        ribbonSound.myHighSource.outputAudioMixerGroup = origGroup;
-						break;
-					case RibbonGenerator.musicStem.Bass:
-						
-						ribbonSound.autoMoveSound = true;
-						break;
-					case RibbonGenerator.musicStem.Drum:
-
-						break;
-					case RibbonGenerator.musicStem.Harmony:
-                        
-						break;
-				}
+                ribbonSound.autoMoveSound = true;
+                ribbonSound.myHighSource.outputAudioMixerGroup = origGroup;
+                ribbonSound.myLowSource.outputAudioMixerGroup = origGroup;
 
 
                 melodyClip = null;
                 mySource.Stop();
                 mySource.clip = null;
-                if (collidedStemType == RibbonGenerator.musicStem.Melody) {
-                    other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>().myHighSource.outputAudioMixerGroup = origGroup;
 
-                }
                 playingMicroSample = false;
-                audioMixer.SetFloat("GlobalLPFreq", 22000);
+
             } 
         }
         
@@ -170,6 +158,13 @@ public class RibbonCollision : MonoBehaviour {
             return;
     }
 
+
+    void OnCollisionExit(Collision collision) {
+        //TODO - find nearest marker, somehow translate that to an index 
+
+        collision.gameObject.transform.root.GetComponentInChildren<DrawRibbonSound>().RestartClips(0);
+
+    }
 
     public void RibbonCollisionStay(Collider other) {
         
@@ -203,6 +198,7 @@ public class RibbonCollision : MonoBehaviour {
 
         //mute the main stem while we do the micro thingy
         ribbonSound.myHighSource.outputAudioMixerGroup = mutedGroup;
+        ribbonSound.myLowSource.outputAudioMixerGroup = mutedGroup;
         melodyClip = ribbonSound.myHighSource.clip;
 		
         AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(sizeAdjust, 0.5f, 1f));
@@ -212,50 +208,7 @@ public class RibbonCollision : MonoBehaviour {
         
     }
 
-//    public void BassRibbonCollision(Collider other) {
-//        //TODO check on VR to see if bug is fixed (renamed LP filter to be the same as exposed parameter)
-//
-//        MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
-//
-//		//find closest marker and second closest marker
-//		float[] markerDistances = new float[markers.Length];
-//        float[] lowPassFrequencies = new float[markers.Length];
-//		int closestMarkerIndex = 0;
-//        int secondClosestMarkerIndex = 0;
-//		float closestMarkerDistance = 1f;
-//        float secondClosestMarkerDistance = 1f;
-//		for (int i = 0; i < markers.Length; i++) {
-//            //populate an array with cutoff frequencies, corresponding to points along the ribbon
-//			markerDistances[i] = Vector3.Distance(markers[i].gameObject.transform.position, transform.position);
-//            lowPassFrequencies[i] = (float) 6000f / markers.Length * i;
-//			if (markerDistances[i] < closestMarkerDistance) {
-//                secondClosestMarkerIndex = closestMarkerIndex;
-//                secondClosestMarkerDistance = closestMarkerDistance;
-//                    
-//				closestMarkerIndex = i;
-//				closestMarkerDistance = markerDistances[i];
-//			}
-//		}
-//
-//        //Vector math to (theoretically) find wand's relative location along the ribbon
-//        Vector3 markerVectorLine = markers[closestMarkerIndex].transform.position - markers[secondClosestMarkerIndex].transform.position;
-//        float markerDistance = markerVectorLine.magnitude;
-//        Vector3 markerALine = markers[closestMarkerIndex].transform.position - transform.position;
-//        Vector3 markerBLine = markers[secondClosestMarkerIndex].transform.position - transform.position;
-//        float angle = Vector3.Angle(markerVectorLine, markerBLine);
-//        float projection = markerBLine.magnitude * Mathf.Cos(Mathf.Deg2Rad * angle);
-//
-//        //Adjust low pass filter to reflect how far wand is along the ribbon
-//        audioMixer.DOSetFloat("GlobalLPFreq", lowPassFrequencies[closestMarkerIndex], 0.5f);
-//
-//		DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
-//
-//		//trying to get the mesh displacement to occur where the collision is occuring
-//		ribbonSound.autoMoveSound = false;
-//
-//		ribbonSound.transform.position = transform.position;
-//
-//    }
+
 
     public void DrumRibbonCollisionEnter(Collider other) {
 		
@@ -320,5 +273,52 @@ public class RibbonCollision : MonoBehaviour {
 		clipIndex++;
 	}
 
+
+    //    NO LONGER USING Bass Ribbon Low Pass Method
+    //
+    //    public void BassRibbonCollision(Collider other) {
+    //        //TODO check on VR to see if bug is fixed (renamed LP filter to be the same as exposed parameter)
+    //
+    //        MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
+    //
+    //      //find closest marker and second closest marker
+    //      float[] markerDistances = new float[markers.Length];
+    //        float[] lowPassFrequencies = new float[markers.Length];
+    //      int closestMarkerIndex = 0;
+    //        int secondClosestMarkerIndex = 0;
+    //      float closestMarkerDistance = 1f;
+    //        float secondClosestMarkerDistance = 1f;
+    //      for (int i = 0; i < markers.Length; i++) {
+    //            //populate an array with cutoff frequencies, corresponding to points along the ribbon
+    //          markerDistances[i] = Vector3.Distance(markers[i].gameObject.transform.position, transform.position);
+    //            lowPassFrequencies[i] = (float) 6000f / markers.Length * i;
+    //          if (markerDistances[i] < closestMarkerDistance) {
+    //                secondClosestMarkerIndex = closestMarkerIndex;
+    //                secondClosestMarkerDistance = closestMarkerDistance;
+    //                    
+    //              closestMarkerIndex = i;
+    //              closestMarkerDistance = markerDistances[i];
+    //          }
+    //      }
+    //
+    //        //Vector math to (theoretically) find wand's relative location along the ribbon
+    //        Vector3 markerVectorLine = markers[closestMarkerIndex].transform.position - markers[secondClosestMarkerIndex].transform.position;
+    //        float markerDistance = markerVectorLine.magnitude;
+    //        Vector3 markerALine = markers[closestMarkerIndex].transform.position - transform.position;
+    //        Vector3 markerBLine = markers[secondClosestMarkerIndex].transform.position - transform.position;
+    //        float angle = Vector3.Angle(markerVectorLine, markerBLine);
+    //        float projection = markerBLine.magnitude * Mathf.Cos(Mathf.Deg2Rad * angle);
+    //
+    //        //Adjust low pass filter to reflect how far wand is along the ribbon
+    //        audioMixer.DOSetFloat("GlobalLPFreq", lowPassFrequencies[closestMarkerIndex], 0.5f);
+    //
+    //      DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
+    //
+    //      //trying to get the mesh displacement to occur where the collision is occuring
+    //      ribbonSound.autoMoveSound = false;
+    //
+    //      ribbonSound.transform.position = transform.position;
+    //
+    //    }
 
 }

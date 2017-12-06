@@ -158,7 +158,6 @@ public class SpectrumAnalysis : MonoBehaviour {
 		energy *= 100f;
 		energy = CompressorExciter (energy, 0.05f, 0.7f);
 
-
 		return energy;
 	}
 

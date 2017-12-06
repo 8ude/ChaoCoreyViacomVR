@@ -18,11 +18,16 @@ public class AudioShaderReact : MonoBehaviour {
 	[SerializeField] RibbonGenerator parentRibbonGenerator;
 
 	[SerializeField] RibbonGenerator.musicStem myStem;
+    AudioSourceTexture aTexture;
 
+    private void Awake() {
+        
+        aTexture = GetComponent<AudioSourceTexture>();
+    
+    }
 
-
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
         analyzer = GetComponent<SpectrumAnalysis>();
 		//myMaterial = GetComponent<Renderer> ().material;
@@ -84,6 +89,7 @@ public class AudioShaderReact : MonoBehaviour {
 			//Debug.Log (myMaterial.GetFloat ("_AudioInput"));
 			myMaterial.SetVector ("_AudioPosition", 
 				new Vector4 (transform.position.x, transform.position.y, transform.position.z, 1.0f));
+            myMaterial.SetTexture("_MainTex", aTexture.AudioTexture);
 		}
 		//Shader.SetGlobalFloat ("_AudioInput", smoothedEnergy);
         

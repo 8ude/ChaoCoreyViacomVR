@@ -21,6 +21,8 @@ public class AudioSourceTexture : MonoBehaviour
 
     public ComputeBuffer _buffer;
 
+    public float lowValue = 0.2f;
+
     void Awake()
     {
         width = size;
@@ -77,10 +79,11 @@ public class AudioSourceTexture : MonoBehaviour
 
             // og = pixels[i];//AudioTexture.GetPixel((int)(width * i / size), (int)(1 * (samples [i])) - 1 );
 
-            pixels[i].r = pixels[i].r * .8f + samples[(int)(i * 4) + 0] * 128;
-            pixels[i].g = pixels[i].g * .8f + samples[(int)(i * 4) + 1] * 128;
-            pixels[i].b = pixels[i].b * .8f + samples[(int)(i * 4) + 2] * 128;
-            pixels[i].a = pixels[i].a * .8f + samples[(int)(i * 4) + 3] * 128;
+            pixels[i].r = (pixels[i].r * .8f + samples[(int)(i * 4) + 0] * 2000) + lowValue;
+            //Debug.Log(pixels[i].r);
+            pixels[i].g = (pixels[i].g * .8f + samples[(int)(i * 4) + 1] * 2000) + lowValue;
+            pixels[i].b = (pixels[i].b * .8f + samples[(int)(i * 4) + 2] * 500) + lowValue;
+            pixels[i].a = (pixels[i].a * .8f + samples[(int)(i * 4) + 3] * 10000) + lowValue;
 
             //pixels[i].Set(r, g, b, a);
 

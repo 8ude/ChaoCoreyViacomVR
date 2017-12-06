@@ -32,8 +32,16 @@ public class DrawRibbonSound : MonoBehaviour {
     float[] origLowAudioData;
 
 	public Vector3[] splinePoints;
+    public GameObject[] markerObjects;
+
 
 	int splinePointIndex;
+    int _halfNotes;
+    public int LengthInHalfNotes {
+        get{
+            return _halfNotes;
+        }
+    }
 
 
     //flip this to false to turn off the movement of the source along the ribbon
@@ -43,6 +51,7 @@ public class DrawRibbonSound : MonoBehaviour {
 	[SerializeField] double sourceStartTime;
 
 	void Awake() {
+        
         myAudioSources = gameObject.GetComponents<AudioSource>();
         //Debug.Log(myAudioSources.Length);
         if (myAudioSources.Length > 1) {
@@ -118,24 +127,20 @@ public class DrawRibbonSound : MonoBehaviour {
                 lowAudioData[i] *= Mathf.Lerp(1f, 0f, (float)j / 10000);
 			}
 
-
-
 		}
-
 
 		newHighClip.SetData (highAudioData, 0);
         newLowClip.SetData(lowAudioData, 0);
 
-
-
 		myHighSource.clip = newHighClip;
         myLowSource.clip = newLowClip;
-
 
 		sourceStartTime = Clock.Instance.AtNextMeasure ();
         Debug.Log("source start time: " + sourceStartTime);
 		myHighSource.PlayScheduled (sourceStartTime);
         myLowSource.PlayScheduled (sourceStartTime);
+
+        _halfNotes = Mathf.RoundToInt(newHighClip.length / Clock.Instance.HalfLength()); 
 
 	}
 
@@ -172,8 +177,14 @@ public class DrawRibbonSound : MonoBehaviour {
 
         myHighSource.volume = Mathf.Sqrt(0.5f * (1f + heightValue)) * maxVolume;
         myLowSource.volume = Mathf.Sqrt(0.5f * (1f - heightValue)) * maxVolume;
-        
 
+    }
+
+    public void RestartClips(int halfNoteIndex) {
+        //TODO Start the clip at ((time/_halfnotes) * noteIndex)
+
+        myHighSource.PlayScheduled(Clock.Instance.AtNextBeat());
+        myLowSource.PlayScheduled(Clock.Instance.AtNextBeat());
 
     }
 		

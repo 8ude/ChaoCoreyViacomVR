@@ -26,7 +26,7 @@ Shader "Custom/AudioDisplacement" {
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows vertex:vert 
+		#pragma surface surf Standard fullforwardshadows vertex:vert fragment:frag
 			//alpha:fade
 
 		// Use shader model 3.0 target, to get nicer looking lighting
@@ -38,6 +38,11 @@ Shader "Custom/AudioDisplacement" {
 		struct Input {
 			float2 uv_MainTex;
 		};
+
+        struct v2s {
+            float4 pos : SV_POSITION;
+            fixed4 color : COLOR;
+        };
 
 		float4 _AudioPosition;
 		float _AudioInput;
@@ -120,7 +125,10 @@ Shader "Custom/AudioDisplacement" {
 
 
 
-		void vert (inout appdata_full v) {
+		v2s vert (inout appdata_full v) {
+
+            v2s o;
+
 			float3 vertWorld = mul(unity_ObjectToWorld, v.vertex).xyz;
 
 			float distPointToSound = distance(vertWorld, _AudioPosition.xyz);
@@ -130,7 +138,8 @@ Shader "Custom/AudioDisplacement" {
 
 			v.vertex.xyz = wsVertexOut;
 
-            
+            o.color = float4(1.0,1.0,1.0,1.0);
+            o.pos = UnityObjectToClipPos(v.vertex);
 			 
 			if (distPointToSound < _MaxAudioDistance) {
 
@@ -154,17 +163,20 @@ Shader "Custom/AudioDisplacement" {
 				//v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
 			}
 
+            o.color.r = v.color.r; 
 
-
-
+            return o;
 
 		}
+
+        fixed4 frag (v2s i) : SV_Target { return i.color; }
+
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
 			//fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * _Color;
-	
+	       
 			//o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;

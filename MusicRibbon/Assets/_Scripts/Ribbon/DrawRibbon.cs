@@ -313,6 +313,7 @@ public class DrawRibbon: MonoBehaviour {
 
             //turn the List into an array, to be fed to the spline generator
             Vector3[] newPoints = new Vector3[markerChain.Count];
+            
             int i = 0;
             ribbonGenerator.ribbonLength = 0;
             foreach (GameObject go in markerChain) {
@@ -327,6 +328,7 @@ public class DrawRibbon: MonoBehaviour {
 
             //For now, feed the point array to the sound object, which runs a coroutine to (mostly) follow the path
             currentRibbonSound.GetComponent<DrawRibbonSound>().splinePoints = newPoints;
+            currentRibbonSound.GetComponent<DrawRibbonSound>().markerObjects = markerChain.ToArray();
             currentRibbonSound.GetComponent<DrawRibbonSound>().FollowRibbon();
 
             //generate our spline, set it's parent (just for organization for now)
