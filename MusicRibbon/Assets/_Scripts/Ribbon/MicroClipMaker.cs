@@ -19,7 +19,7 @@ public class MicroClipMaker : MonoBehaviour {
         //Debug.Log("microclip start index: " + clipDataStart);
         //Debug.Log("microclip total samples: " + origClipData.Length);
 
-        int tenthLengthSamples = Mathf.RoundToInt(newClipData.Length / 10f);
+        int tenthLengthSamples = Mathf.RoundToInt(newClipData.Length / 8f);
 
         for (int i = 0; i < newClipData.Length; i++) {
             newClipData[i] = origClipData[clipDataStart + i];
@@ -28,8 +28,9 @@ public class MicroClipMaker : MonoBehaviour {
         for (int i = 0; i < tenthLengthSamples; i++) {
             newClipData[i] *= Mathf.Lerp(0f, 1f, (float)i / (float)tenthLengthSamples);
             newClipData[newClipData.Length - i - 1] *= Mathf.Lerp(0f, 1f, (float)i / (float)tenthLengthSamples);
-            newClipData[newClipData.Length - 1] = 0;
         }
+        newClipData[newClipData.Length - 1] = 0;
+
         newClip.SetData(newClipData, 0);
         return newClip;
 

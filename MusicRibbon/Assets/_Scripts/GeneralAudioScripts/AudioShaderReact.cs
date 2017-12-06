@@ -95,4 +95,10 @@ public class AudioShaderReact : MonoBehaviour {
         
 
 	}
+
+    public void WandInteract (Transform wand) {
+
+        myMaterial.SetVector("_WandPos", wand.position);
+
+    }
 }

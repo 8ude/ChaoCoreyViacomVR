@@ -9,8 +9,10 @@ Shader "Custom/AudioDisplacement" {
 		_AudioPosition ("Audio Position", Vector) = (0,0,0,0)
 		_AudioInput ("Audio Input", Float) = 0.0
 		_InputAlpha("Input Alpha", Float) = 0.0
+		_WandPos("Wand Pos", Vector) = (0,0,0,0)
 
 		_MaxAudioDistance("Max Audio Distance", Float) = 0.4
+		_MaxWandDistance("Max Wand Distance", Float) = 0.4
         
 
 		A ("Amplitude", Float) = 0.5 //amplitude
@@ -26,7 +28,7 @@ Shader "Custom/AudioDisplacement" {
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows vertex:vert fragment:frag
+		#pragma surface surf Standard fullforwardshadows vertex:vert
 			//alpha:fade
 
 		// Use shader model 3.0 target, to get nicer looking lighting
@@ -37,17 +39,19 @@ Shader "Custom/AudioDisplacement" {
 
 		struct Input {
 			float2 uv_MainTex;
+			float3 customColor;
 		};
 
-        struct v2s {
-            float4 pos : SV_POSITION;
-            fixed4 color : COLOR;
-        };
+        
 
 		float4 _AudioPosition;
+		
 		float _AudioInput;
 		float _MaxAudioDistance;
 		float _InputAlpha;
+
+		float4 _WandPos;
+		float _MaxWandDistance;
 
 
 		half _Glossiness;
@@ -125,21 +129,23 @@ Shader "Custom/AudioDisplacement" {
 
 
 
-		v2s vert (inout appdata_full v) {
+		void vert (inout appdata_full v, out Input o) {
 
-            v2s o;
+            UNITY_INITIALIZE_OUTPUT(Input, o);
 
 			float3 vertWorld = mul(unity_ObjectToWorld, v.vertex).xyz;
 
 			float distPointToSound = distance(vertWorld, _AudioPosition.xyz);
+
+			float distPointToWand = distance(vertWorld, _WandPos.xyz);
 
 			S += (S * _AudioInput * 0.1);
 			float3 wsVertexOut = gerstnerWave(v.vertex.xyz);
 
 			v.vertex.xyz = wsVertexOut;
 
-            o.color = float4(1.0,1.0,1.0,1.0);
-            o.pos = UnityObjectToClipPos(v.vertex);
+            o.customColor = float3(1.0,1.0,1.0);
+            
 			 
 			if (distPointToSound < _MaxAudioDistance) {
 
@@ -157,26 +163,37 @@ Shader "Custom/AudioDisplacement" {
 				v.vertex.xyz += subWave * 0.3;
 
                 //NEED TO CHECK THIS!!!! getting color to change based on audio
-                v.color.r = ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance);
+                o.customColor.r = ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance);
 
 				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
 				//v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
 			}
 
-            o.color.r = v.color.r; 
+			if (distPointToWand < _MaxWandDistance) {
 
-            return o;
+				noise = 10.0 *  -0.10 * turbulence( 0.5 * v.normal + _Time.y);
+ 				// get a 3d noise using the position, low frequency
+ 				float b = 5.0 * pnoise( 0.05 * v.vertex.xyz, float3( 100.0, 100.0, 100.0 ) );
+  				// compose both noises
+  				float displacement = -10.0 * noise + b;
 
+				S += (S * 0.1 );
+				float3 subWave = gerstnerWave(cross(v.vertex, v.normal) * 
+				((_MaxWandDistance-distPointToWand)/_MaxWandDistance) * (_AudioInput * 3.0 * 
+				((_MaxWandDistance-distPointToWand)/_MaxWandDistance) * displacement));
+
+				v.vertex.xyz += subWave * 1.0;
+			}
 		}
 
-        fixed4 frag (v2s i) : SV_Target { return i.color; }
+
 
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
 			//fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * _Color;
-	       
+	        o.Albedo *= IN.customColor;
 			//o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;

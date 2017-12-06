@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using Beat;
 using DG.Tweening;
 
 /// <summary>
@@ -28,9 +29,13 @@ public class RibbonCollision : MonoBehaviour {
 
     //rate at which melody ribbons trigger - ideally the closer the ribbon,
     // the more they overlap
-    public float TriggerCooldown;
-    float TriggerTimer;
+    public float MicroClipCooldown;
+    [SerializeField] float MicroClipTimer;
+
+    public float TriggerCoolDown;
+    [SerializeField] float triggerTimer;
  
+    
     
     //the distance along the wand where the particles will spawn
     public float yOffset;
@@ -51,8 +56,10 @@ public class RibbonCollision : MonoBehaviour {
         mySource = GetComponent<AudioSource>();
         audioMixer = mySource.outputAudioMixerGroup.audioMixer;
         playingMicroSample = false;
-        TriggerTimer = 0f;
-        TriggerCooldown = 1f;
+        MicroClipTimer = 0f;
+        MicroClipCooldown = Clock.Instance.SixteenthLength();
+
+        triggerTimer = 0f;
     }
     
     // Update is called once per frame
@@ -60,12 +67,17 @@ public class RibbonCollision : MonoBehaviour {
         
     }
 
+    private void FixedUpdate() {
+        MicroClipTimer += Time.fixedDeltaTime;
+        triggerTimer += Time.fixedDeltaTime;
+    }
+
     void OnTriggerEnter(Collider other) {
 
 
 
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
-            if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
+            if (other.transform.parent.parent.gameObject.tag == "MarkerParent" && triggerTimer > TriggerCoolDown) {
 
                 //set the audio clip in accordance with the collision audio in the game manager
 
@@ -88,6 +100,8 @@ public class RibbonCollision : MonoBehaviour {
 						HarmonyRibbonCollisionEnter(other);
                         break;
                 }
+
+                triggerTimer = 0f;
                 
             }
         }
@@ -110,18 +124,25 @@ public class RibbonCollision : MonoBehaviour {
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
 
                 //if trigger is in the melody or bass stem, we want a different kind of interaction
-                TriggerTimer += Time.fixedDeltaTime;
+                MicroClipTimer += Time.fixedDeltaTime;
                     
-				if (TriggerTimer >= TriggerCooldown) 
+				if (MicroClipTimer >= MicroClipCooldown) 
 				{
                     RibbonCollisionStay(other);
                     if(other.gameObject.name == "Create Mesh_5_Mesh000")
                     {
-                        Debug.Log(other.gameObject.name);
+                        //SAVE FOR LATER, also there's a reference to the mesh in collider.root.GetComponent<RibbonGenerator>();
+
+                        //Debug.Log(other.gameObject.name);
                         //AudioReactiveMaterial.
                     }
                    
-                } 
+                }
+
+                triggerTimer = 0f;
+
+                other.transform.root.GetComponentInChildren<AudioShaderReact>().WandInteract(transform);
+
             }
         }
         
@@ -130,7 +151,7 @@ public class RibbonCollision : MonoBehaviour {
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
-                TriggerTimer = 0f; //clear timer
+                MicroClipTimer = 0f; //clear timer
 
                 RibbonGenerator collidedGenerator = other.transform.root.GetComponent<RibbonGenerator>();
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
@@ -148,14 +169,14 @@ public class RibbonCollision : MonoBehaviour {
 
                 playingMicroSample = false;
 
-            } 
+            }
+            RibbonCollisionExit(other);
+
+            triggerTimer = 0f;
+            
+            //other.gameObject.transform.root.GetComponentInChildren<DrawRibbonSound>().RestartClips(0);
         }
         
-    }
-
-    void OnAudioFilterRead(float[] data, int channels) {
-        if (!playingMicroSample)
-            return;
     }
 
 
@@ -163,6 +184,45 @@ public class RibbonCollision : MonoBehaviour {
         //TODO - find nearest marker, somehow translate that to an index 
 
         collision.gameObject.transform.root.GetComponentInChildren<DrawRibbonSound>().RestartClips(0);
+        Debug.Log("gaaaah");
+
+    }
+
+    public void RibbonCollisionExit(Collider other) {
+        MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
+
+        //find closest marker
+        float[] markerDistances = new float[markers.Length];
+        int closestMarkerIndex = 0;
+        float closestMarkerDistance = 3f;
+        for (int i = 0; i < markers.Length; i++)
+        {
+            markerDistances[i] = Vector3.Distance(markers[i].gameObject.transform.position, transform.position);
+            if (markerDistances[i] < closestMarkerDistance)
+            {
+                closestMarkerIndex = i;
+                closestMarkerDistance = markerDistances[i];
+            }
+        }
+
+        //Get the ribbon sound component for the audio sources
+        DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
+
+        //divide the clip up into half notes (round down)
+        int halfLengthOfClip = Mathf.FloorToInt(ribbonSound.myHighSource.clip.length / Clock.Instance.HalfLength());
+
+        //find the half note index of our nearest marker (four eigth notes per half note)
+        int halfNoteIndex = Mathf.FloorToInt((float)closestMarkerIndex / 4f);
+
+        //pause the audio sources, set the time according to the index, then play at the next beat
+        ribbonSound.myHighSource.Pause();
+        ribbonSound.myLowSource.Pause();
+
+        ribbonSound.myHighSource.time = halfNoteIndex * Clock.Instance.HalfLength();
+        ribbonSound.myLowSource.time = halfNoteIndex * Clock.Instance.HalfLength();
+
+        ribbonSound.myHighSource.PlayScheduled(Clock.Instance.AtNextQuarter());
+        ribbonSound.myLowSource.PlayScheduled(Clock.Instance.AtNextQuarter());
 
     }
 
@@ -201,10 +261,10 @@ public class RibbonCollision : MonoBehaviour {
         ribbonSound.myLowSource.outputAudioMixerGroup = mutedGroup;
         melodyClip = ribbonSound.myHighSource.clip;
 		
-        AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, Mathf.Clamp(sizeAdjust, 0.5f, 1f));
+        AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, 0.2f);
         //reset the triggerCooldown and play the clip
-        TriggerCooldown = 0.8f * microClip.length;
-        mySource.PlayOneShot(microClip);
+        MicroClipTimer = 0f;
+        AudioSource.PlayClipAtPoint(microClip, transform.position, 0.3f);
         
     }
 
