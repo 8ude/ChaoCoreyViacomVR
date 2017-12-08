@@ -119,8 +119,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 
 		//Set Mesh Material Values Here
-        /*
-         * 
+       
 		switch (myStem) {
 		case musicStem.Bass:
                 myColor = RibbonGameManager.instance.bassColor;
@@ -131,7 +130,6 @@ public class RibbonGenerator : MonoBehaviour {
                 ribbonRenderer.material.SetFloat("_TurbulenceSpeed", RibbonAudioShaderManager.Instance.BassTurbulenceSpeed);
                 ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.BassSpikiness);
                 ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.BassColorShift);
-
                 break;
 		case musicStem.Drum:
                 myColor = RibbonGameManager.instance.drumColor;
@@ -164,7 +162,6 @@ public class RibbonGenerator : MonoBehaviour {
                 ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.MelodyColorShift);
                 break;
 		}
-        */
 
 		ribbonRenderer.material.color = myColor;
 		DOTween.To (() => transparency, x => transparency = x, 1, 1);
