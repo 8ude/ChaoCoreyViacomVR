@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FluffyUnderware.Curvy;
+using FluffyUnderware.Curvy.Controllers;
 using Beat;
 
 public class DrawRibbonSound : MonoBehaviour {
@@ -72,10 +74,10 @@ public class DrawRibbonSound : MonoBehaviour {
 
 
 		myHighSource.clip = origHighClip;
-        Debug.Log("high clip " + origHighClip.name);
+        //Debug.Log("high clip " + origHighClip.name);
 
         myLowSource.clip = origLowClip;
-        Debug.Log("low clip " + origLowClip.name);
+        //Debug.Log("low clip " + origLowClip.name);
 
 
         startTime = Clock.Instance.AtNextHalf();
@@ -136,7 +138,7 @@ public class DrawRibbonSound : MonoBehaviour {
         myLowSource.clip = newLowClip;
 
 		sourceStartTime = Clock.Instance.AtNextMeasure ();
-        Debug.Log("source start time: " + sourceStartTime);
+        //Debug.Log("source start time: " + sourceStartTime);
 		myHighSource.PlayScheduled (sourceStartTime);
         myLowSource.PlayScheduled (sourceStartTime);
 
@@ -144,11 +146,27 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	}
 
+    /*
+     * doesnt fucking work
+     * 
+    public void FollowRibbonSpline() {
+        SplineController sController = gameObject.AddComponent<SplineController>();
+        sController.Spline = transform.root.gameObject.GetComponentInChildren<CurvySpline>();
+        sController.Speed = 20f;
+        sController.Clamping = CurvyClamping.Loop;
+        sController.Play();
+    }
+    */
+
 	public void FollowRibbon() {
 
 		if (splinePoints != null) {
 			//This coroutine is causing issues with small splines/drawing in small areas
 			StartCoroutine(MoveToNextPoint (splinePoints));
+
+
+
+
 			//index++;
 
 		}

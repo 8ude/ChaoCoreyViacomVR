@@ -8,12 +8,16 @@ public class SpectrumAnalysis : MonoBehaviour {
 
 	[HideInInspector]
 	public float[] spectrumData;
+    public float[] spectrumDataB;
 
 	public AudioSource audioSource;
+    public AudioSource audioSourceB;
 
 	public float[] bandBuffer;
+    public float[] bandBufferB;
 	int bufferSize = 128;
-	float [] bufferDecrease;
+	float[] bufferDecrease;
+    float[] bufferDecreaseB;
 
 	public float sampleRate;
 
@@ -23,6 +27,13 @@ public class SpectrumAnalysis : MonoBehaviour {
 	void Awake(){
 
 		audioSource = gameObject.GetComponent<AudioSource> ();
+
+        if (GetComponents<AudioSource>().Length > 0) {
+            //max 2 audiosources for now
+            AudioSource[] sources = GetComponents<AudioSource>();
+            audioSource = sources[0];
+            audioSourceB = sources[1];
+        }
 
 		/*Deleting Singleton Stuff for now
 		if (instance == null) {
@@ -40,8 +51,11 @@ public class SpectrumAnalysis : MonoBehaviour {
 
 		//audioSource = gameObject.GetComponent<AudioSource> ();
 		spectrumData = new float[bufferSize];
+        spectrumDataB = new float[bufferSize];
 		bandBuffer = new float[bufferSize];
+        bandBufferB = new float[bufferSize];
 		bufferDecrease = new float[bufferSize];
+        bufferDecreaseB = new float[bufferSize];
 		sampleRate = AudioSettings.outputSampleRate;
 
 		//audioSource = gameObject.GetComponent<AudioSource> ();
@@ -63,10 +77,21 @@ public class SpectrumAnalysis : MonoBehaviour {
 		float wholeEnergy = 0;
 		for (int i = 0; i < spectrumData.Length; i++) {
 			wholeEnergy += spectrumData [i] * spectrumData [i];
+
+            if (audioSourceB != null) {
+                wholeEnergy += spectrumDataB[i] * spectrumDataB[i];
+
+
+            }
 		}
 
 		wholeEnergy *= 100f;
 		wholeEnergy = CompressorExciter (wholeEnergy, 0.05f, 0.7f);
+
+        if (audioSourceB != null) {
+            //need to scale the result down by 4 if we have more than one spectrum
+            wholeEnergy /= 4f;
+        }
 
 
 		return wholeEnergy;
@@ -79,11 +104,19 @@ public class SpectrumAnalysis : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		audioSource.GetSpectrumData( spectrumData, 0, FFTWindow.Blackman );
+        if(audioSourceB != null) {
+            audioSourceB.GetSpectrumData(spectrumDataB, 0, FFTWindow.Blackman);
+        }
 
 		BandBuffer ();
 		float wholeEnergy = 0;
 		for (int i = spectrumData.Length / 5 * 2; i < spectrumData.Length / 5 * 2 + spectrumData.Length / 2; i++) {
 			wholeEnergy += spectrumData [i];
+
+            if (audioSourceB != null) {
+                wholeEnergy += spectrumDataB[i];
+                wholeEnergy = wholeEnergy / 4f;
+            }
 		}
 
 		//Debug.Log (wholeEnergy);

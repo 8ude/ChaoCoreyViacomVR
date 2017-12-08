@@ -36,7 +36,7 @@ public class AudioShaderReact : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		
 
 
@@ -56,7 +56,7 @@ public class AudioShaderReact : MonoBehaviour {
 			switch (myStem) {
 
 			case RibbonGenerator.musicStem.Bass:
-				normalizedEnergy = analyzer.GetEnergyFrequencyRange(0f,8000f) * 0.1f;
+                    normalizedEnergy = analyzer.GetWholeEnergy() * 1000f;
 				break;
 			case RibbonGenerator.musicStem.Drum:
 				energyGate = 0.15f;

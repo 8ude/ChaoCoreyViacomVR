@@ -3,13 +3,34 @@
 Shader "Custom/AudioDisplacement" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
-		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+
+        //_MainTex will be adjusted by AudioTexture
+        _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
+        
 		_AudioPosition ("Audio Position", Vector) = (0,0,0,0)
+
+        //AudioInput is averaged audio data from the ribbon audio sources
 		_AudioInput ("Audio Input", Float) = 0.0
+
+        //not used currently
 		_InputAlpha("Input Alpha", Float) = 0.0
+
+        //position of wand after ontriggerenter is called
 		_WandPos("Wand Pos", Vector) = (0,0,0,0)
+
+
+        //These properties could and should be tuned for each instrument:
+        //How much the audio source creates a localized chaotic spikey effect
+        _PosTurb("Positional Turbulence", Range(0,3)) = 1.0
+        //How much the audio input changes the wave speed/phase
+        _WaveShud("Wave Shudder", Range(0,1)) = 0.1
+        //How much the audio input adjusts overall chaotic spikey displacement
+        _Turbulence("Turbulence", Float) = 0.0
+        //The speed of the chaotic spikey effect
+        _TurbulenceSpeed("Turbulence Speed", Range(0, 40)) = 0.0
 
 		_MaxAudioDistance("Max Audio Distance", Float) = 0.4
 		_MaxWandDistance("Max Wand Distance", Float) = 0.4
@@ -52,6 +73,12 @@ Shader "Custom/AudioDisplacement" {
 
 		float4 _WandPos;
 		float _MaxWandDistance;
+
+        float _Turbulence;
+        float _TurbulenceSpeed;
+
+        float _PosTurb;
+        float _WaveShud;
 
 
 		half _Glossiness;
@@ -139,31 +166,39 @@ Shader "Custom/AudioDisplacement" {
 
 			float distPointToWand = distance(vertWorld, _WandPos.xyz);
 
-			S += (S * _AudioInput * 0.1);
+			S += (S * _AudioInput * _WaveShud * 0.1);
 			float3 wsVertexOut = gerstnerWave(v.vertex.xyz);
 
 			v.vertex.xyz = wsVertexOut;
 
             o.customColor = float3(1.0,1.0,1.0);
+
+            //create noise by scaling turbulence (from the other shader file), with the time scale
+            //given by the _TurbulenceSpeed property)
+            noise = 10.0 *  -0.10 * turbulence( 0.5 * v.normal + (_Time.x * _TurbulenceSpeed));
+            // get a 3d noise using the position, low frequency
+            float b = 5.0 * pnoise( 0.05 * v.vertex.xyz, float3( 100.0, 100.0, 100.0 ) );
+            // compose both noises
+            float displacement = -10.0 * noise + b;
             
-			 
+			 //
 			if (distPointToSound < _MaxAudioDistance) {
 
-				noise = 10.0 *  -0.10 * turbulence( 0.5 * v.normal + _Time.y);
- 				// get a 3d noise using the position, low frequency
- 				float b = 5.0 * pnoise( 0.05 * v.vertex.xyz, float3( 100.0, 100.0, 100.0 ) );
-  				// compose both noises
-  				float displacement = -10.0 * noise + b;
+				
 
-				S += (S * _AudioInput * 0.1 );
+				//S += (S * _AudioInput * 0.1 );
 				float3 subWave = gerstnerWave(cross(v.vertex, v.normal) * _AudioInput * 
-				((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance) * (_AudioInput * 3.0 * 
+				((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance) * (_AudioInput * _PosTurb * 
 				((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance) * displacement));
 
-				v.vertex.xyz += subWave * 0.3;
+				v.vertex.xyz += subWave * 0.001;
 
                 //NEED TO CHECK THIS!!!! getting color to change based on audio
-                o.customColor.r = ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance);
+                o.customColor.r = 1-((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance);
+                o.customColor.g = 1-((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance);
+                o.customColor.b = 1-((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance);
+
+                //o.customColor *= ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance);
 
 				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
 				//v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
@@ -177,13 +212,18 @@ Shader "Custom/AudioDisplacement" {
   				// compose both noises
   				float displacement = -10.0 * noise + b;
 
-				S += (S * 0.1 );
+				//S += (S * 0.1 );
 				float3 subWave = gerstnerWave(cross(v.vertex, v.normal) * 
 				((_MaxWandDistance-distPointToWand)/_MaxWandDistance) * (_AudioInput * 3.0 * 
 				((_MaxWandDistance-distPointToWand)/_MaxWandDistance) * displacement));
 
-				v.vertex.xyz += subWave * 1.0;
+				//v.vertex.xyz += subWave * 1.0;
 			}
+
+            //Ambient Noise
+
+            v.vertex.xyz += v.normal * displacement * _Turbulence * (_AudioInput);
+
 		}
 
 
@@ -193,7 +233,7 @@ Shader "Custom/AudioDisplacement" {
 			// Albedo comes from a texture tinted by color
 			//fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * _Color;
-	        o.Albedo *= IN.customColor;
+	        o.Albedo = (o.Albedo * 0.8) + (IN.customColor * 0.2);
 			//o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
