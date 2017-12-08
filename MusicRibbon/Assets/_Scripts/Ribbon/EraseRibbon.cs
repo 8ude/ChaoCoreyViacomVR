@@ -171,17 +171,22 @@ public class EraseRibbon : MonoBehaviour {
 			if (other.transform.parent.parent.name == "MarkerParent(Clone)") {
 
 				GameObject otherParent = other.transform.parent.parent.gameObject;
-				//Want to add juice by having an "eraser" particle follow the ribbon...
-				//the sound follower object already has a reference to the points
-				Vector3[] splinePoints = otherParent.GetComponentInChildren<DrawRibbonSound> ().splinePoints;
 
-				GameObject eraserCube = Instantiate (EraserCubePrefab, splinePoints [0], Quaternion.identity);
-				eraserCube.GetComponent<EraseRibbonAnim> ().EraseRibbon (splinePoints, 1.0f);
-				otherParent.GetComponent<RibbonGenerator> ().FadeOutRibbon (0.5f);
-                DOTween.To( () => otherParent.GetComponentInChildren<DrawRibbonSound> ().currentMaxVolume, 
-                          x => otherParent.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume = x,
-                           0f, 0.6f);
-                RibbonGameManager.instance.ribbonObjects.Remove(otherParent);
+                if (otherParent.GetComponentInChildren<DrawRibbonSound>() != null) {
+                    //Want to add juice by having an "eraser" particle follow the ribbon...
+                    //the sound follower object already has a reference to the points
+
+                    Vector3[] splinePoints = otherParent.GetComponentInChildren<DrawRibbonSound>().splinePoints;
+
+                    GameObject eraserCube = Instantiate(EraserCubePrefab, splinePoints[0], Quaternion.identity);
+                    eraserCube.GetComponent<EraseRibbonAnim>().EraseRibbon(splinePoints, 1.0f);
+                    otherParent.GetComponent<RibbonGenerator>().FadeOutRibbon(0.5f);
+                    DOTween.To(() => otherParent.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume,
+                              x => otherParent.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume = x,
+                               0f, 0.6f);
+                    RibbonGameManager.instance.ribbonObjects.Remove(otherParent);
+                }
+
 				Destroy (other.transform.parent.parent.gameObject, 1.0f);
 
 

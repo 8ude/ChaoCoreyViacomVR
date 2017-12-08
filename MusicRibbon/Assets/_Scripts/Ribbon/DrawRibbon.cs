@@ -283,9 +283,10 @@ public class DrawRibbon: MonoBehaviour {
     }
 
     void StopDrawing() {
-        
 
-        currentRibbonSound.GetComponent<DrawRibbonSound>().StopDrawingRibbon(nextHighClip);
+        if (currentRibbonSound != null) {
+            currentRibbonSound.GetComponent<DrawRibbonSound>().StopDrawingRibbon(nextHighClip);
+        }
 
         if (markerChain.Count > 1) {
 
