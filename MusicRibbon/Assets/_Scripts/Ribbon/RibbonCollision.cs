@@ -141,7 +141,9 @@ public class RibbonCollision : MonoBehaviour {
 
                 triggerTimer = 0f;
 
-                other.transform.root.GetComponentInChildren<AudioShaderReact>().WandInteract(transform);
+                if (other.transform.root.GetComponentInChildren<AudioShaderReact>() != null) {
+                    other.transform.root.GetComponentInChildren<AudioShaderReact>().WandInteract(transform);
+                }
 
             }
         }
@@ -157,11 +159,11 @@ public class RibbonCollision : MonoBehaviour {
                 RibbonGenerator.musicStem collidedStemType = collidedGenerator.myStem;
 
                 DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
-
-                ribbonSound.autoMoveSound = true;
-                ribbonSound.myHighSource.outputAudioMixerGroup = origGroup;
-                ribbonSound.myLowSource.outputAudioMixerGroup = origGroup;
-
+                if (ribbonSound != null) {
+                    ribbonSound.autoMoveSound = true;
+                    ribbonSound.myHighSource.outputAudioMixerGroup = origGroup;
+                    ribbonSound.myLowSource.outputAudioMixerGroup = origGroup;
+                }
 
                 melodyClip = null;
                 mySource.Stop();
@@ -209,20 +211,23 @@ public class RibbonCollision : MonoBehaviour {
         DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
 
         //divide the clip up into half notes (round down)
-        int halfLengthOfClip = Mathf.FloorToInt(ribbonSound.myHighSource.clip.length / Clock.Instance.HalfLength());
+        if (ribbonSound != null)
+        {
+            int halfLengthOfClip = Mathf.FloorToInt(ribbonSound.myHighSource.clip.length / Clock.Instance.HalfLength());
 
-        //find the half note index of our nearest marker (four eigth notes per half note)
-        int halfNoteIndex = Mathf.FloorToInt((float)closestMarkerIndex / 4f);
+            //find the half note index of our nearest marker (four eigth notes per half note)
+            int halfNoteIndex = Mathf.FloorToInt((float)closestMarkerIndex / 4f);
 
-        //pause the audio sources, set the time according to the index, then play at the next beat
-        ribbonSound.myHighSource.Pause();
-        ribbonSound.myLowSource.Pause();
+            //pause the audio sources, set the time according to the index, then play at the next beat
+            ribbonSound.myHighSource.Pause();
+            ribbonSound.myLowSource.Pause();
 
-        ribbonSound.myHighSource.time = halfNoteIndex * Clock.Instance.HalfLength();
-        ribbonSound.myLowSource.time = halfNoteIndex * Clock.Instance.HalfLength();
+            ribbonSound.myHighSource.time = halfNoteIndex * Clock.Instance.HalfLength();
+            ribbonSound.myLowSource.time = halfNoteIndex * Clock.Instance.HalfLength();
 
-        ribbonSound.myHighSource.PlayScheduled(Clock.Instance.AtNextQuarter());
-        ribbonSound.myLowSource.PlayScheduled(Clock.Instance.AtNextQuarter());
+            ribbonSound.myHighSource.PlayScheduled(Clock.Instance.AtNextQuarter());
+            ribbonSound.myLowSource.PlayScheduled(Clock.Instance.AtNextQuarter());
+        }
 
     }
 
@@ -249,22 +254,23 @@ public class RibbonCollision : MonoBehaviour {
         float sizeAdjust = Mathf.Clamp(closestMarkerDistance, 0.1f, 1f);
 
 
+        if (other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>() != null) {
+            DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
 
-        DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
+            //trying to get the mesh displacement to occur where the collision is occuring
+            ribbonSound.autoMoveSound = false;
+            ribbonSound.transform.position = transform.position;
 
-        //trying to get the mesh displacement to occur where the collision is occuring
-        ribbonSound.autoMoveSound = false;
-        ribbonSound.transform.position = transform.position;
+            //mute the main stem while we do the micro thingy
+            ribbonSound.myHighSource.outputAudioMixerGroup = mutedGroup;
+            ribbonSound.myLowSource.outputAudioMixerGroup = mutedGroup;
+            melodyClip = ribbonSound.myHighSource.clip;
 
-        //mute the main stem while we do the micro thingy
-        ribbonSound.myHighSource.outputAudioMixerGroup = mutedGroup;
-        ribbonSound.myLowSource.outputAudioMixerGroup = mutedGroup;
-        melodyClip = ribbonSound.myHighSource.clip;
-		
-        AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, 0.2f);
-        //reset the triggerCooldown and play the clip
-        MicroClipTimer = 0f;
-        AudioSource.PlayClipAtPoint(microClip, transform.position, 0.3f);
+            AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, 0.2f);
+            //reset the triggerCooldown and play the clip
+            MicroClipTimer = 0f;
+            AudioSource.PlayClipAtPoint(microClip, transform.position, 0.3f);
+        }
         
     }
 
@@ -332,53 +338,5 @@ public class RibbonCollision : MonoBehaviour {
 		Destroy(newParticles, 2.0f);
 		clipIndex++;
 	}
-
-
-    //    NO LONGER USING Bass Ribbon Low Pass Method
-    //
-    //    public void BassRibbonCollision(Collider other) {
-    //        //TODO check on VR to see if bug is fixed (renamed LP filter to be the same as exposed parameter)
-    //
-    //        MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
-    //
-    //      //find closest marker and second closest marker
-    //      float[] markerDistances = new float[markers.Length];
-    //        float[] lowPassFrequencies = new float[markers.Length];
-    //      int closestMarkerIndex = 0;
-    //        int secondClosestMarkerIndex = 0;
-    //      float closestMarkerDistance = 1f;
-    //        float secondClosestMarkerDistance = 1f;
-    //      for (int i = 0; i < markers.Length; i++) {
-    //            //populate an array with cutoff frequencies, corresponding to points along the ribbon
-    //          markerDistances[i] = Vector3.Distance(markers[i].gameObject.transform.position, transform.position);
-    //            lowPassFrequencies[i] = (float) 6000f / markers.Length * i;
-    //          if (markerDistances[i] < closestMarkerDistance) {
-    //                secondClosestMarkerIndex = closestMarkerIndex;
-    //                secondClosestMarkerDistance = closestMarkerDistance;
-    //                    
-    //              closestMarkerIndex = i;
-    //              closestMarkerDistance = markerDistances[i];
-    //          }
-    //      }
-    //
-    //        //Vector math to (theoretically) find wand's relative location along the ribbon
-    //        Vector3 markerVectorLine = markers[closestMarkerIndex].transform.position - markers[secondClosestMarkerIndex].transform.position;
-    //        float markerDistance = markerVectorLine.magnitude;
-    //        Vector3 markerALine = markers[closestMarkerIndex].transform.position - transform.position;
-    //        Vector3 markerBLine = markers[secondClosestMarkerIndex].transform.position - transform.position;
-    //        float angle = Vector3.Angle(markerVectorLine, markerBLine);
-    //        float projection = markerBLine.magnitude * Mathf.Cos(Mathf.Deg2Rad * angle);
-    //
-    //        //Adjust low pass filter to reflect how far wand is along the ribbon
-    //        audioMixer.DOSetFloat("GlobalLPFreq", lowPassFrequencies[closestMarkerIndex], 0.5f);
-    //
-    //      DrawRibbonSound ribbonSound = other.transform.parent.parent.GetComponentInChildren<DrawRibbonSound>();
-    //
-    //      //trying to get the mesh displacement to occur where the collision is occuring
-    //      ribbonSound.autoMoveSound = false;
-    //
-    //      ribbonSound.transform.position = transform.position;
-    //
-    //    }
 
 }

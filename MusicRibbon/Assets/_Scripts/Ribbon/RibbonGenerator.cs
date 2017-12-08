@@ -123,16 +123,45 @@ public class RibbonGenerator : MonoBehaviour {
 		switch (myStem) {
 		case musicStem.Bass:
                 myColor = RibbonGameManager.instance.bassColor;
-			break;
+
+                ribbonRenderer.material.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.BassPosTurbulence);
+                ribbonRenderer.material.SetFloat("_WaveShud", RibbonAudioShaderManager.Instance.BassWaveShudder);
+                ribbonRenderer.material.SetFloat("_Turbulence", RibbonAudioShaderManager.Instance.BassOverallTurbulence);
+                ribbonRenderer.material.SetFloat("_TurbulenceSpeed", RibbonAudioShaderManager.Instance.BassTurbulenceSpeed);
+                ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.BassSpikiness);
+                ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.BassColorShift);
+
+                break;
 		case musicStem.Drum:
                 myColor = RibbonGameManager.instance.drumColor;
-			break;
+
+                ribbonRenderer.material.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.DrumPosTurbulence);
+                ribbonRenderer.material.SetFloat("_WaveShud", RibbonAudioShaderManager.Instance.DrumWaveShudder);
+                ribbonRenderer.material.SetFloat("_Turbulence", RibbonAudioShaderManager.Instance.DrumOverallTurbulence);
+                ribbonRenderer.material.SetFloat("_TurbulenceSpeed", RibbonAudioShaderManager.Instance.DrumTurbulenceSpeed);
+                ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.DrumSpikiness);
+                ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.DrumColorShift);
+                break;
 		case musicStem.Melody:
                 myColor = RibbonGameManager.instance.melodyColor;
-			break;
+
+                ribbonRenderer.material.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.HarmonyPosTurbulence);
+                ribbonRenderer.material.SetFloat("_WaveShud", RibbonAudioShaderManager.Instance.HarmonyWaveShudder);
+                ribbonRenderer.material.SetFloat("_Turbulence", RibbonAudioShaderManager.Instance.HarmonyOverallTurbulence);
+                ribbonRenderer.material.SetFloat("_TurbulenceSpeed", RibbonAudioShaderManager.Instance.HarmonyTurbulenceSpeed);
+                ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.HarmonySpikiness);
+                ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.HarmonyColorShift);
+                break;
 		case musicStem.Harmony:
                 myColor = RibbonGameManager.instance.harmonyColor;
-			break;
+
+                ribbonRenderer.material.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.MelodyPosTurbulence);
+                ribbonRenderer.material.SetFloat("_WaveShud", RibbonAudioShaderManager.Instance.MelodyWaveShudder);
+                ribbonRenderer.material.SetFloat("_Turbulence", RibbonAudioShaderManager.Instance.MelodyOverallTurbulence);
+                ribbonRenderer.material.SetFloat("_TurbulenceSpeed", RibbonAudioShaderManager.Instance.MelodyTurbulenceSpeed);
+                ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.MelodySpikiness);
+                ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.MelodyColorShift);
+                break;
 		}
 
 		ribbonRenderer.material.color = myColor;

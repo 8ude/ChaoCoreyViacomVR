@@ -32,6 +32,12 @@ Shader "Custom/AudioDisplacement" {
         //The speed of the chaotic spikey effect
         _TurbulenceSpeed("Turbulence Speed", Range(0, 40)) = 0.0
 
+		//Controls how much spikes will displace from the mesh
+		_Spikinees("Spikiness", Range(1,3)) = 1.0
+
+		//Degree of color change around Audio Source and Wand
+		_ColorShift("Color Shift", Range(0.1, 0.5)) = 0.2
+
 		_MaxAudioDistance("Max Audio Distance", Float) = 0.4
 		_MaxWandDistance("Max Wand Distance", Float) = 0.4
         
@@ -77,9 +83,12 @@ Shader "Custom/AudioDisplacement" {
         float _Turbulence;
         float _TurbulenceSpeed;
 
+		float _Spikiness;
+
         float _PosTurb;
         float _WaveShud;
 
+		float _ColorShift;
 
 		half _Glossiness;
 		half _Metallic;
@@ -180,6 +189,12 @@ Shader "Custom/AudioDisplacement" {
             float b = 5.0 * pnoise( 0.05 * v.vertex.xyz, float3( 100.0, 100.0, 100.0 ) );
             // compose both noises
             float displacement = -10.0 * noise + b;
+
+			float spikeThreshold = 0.005;
+
+			if (displacement > spikeThreshold) {
+				displacement *= _Spikiness * 5;
+			}
             
 			 //
 			if (distPointToSound < _MaxAudioDistance) {
@@ -222,7 +237,7 @@ Shader "Custom/AudioDisplacement" {
 
             //Ambient Noise
 
-            v.vertex.xyz += v.normal * displacement * _Turbulence * (_AudioInput);
+            v.vertex.xyz += v.normal * displacement * ( _Turbulence * 0.001 ) * (_AudioInput);
 
 		}
 
@@ -233,7 +248,7 @@ Shader "Custom/AudioDisplacement" {
 			// Albedo comes from a texture tinted by color
 			//fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * _Color;
-	        o.Albedo = (o.Albedo * 0.8) + (IN.customColor * 0.2);
+	        o.Albedo = (o.Albedo * (1.0 - _ColorShift) + (IN.customColor * _ColorShift));
 			//o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
