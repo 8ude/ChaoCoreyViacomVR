@@ -287,8 +287,6 @@ public class RibbonCollision : MonoBehaviour {
         
     }
 
-
-
     public void DrumRibbonCollisionEnter(Collider other) {
 		
 		GameObject newParticles = Instantiate(DrumParticlePrefab, transform.position + (transform.up * yOffset), Quaternion.identity);
@@ -297,9 +295,8 @@ public class RibbonCollision : MonoBehaviour {
 		aSource.Play();
 		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
 		var main = ps.main;
-		//Particle color will be somewhere between white and the ribbon color
-		main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
-
+        //Particle color will be somewhere between white and the ribbon color
+        //main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
 		Destroy(newParticles, 2.0f);
 		clipIndex++;
         
@@ -313,8 +310,9 @@ public class RibbonCollision : MonoBehaviour {
 		aSource.Play();
 		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
 		var main = ps.main;
-		//Particle color will be somewhere between white and the ribbon color
-		main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
+        //Particle color will be somewhere between white and the ribbon color
+
+        //main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
 
 		Destroy(newParticles, 2.0f);
 		clipIndex++;
@@ -329,9 +327,9 @@ public class RibbonCollision : MonoBehaviour {
 		aSource.Play();
 		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
 		var main = ps.main;
-		//Particle color will be somewhere between white and the ribbon color
-		main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
+        //Particle color will be somewhere between white and the ribbon color
 
+        //main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
 		Destroy(newParticles, 2.0f);
 		clipIndex++;
 
@@ -345,9 +343,9 @@ public class RibbonCollision : MonoBehaviour {
 		aSource.Play();
 		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
 		var main = ps.main;
-		//Particle color will be somewhere between white and the ribbon color
-		main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
+        //Particle color will be somewhere between white and the ribbon color
 
+        //main.startColor = new ParticleSystem.MinMaxGradient(other.gameObject.GetComponent<Renderer>().material.color, Color.white);
 		Destroy(newParticles, 2.0f);
 		clipIndex++;
 	}
