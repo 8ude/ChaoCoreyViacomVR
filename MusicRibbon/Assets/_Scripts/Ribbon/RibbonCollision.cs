@@ -64,7 +64,7 @@ public class RibbonCollision : MonoBehaviour {
         audioMixer = mySource.outputAudioMixerGroup.audioMixer;
         playingMicroSample = false;
         MicroClipTimer = 0f;
-        MicroClipCooldown = Clock.Instance.SixteenthLength();
+        //MicroClipCooldown = Clock.Instance.SixteenthLength();
 
         triggerTimer = 0f;
     }
