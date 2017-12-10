@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.Audio;
 using Beat;
 using DG.Tweening;
+using FluffyUnderware.Curvy;
+using FluffyUnderware.Curvy.Generator;
+using FluffyUnderware.Curvy.Generator.Modules;
+using FluffyUnderware.Curvy.Controllers;
+using FluffyUnderware.Curvy.Shapes;
+using FluffyUnderware.DevTools;
+using UnityEngine.UI;
 
 /// <summary>
 /// Attach to Wand object to spawn particles upon collision with ribbon
@@ -16,7 +23,7 @@ public class RibbonCollision : MonoBehaviour {
     public GameObject BassParticlePrefab;
     public GameObject MelodyParticlePrefab;
     public GameObject HarmonyParticlePrefab;
-    public Material AudioReactiveMaterial;
+    public MeshRenderer ribbonRenderer;
     public AudioSource mySource;
     AudioClip melodyClip;
     public AudioMixerGroup mutedGroup, origGroup;
@@ -74,8 +81,6 @@ public class RibbonCollision : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
 
-
-
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent" && triggerTimer > TriggerCoolDown) {
 
@@ -105,6 +110,7 @@ public class RibbonCollision : MonoBehaviour {
                 
             }
         }
+
     }
     void OnTriggerStay(Collider other) {
 
@@ -129,12 +135,14 @@ public class RibbonCollision : MonoBehaviour {
 				if (MicroClipTimer >= MicroClipCooldown) 
 				{
                     RibbonCollisionStay(other);
+
                     if(other.gameObject.name == "Create Mesh_5_Mesh000")
                     {
                         //SAVE FOR LATER, also there's a reference to the mesh in collider.root.GetComponent<RibbonGenerator>();
+                        ribbonRenderer = other.gameObject.GetComponentInChildren<MeshRenderer>();
+                        ribbonRenderer.material.SetFloat("A", 0.07f);
+                        ribbonRenderer.material.SetFloat("L", 0.01f);
 
-                        //Debug.Log(other.gameObject.name);
-                        //AudioReactiveMaterial.
                     }
                    
                 }
@@ -175,12 +183,16 @@ public class RibbonCollision : MonoBehaviour {
             RibbonCollisionExit(other);
 
             triggerTimer = 0f;
-            
+
+            ribbonRenderer.material.SetFloat("A", 0.04f);
+            ribbonRenderer.material.SetFloat("L", 0.12f);
+ 
+
             //other.gameObject.transform.root.GetComponentInChildren<DrawRibbonSound>().RestartClips(0);
+
         }
         
     }
-
 
     void OnCollisionExit(Collision collision) {
         //TODO - find nearest marker, somehow translate that to an index 
@@ -237,9 +249,10 @@ public class RibbonCollision : MonoBehaviour {
 		
         playingMicroSample = true;
 		MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
-		
+
+
         //find closest marker
-		float[] markerDistances = new float[markers.Length];
+        float[] markerDistances = new float[markers.Length];
 		int closestMarkerIndex = 0;
 		float closestMarkerDistance = 3f;
 		for (int i = 0; i < markers.Length; i++) {
