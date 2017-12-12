@@ -97,7 +97,7 @@ Shader "Custom/AudioDisplacement" {
 		float noise;
 
 		float A = 0.5; //amplitude
-		float L = 1; //wavelength
+		float L; //wavelength
 		float S = 0.1; //speed
 		float Q = 0.5; //steepness
 		float i = 1; //number of waves
