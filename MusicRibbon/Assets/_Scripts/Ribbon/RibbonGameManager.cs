@@ -76,6 +76,7 @@ public class RibbonGameManager : MonoBehaviour {
 	public float autoKillFadeOutTime;
 
 	public float maxDistanceBeforeFade;
+    public float followRibbonSpeed = 2f;
 
     private void Awake() {
 

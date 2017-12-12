@@ -203,13 +203,7 @@ public class RibbonCollision : MonoBehaviour {
         
     }
 
-    void OnCollisionExit(Collision collision) {
-        //TODO - find nearest marker, somehow translate that to an index 
-
-        collision.gameObject.transform.root.GetComponentInChildren<DrawRibbonSound>().RestartClips(0);
-        Debug.Log("gaaaah");
-
-    }
+    
 
     public void RibbonCollisionExit(Collider other) {
         MarkerObjectBehavior[] markers = other.transform.root.GetComponentsInChildren<MarkerObjectBehavior>();
@@ -246,8 +240,8 @@ public class RibbonCollision : MonoBehaviour {
             ribbonSound.myHighSource.time = halfNoteIndex * Clock.Instance.HalfLength();
             ribbonSound.myLowSource.time = halfNoteIndex * Clock.Instance.HalfLength();
 
-            ribbonSound.myHighSource.PlayScheduled(Clock.Instance.AtNextQuarter());
-            ribbonSound.myLowSource.PlayScheduled(Clock.Instance.AtNextQuarter());
+            ribbonSound.myHighSource.PlayScheduled(Clock.Instance.AtNextHalf());
+            ribbonSound.myLowSource.PlayScheduled(Clock.Instance.AtNextHalf());
         }
 
     }
@@ -291,7 +285,7 @@ public class RibbonCollision : MonoBehaviour {
             AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, 0.2f);
             //reset the triggerCooldown and play the clip
             MicroClipTimer = 0f;
-            AudioSource.PlayClipAtPoint(microClip, transform.position, 0.3f);
+            AudioSource.PlayClipAtPoint(microClip, transform.position, 0.6f);
         }
         
     }

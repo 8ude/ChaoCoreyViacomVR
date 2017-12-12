@@ -7,6 +7,7 @@ public class AudioShaderReact : MonoBehaviour {
     SpectrumAnalysis analyzer;
 	 
 	public float smoothing = 0.75f;
+    float energyScaleFactor = 60f;
 
     float normalizedEnergy = 0f;
 	float prevEnergy = 0f;
@@ -56,16 +57,16 @@ public class AudioShaderReact : MonoBehaviour {
 			switch (myStem) {
 
 			case RibbonGenerator.musicStem.Bass:
-                normalizedEnergy = analyzer.GetWholeEnergy() * 1000f;
+                normalizedEnergy = analyzer.GetWholeEnergy() * energyScaleFactor;
 				break;
 			case RibbonGenerator.musicStem.Drum:
-                normalizedEnergy = analyzer.GetWholeEnergy() * 1000f;
+                normalizedEnergy = analyzer.GetWholeEnergy() * energyScaleFactor;
                 break;
             case RibbonGenerator.musicStem.Harmony:
-                normalizedEnergy = analyzer.GetWholeEnergy() * 1000f;
+                normalizedEnergy = analyzer.GetWholeEnergy() * energyScaleFactor;
                 break;
             case RibbonGenerator.musicStem.Melody:
-                normalizedEnergy = analyzer.GetWholeEnergy() * 1000f;
+                normalizedEnergy = analyzer.GetWholeEnergy() * energyScaleFactor;
                 break;
             }
 
@@ -111,22 +112,24 @@ public class AudioShaderReact : MonoBehaviour {
                     break;
                 case RibbonGenerator.musicStem.Melody:
 
-
-                    myMaterial.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.HarmonyPosTurbulence);
-                    myMaterial.SetFloat("_WaveShud", RibbonAudioShaderManager.Instance.HarmonyWaveShudder);
-                    myMaterial.SetFloat("_Turbulence", RibbonAudioShaderManager.Instance.HarmonyOverallTurbulence);
-                    myMaterial.SetFloat("_TurbulenceSpeed", RibbonAudioShaderManager.Instance.HarmonyTurbulenceSpeed);
-                    myMaterial.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.HarmonySpikiness);
-                    myMaterial.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.HarmonyColorShift);
-                    break;
-                case RibbonGenerator.musicStem.Harmony:
-                    
                     myMaterial.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.MelodyPosTurbulence);
                     myMaterial.SetFloat("_WaveShud", RibbonAudioShaderManager.Instance.MelodyWaveShudder);
                     myMaterial.SetFloat("_Turbulence", RibbonAudioShaderManager.Instance.MelodyOverallTurbulence);
                     myMaterial.SetFloat("_TurbulenceSpeed", RibbonAudioShaderManager.Instance.MelodyTurbulenceSpeed);
                     myMaterial.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.MelodySpikiness);
                     myMaterial.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.MelodyColorShift);
+
+
+                    break;
+                case RibbonGenerator.musicStem.Harmony:
+                    
+                    myMaterial.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.HarmonyPosTurbulence);
+                    myMaterial.SetFloat("_WaveShud", RibbonAudioShaderManager.Instance.HarmonyWaveShudder);
+                    myMaterial.SetFloat("_Turbulence", RibbonAudioShaderManager.Instance.HarmonyOverallTurbulence);
+                    myMaterial.SetFloat("_TurbulenceSpeed", RibbonAudioShaderManager.Instance.HarmonyTurbulenceSpeed);
+                    myMaterial.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.HarmonySpikiness);
+                    myMaterial.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.HarmonyColorShift);
+
                     break;
             }
 
