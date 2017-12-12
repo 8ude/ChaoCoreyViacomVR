@@ -36,11 +36,12 @@ public class RibbonCollision : MonoBehaviour {
 
     //rate at which melody ribbons trigger - ideally the closer the ribbon,
     // the more they overlap
-    public float MicroClipCooldown;
+    private float MicroClipCooldown;
     [SerializeField] float MicroClipTimer;
 
     public float TriggerCoolDown;
     [SerializeField] float triggerTimer;
+
  
     
     
@@ -64,7 +65,7 @@ public class RibbonCollision : MonoBehaviour {
         audioMixer = mySource.outputAudioMixerGroup.audioMixer;
         playingMicroSample = false;
         MicroClipTimer = 0f;
-        //MicroClipCooldown = Clock.Instance.SixteenthLength();
+        MicroClipCooldown = Clock.Instance.SixteenthLength();
 
         triggerTimer = 0f;
     }
@@ -75,14 +76,14 @@ public class RibbonCollision : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        MicroClipTimer += Time.fixedDeltaTime;
-        triggerTimer += Time.fixedDeltaTime;
+       // MicroClipTimer += Time.fixedDeltaTime;
+        //triggerTimer += Time.fixedDeltaTime;
     }
 
     void OnTriggerEnter(Collider other) {
 
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
-            if (other.transform.parent.parent.gameObject.tag == "MarkerParent" && triggerTimer > TriggerCoolDown) {
+            if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
                 //set the audio clip in accordance with the collision audio in the game manager
 
@@ -131,23 +132,29 @@ public class RibbonCollision : MonoBehaviour {
 
                 //if trigger is in the melody or bass stem, we want a different kind of interaction
                 MicroClipTimer += Time.fixedDeltaTime;
-                    
-				if (MicroClipTimer >= MicroClipCooldown) 
-				{
-                    RibbonCollisionStay(other);
+                triggerTimer += Time.fixedDeltaTime;
 
-                    if(other.gameObject.name == "Create Mesh_5_Mesh000")
+                ribbonRenderer = other.gameObject.GetComponentInChildren<MeshRenderer>();
+
+                if (triggerTimer >= TriggerCoolDown)
+                {
+                    if (other.gameObject.name == "Create Mesh_5_Mesh000")
                     {
                         //SAVE FOR LATER, also there's a reference to the mesh in collider.root.GetComponent<RibbonGenerator>();
-                        ribbonRenderer = other.gameObject.GetComponentInChildren<MeshRenderer>();
+                  
                         ribbonRenderer.material.SetFloat("A", 0.07f);
                         ribbonRenderer.material.SetFloat("L", 0.01f);
 
                     }
-                   
                 }
 
-                triggerTimer = 0f;
+                
+                //only for audio part
+				if (MicroClipTimer >= MicroClipCooldown) 
+				{
+                    RibbonCollisionStay(other);
+                   
+                }
 
                 if (other.transform.root.GetComponentInChildren<AudioShaderReact>() != null) {
                     other.transform.root.GetComponentInChildren<AudioShaderReact>().WandInteract(transform);
@@ -158,7 +165,9 @@ public class RibbonCollision : MonoBehaviour {
         
     }
     void OnTriggerExit(Collider other) {
+
         if (other.transform.parent != null && !drawRibbonScript.eraseRibbon.isErasing) {
+
             if (other.transform.parent.parent.gameObject.tag == "MarkerParent") {
 
                 MicroClipTimer = 0f; //clear timer
