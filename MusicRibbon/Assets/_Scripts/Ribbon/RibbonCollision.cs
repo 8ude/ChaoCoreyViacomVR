@@ -23,7 +23,7 @@ public class RibbonCollision : MonoBehaviour {
     public GameObject BassParticlePrefab;
     public GameObject MelodyParticlePrefab;
     public GameObject HarmonyParticlePrefab;
-    public MeshRenderer ribbonRenderer;
+    //public MeshRenderer ribbonRenderer;
     public AudioSource mySource;
     AudioClip melodyClip;
     public AudioMixerGroup mutedGroup, origGroup;
@@ -134,11 +134,11 @@ public class RibbonCollision : MonoBehaviour {
                 MicroClipTimer += Time.fixedDeltaTime;
                 triggerTimer += Time.fixedDeltaTime;
 
-                ribbonRenderer = other.gameObject.GetComponentInChildren<MeshRenderer>();
+                MeshRenderer ribbonRenderer = other.gameObject.GetComponentInChildren<MeshRenderer>();
 
                 if (triggerTimer >= TriggerCoolDown)
                 {
-                    if (other.gameObject.name == "Create Mesh_5_Mesh000")
+                    if (other.gameObject.name == "Create Mesh_5_Mesh000" && ribbonRenderer != null)
                     {
                         //SAVE FOR LATER, also there's a reference to the mesh in collider.root.GetComponent<RibbonGenerator>();
                   
@@ -193,8 +193,13 @@ public class RibbonCollision : MonoBehaviour {
 
             triggerTimer = 0f;
 
-            ribbonRenderer.material.SetFloat("A", 0.04f);
-            ribbonRenderer.material.SetFloat("L", 0.12f);
+            MeshRenderer ribbonRenderer = other.gameObject.GetComponentInChildren<MeshRenderer>();
+
+            if (ribbonRenderer != null)
+            {
+                ribbonRenderer.material.SetFloat("A", 0.04f);
+                ribbonRenderer.material.SetFloat("L", 0.12f);
+            }
  
 
             //other.gameObject.transform.root.GetComponentInChildren<DrawRibbonSound>().RestartClips(0);

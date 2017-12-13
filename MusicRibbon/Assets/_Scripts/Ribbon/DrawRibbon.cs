@@ -25,8 +25,8 @@ public class DrawRibbon: MonoBehaviour {
 	public GameObject curvySplinePrefab;
 	public GameObject ribbonSoundPrefab;
 
-	//reference to switch stems - use to change color of ribbons to match instruments
-	public SwitchStems switchStems;
+    //reference to switch stems - use to change color of ribbons to match instruments
+    public SwitchStems switchStems;
 
     
     [SerializeField] GameObject currentRibbonSound;
@@ -111,27 +111,31 @@ public class DrawRibbon: MonoBehaviour {
 
 	void ShortStem (GameObject go) {
 
-		GameObject newParticles = Instantiate (
-			RibbonGameManager.instance.particlePrefab, 
-			markerChain [0].transform.position, 
-			Quaternion.identity);
+        GameObject newParticles = Instantiate(RibbonGameManager.instance.particlePrefab, markerChain[0].transform.position, Quaternion.identity);
+        //set the audio clip in accordance with the collision audio in the game manager
+        AudioSource aSource = newParticles.GetComponent<AudioSource>();
+        ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
+		var main = ps.main;
 
-		//set the audio clip in accordance with the collision audio in the game manager
-		AudioSource aSource = newParticles.GetComponent<AudioSource>();
         if (switchStems != null) {
             string instrumentType = switchStems.currentInstrument;
             //Debug.Log(drawRibbonScript.switchStems.currentInstrument);
             switch (instrumentType) {
                 case "Bass":
+		            main.startColor = new ParticleSystem.MinMaxGradient(switchStems.bassColor, Color.white);
                     aSource.clip = RibbonGameManager.instance.bassCollisionClips[0];
+
                     break;
                 case "Drums":
+                    main.startColor = new ParticleSystem.MinMaxGradient(switchStems.drumColor, Color.white);
                     aSource.clip = RibbonGameManager.instance.drumCollisionClips[0];
                     break;
                 case "Harmony":
+                    main.startColor = new ParticleSystem.MinMaxGradient(switchStems.harmonyColor, Color.white);
                     aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[0];
                     break;
                 case "Melody":
+                    main.startColor = new ParticleSystem.MinMaxGradient(switchStems.melodyColor, Color.white);
                     aSource.clip = RibbonGameManager.instance.melodyCollisionClips[0];
                     break;
 
@@ -142,11 +146,7 @@ public class DrawRibbon: MonoBehaviour {
         }
 		aSource.Play();
 
-		ParticleSystem ps = newParticles.GetComponent<ParticleSystem>();
-		var main = ps.main;
 
-		//Particle color will be somewhere between white and the ribbon color
-		main.startColor = new ParticleSystem.MinMaxGradient( go.GetComponent<Renderer>().material.color, Color.white);
 
 		Destroy (go);
 
