@@ -176,9 +176,9 @@ public class DrawRibbonSound : MonoBehaviour {
 
 		while (true) {
 			for (int i = 0; i < sPoints.Length; i++) {
-				while (Vector3.Distance (transform.position, sPoints [i]) > 0.001f) {
+				while (Vector3.Distance (transform.position, sPoints [i]) > 0.01f) {
                     if (autoMoveSound) {
-                        transform.position += (sPoints[i] - transform.position) * Time.deltaTime * 4f;
+                        transform.Translate ((sPoints[i]-transform.position).normalized * Time.deltaTime * RibbonGameManager.instance.followRibbonSpeed, Space.World);
                         yield return null;
                     }
                     else yield return null;
