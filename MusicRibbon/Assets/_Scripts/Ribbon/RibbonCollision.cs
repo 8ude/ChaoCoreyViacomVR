@@ -289,7 +289,7 @@ public class RibbonCollision : MonoBehaviour {
             //mute the main stem while we do the micro thingy
             ribbonSound.myHighSource.outputAudioMixerGroup = mutedGroup;
             ribbonSound.myLowSource.outputAudioMixerGroup = mutedGroup;
-            melodyClip = ribbonSound.myHighSource.clip;
+            melodyClip = ribbonSound.myLowSource.clip;
 
             AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, 0.2f);
             //reset the triggerCooldown and play the clip
