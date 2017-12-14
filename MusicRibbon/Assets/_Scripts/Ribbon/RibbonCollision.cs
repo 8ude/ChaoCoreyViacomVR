@@ -240,8 +240,12 @@ public class RibbonCollision : MonoBehaviour {
 
             //pause the audio sources, set the time according to the index, then play at the next beat
             ribbonSound.myHighSource.Pause();
+            ribbonSound.myHighSource.volume = 0f;
             ribbonSound.myLowSource.Pause();
+            ribbonSound.myLowSource.volume = 0f;
 
+            ribbonSound.UnPauseBalancing();
+             
             ribbonSound.myHighSource.time = halfNoteIndex * Clock.Instance.HalfLength();
             ribbonSound.myLowSource.time = halfNoteIndex * Clock.Instance.HalfLength();
 

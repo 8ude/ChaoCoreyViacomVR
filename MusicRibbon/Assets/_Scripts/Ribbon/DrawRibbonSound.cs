@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FluffyUnderware.Curvy;
 using FluffyUnderware.Curvy.Controllers;
+using DG.Tweening;
 using Beat;
 
 public class DrawRibbonSound : MonoBehaviour {
@@ -15,7 +16,12 @@ public class DrawRibbonSound : MonoBehaviour {
 	public AudioSource myHighSource;
     public AudioSource myLowSource;
 
+    float prevHighVolume;
+    float prevLowVolume;
+
     public float currentMaxVolume = 1f;
+
+    bool pauseBalancing = false;
 
 	public string instrumentType;
 
@@ -53,6 +59,11 @@ public class DrawRibbonSound : MonoBehaviour {
 	[SerializeField] double sourceStartTime;
 
 	void Awake() {
+
+        prevHighVolume = 0f;
+        prevLowVolume = 0f;
+
+        pauseBalancing = false;
         
         myAudioSources = gameObject.GetComponents<AudioSource>();
         //Debug.Log(myAudioSources.Length);
@@ -66,7 +77,9 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	void Update() {
 
-        BalanceAudioSources(RibbonGameManager.instance.RemapRange(transform.position.y, 0f, 2f, -1f, 1f), currentMaxVolume);
+        if (!pauseBalancing) {
+            BalanceAudioSources(RibbonGameManager.instance.RemapRange(transform.position.y, 0f, 2f, -1f, 1f), currentMaxVolume);
+        } 
 	
 	}
 
@@ -193,8 +206,10 @@ public class DrawRibbonSound : MonoBehaviour {
         /// to constant power curve
         ///</summary>
 
-        myHighSource.volume = Mathf.Sqrt(0.5f * (1f + heightValue)) * maxVolume;
-        myLowSource.volume = Mathf.Sqrt(0.5f * (1f - heightValue)) * maxVolume;
+        myHighSource.volume = Mathf.Lerp(prevHighVolume, Mathf.Sqrt(0.5f * (1f + heightValue)) * maxVolume, 0.1f);
+        prevHighVolume = myHighSource.volume;
+        myLowSource.volume = Mathf.Lerp(prevLowVolume, Mathf.Sqrt(0.5f * (1f - heightValue)) * maxVolume, 0.1f);
+        prevLowVolume = myLowSource.volume;
 
     }
 
@@ -205,5 +220,11 @@ public class DrawRibbonSound : MonoBehaviour {
         myLowSource.PlayScheduled(Clock.Instance.AtNextBeat());
 
     }
-		
+
+    public void UnPauseBalancing() {
+        pauseBalancing = false;
+        prevLowVolume = 0f;
+        prevHighVolume = 0f;
+    }
+
 }
