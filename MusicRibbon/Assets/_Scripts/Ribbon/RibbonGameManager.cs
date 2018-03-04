@@ -91,10 +91,10 @@ public class RibbonGameManager : MonoBehaviour {
 		melodyCollisionClips = Resources.LoadAll<AudioClip>("Audio/MelodyCollision");
 
 
-		drumRibbonsDrawn = 0;
-		bassRibbonsDrawn = 0;
-		harmonyRibbonsDrawn = 0;
-		melodyRibbonsDrawn = 0;
+		drumRibbonsDrawn = Random.Range(0,3);
+		bassRibbonsDrawn = Random.Range(0,3);
+		harmonyRibbonsDrawn = Random.Range(0,3);
+		melodyRibbonsDrawn = Random.Range(0,3);
 
         ribbonObjects = new List<GameObject>();
 

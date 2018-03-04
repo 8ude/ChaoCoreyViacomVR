@@ -25,7 +25,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	public string instrumentType;
 
-	public int clipIndex = 0;
+	public int clipIndex;
 
 	double startTime, stopTime;
 	double timeDifference;
@@ -206,9 +206,9 @@ public class DrawRibbonSound : MonoBehaviour {
         /// to constant power curve
         ///</summary>
 
-        myHighSource.volume = Mathf.Lerp(prevHighVolume, Mathf.Sqrt(0.5f * (1f + heightValue)) * maxVolume, 0.1f);
+        myHighSource.volume = Mathf.Lerp(prevHighVolume, Mathf.Sqrt(0.5f * (1f + heightValue)) * maxVolume, Time.deltaTime);
         prevHighVolume = myHighSource.volume;
-        myLowSource.volume = Mathf.Lerp(prevLowVolume, Mathf.Sqrt(0.5f * (1f - heightValue)) * maxVolume, 0.1f);
+        myLowSource.volume = Mathf.Lerp(prevLowVolume, Mathf.Sqrt(0.5f * (1f - heightValue)) * maxVolume, Time.deltaTime);
         prevLowVolume = myLowSource.volume;
 
     }

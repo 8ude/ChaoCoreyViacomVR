@@ -233,15 +233,16 @@ public class RibbonCollision : MonoBehaviour {
         //divide the clip up into half notes (round down)
         if (ribbonSound != null)
         {
+            Debug.Log("ribbon trigger exit");
             int halfLengthOfClip = Mathf.FloorToInt(ribbonSound.myHighSource.clip.length / Clock.Instance.HalfLength());
 
             //find the half note index of our nearest marker (four eigth notes per half note)
             int halfNoteIndex = Mathf.FloorToInt((float)closestMarkerIndex / 4f);
 
             //pause the audio sources, set the time according to the index, then play at the next beat
-            ribbonSound.myHighSource.Pause();
+            ribbonSound.myHighSource.Stop();
             ribbonSound.myHighSource.volume = 0f;
-            ribbonSound.myLowSource.Pause();
+            ribbonSound.myLowSource.Stop();
             ribbonSound.myLowSource.volume = 0f;
 
             ribbonSound.UnPauseBalancing();
@@ -294,7 +295,7 @@ public class RibbonCollision : MonoBehaviour {
             AudioClip microClip = MicroClipMaker.MakeMicroClip(melodyClip, markers.Length, closestMarkerIndex, 0.2f);
             //reset the triggerCooldown and play the clip
             MicroClipTimer = 0f;
-            AudioSource.PlayClipAtPoint(microClip, transform.position, 0.6f);
+            AudioSource.PlayClipAtPoint(microClip, transform.position, 1.0f);
         }
         
     }
