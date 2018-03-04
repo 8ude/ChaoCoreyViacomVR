@@ -63,14 +63,14 @@ namespace FluffyUnderware.DevToolsEditor
         {
             get
             {
-                return (Event.current!=null && Event.current.type == EventType.mouseDown && Event.current.button == 0);
+                return (Event.current!=null && Event.current.type == EventType.MouseDown && Event.current.button == 0);
             }
         }
         public static bool IsContextClick
         {
             get
             {
-                return (Event.current != null && Event.current.type == EventType.mouseDown && Event.current.button == 1);
+                return (Event.current != null && Event.current.type == EventType.MouseDown && Event.current.button == 1);
             }
         }
 

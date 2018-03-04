@@ -83,7 +83,7 @@ namespace FluffyUnderware.CurvyEditor
 
             GUILayout.EndVertical();
 
-            if (!heightHasBeenSet && Event.current.type == EventType.repaint)
+            if (!heightHasBeenSet && Event.current.type == EventType.Repaint)
                 setHeightToContent();
         }
 

@@ -78,7 +78,9 @@ public class DrawRibbonSound : MonoBehaviour {
 	void Update() {
 
         if (!pauseBalancing) {
-            BalanceAudioSources(RibbonGameManager.instance.RemapRange(transform.position.y, 0f, 2f, -1f, 1f), currentMaxVolume);
+            float balanceValue = RibbonGameManager.instance.RemapRange(transform.position.y, -0.5f, 2f, -1f, 1f);
+            balanceValue = Mathf.Clamp(balanceValue, -1f, 1f);
+            BalanceAudioSources(balanceValue, currentMaxVolume);
         } 
 	
 	}
@@ -87,6 +89,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 
 		myHighSource.clip = origHighClip;
+        Debug.Log(myHighSource.clip.name);
         //Debug.Log("high clip " + origHighClip.name);
 
         myLowSource.clip = origLowClip;
@@ -205,6 +208,8 @@ public class DrawRibbonSound : MonoBehaviour {
         /// Balance between the two different audio loops according
         /// to constant power curve
         ///</summary>
+        //Debug.Log ("height value " + heightValue);
+        //Debug.Log("power scale " + Mathf.Sqrt(0.5f * (1f + heightValue)));
 
         myHighSource.volume = Mathf.Lerp(prevHighVolume, Mathf.Sqrt(0.5f * (1f + heightValue)) * maxVolume, Time.deltaTime);
         prevHighVolume = myHighSource.volume;

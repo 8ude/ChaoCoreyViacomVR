@@ -233,7 +233,7 @@ public class RibbonCollision : MonoBehaviour {
         //divide the clip up into half notes (round down)
         if (ribbonSound != null)
         {
-            Debug.Log("ribbon trigger exit");
+            //Debug.Log("ribbon trigger exit");
             int halfLengthOfClip = Mathf.FloorToInt(ribbonSound.myHighSource.clip.length / Clock.Instance.HalfLength());
 
             //find the half note index of our nearest marker (four eigth notes per half note)

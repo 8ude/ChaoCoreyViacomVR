@@ -162,7 +162,7 @@ namespace FluffyUnderware.DevToolsEditor
                         }
       
 #if UNITY_5_6_OR_NEWER
-                        capFunc(id, position, Quaternion.identity, size, EventType.repaint);
+                        capFunc(id, position, Quaternion.identity, size, EventType.Repaint);
 #else
                         capFunc(id, position, direction, size);
 #endif
