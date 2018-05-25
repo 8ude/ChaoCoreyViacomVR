@@ -10,15 +10,16 @@ using FluffyUnderware.DevTools;
 using UnityEngine.UI;
 
 using DG.Tweening;
+
 /// <summary>
-/// Stores references to spline and spline mesh, and confirms when they have been initialized
+/// Supplements CurvyGenerator (spline mesh generator) with game-specific variables and methods
+/// Stores references to spline and ribbon mesh, and confirms when they have been initialized
 /// </summary>
 public class RibbonGenerator : MonoBehaviour {
 	
 	public CurvySpline ribbonSpline;
 	public MeshFilter ribbonMesh;
 	public MeshRenderer ribbonRenderer;
-
 
 	public CurvyGenerator curvyGenerator;
 	public DrawRibbonSound drawRibbonSound;
@@ -34,7 +35,6 @@ public class RibbonGenerator : MonoBehaviour {
 	public bool fadingOut;
 
 	public float ribbonLength;
-	
 
 	//float endWidth = 0.1f;
 	//float endHeight = 0.5f;
@@ -62,15 +62,8 @@ public class RibbonGenerator : MonoBehaviour {
 		}
 
 		drawRibbonSound = GetComponentInChildren<DrawRibbonSound> ();
-
-		//Set Spline Controller Values Here
-		//...except they don't work
-		//ribbonController = drawRibbonSound.gameObject.GetComponent<SplineController> ();
-		
-		//ribbonController.Spline = ribbonSpline;
 		
 		StartCoroutine (WaitForMeshRenderer());
-
 		
 	}
 	
@@ -89,7 +82,6 @@ public class RibbonGenerator : MonoBehaviour {
 		}
 
 		if (ribbonRenderer) {
-			
 			ribbonRenderer.material.SetFloat ("_InputAlpha", transparency);
 		}
 
@@ -98,6 +90,7 @@ public class RibbonGenerator : MonoBehaviour {
 
 	IEnumerator WaitForMeshRenderer() {
 
+        //wait for Curvy to generate the mesh from spline points
         while (GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>() == null)   {
             yield return null;
         }
@@ -107,21 +100,44 @@ public class RibbonGenerator : MonoBehaviour {
             ribbonRenderer = GetComponentInChildren<CreateMesh>().transform.GetComponentInChildren<MeshRenderer>();
 			ribbonMesh = GetComponentInChildren<CreateMesh> ().transform.GetComponentInChildren<MeshFilter> ();
 			Mesh mesh = ribbonMesh.mesh;
-			MeshHelper.Subdivide (mesh, 8);
+
+        
+			MeshHelper.Subdivide (mesh, RibbonGameManager.instance.ribbonMeshSmoothing);
 			ribbonMesh.mesh = mesh;
 
         } 
 
 		while (ribbonRenderer == null) {
-
 			yield return null;
 		}
 
 
-		//Set Mesh Material Values Here
-       
-		switch (myStem) {
-		case musicStem.Bass:
+        SetMaterialValues();
+
+		ribbonRenderer.material.color = myColor;
+		DOTween.To (() => transparency, x => transparency = x, 1, 1);
+
+        //Find the Marker objects that were used to spawn this ribbon, turn off their renderers
+        MarkerObjectBehavior[] markerObjects = GetComponentsInChildren<MarkerObjectBehavior>();
+        foreach(MarkerObjectBehavior markerBehavior in markerObjects) {
+            markerBehavior.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        }
+
+        //TODO - determine why spline object is being destroyed
+		CurvySpline mySpline = GetComponentInChildren<CurvySpline> ();
+		Destroy (mySpline.gameObject);
+
+        //TODO - invoke method for re-balancing audio stems
+        //Better way of doing this? 
+        RibbonGameManager.instance.ribbonObjects.Add(gameObject);
+
+	}
+
+    void SetMaterialValues() {
+        //Set Mesh Material Values from RibbonAudioShaderManager
+        switch (myStem)
+        {
+            case musicStem.Bass:
                 myColor = RibbonGameManager.instance.bassColor;
 
                 ribbonRenderer.material.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.BassPosTurbulence);
@@ -131,7 +147,7 @@ public class RibbonGenerator : MonoBehaviour {
                 ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.BassSpikiness);
                 ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.BassColorShift);
                 break;
-		case musicStem.Drum:
+            case musicStem.Drum:
                 myColor = RibbonGameManager.instance.drumColor;
 
                 ribbonRenderer.material.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.DrumPosTurbulence);
@@ -141,7 +157,7 @@ public class RibbonGenerator : MonoBehaviour {
                 ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.DrumSpikiness);
                 ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.DrumColorShift);
                 break;
-		case musicStem.Melody:
+            case musicStem.Melody:
                 myColor = RibbonGameManager.instance.melodyColor;
 
                 ribbonRenderer.material.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.HarmonyPosTurbulence);
@@ -151,7 +167,7 @@ public class RibbonGenerator : MonoBehaviour {
                 ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.HarmonySpikiness);
                 ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.HarmonyColorShift);
                 break;
-		case musicStem.Harmony:
+            case musicStem.Harmony:
                 myColor = RibbonGameManager.instance.harmonyColor;
 
                 ribbonRenderer.material.SetFloat("_PosTurb", RibbonAudioShaderManager.Instance.MelodyPosTurbulence);
@@ -161,24 +177,8 @@ public class RibbonGenerator : MonoBehaviour {
                 ribbonRenderer.material.SetFloat("_Spikiness", RibbonAudioShaderManager.Instance.MelodySpikiness);
                 ribbonRenderer.material.SetFloat("_ColorShift", RibbonAudioShaderManager.Instance.MelodyColorShift);
                 break;
-		}
-
-		ribbonRenderer.material.color = myColor;
-		DOTween.To (() => transparency, x => transparency = x, 1, 1);
-
-        MarkerObjectBehavior[] markerObjects = GetComponentsInChildren<MarkerObjectBehavior>();
-        foreach(MarkerObjectBehavior markerBehavior in markerObjects) {
-
-            markerBehavior.gameObject.GetComponent<MeshRenderer>().enabled = false;
-
         }
-
-		CurvySpline mySpline = GetComponentInChildren<CurvySpline> ();
-		Destroy (mySpline.gameObject);
-
-        RibbonGameManager.instance.ribbonObjects.Add(gameObject);
-
-	}
+    }
 
 	public void FadeOutRibbon(float time) {
 		if (!fadingOut) {

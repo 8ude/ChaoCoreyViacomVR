@@ -6,7 +6,7 @@ using DG.Tweening;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Adjust ribbon volume and position and reset
+/// Store game variables, adjust ribbon volumes, keeps track of ribbon quantities, resets game
 /// </summary>
 public class RibbonGameManager : MonoBehaviour {
 
@@ -56,7 +56,9 @@ public class RibbonGameManager : MonoBehaviour {
     public int totalRibbons;
 
 
-	[Space(20)]
+    [Space(20)]
+
+    public int ribbonMeshSmoothing = 8;
 
 	public float endingWidth;
 	public float endingHeight;
@@ -98,15 +100,13 @@ public class RibbonGameManager : MonoBehaviour {
 
         ribbonObjects = new List<GameObject>();
 
+        //enforce singleon pattern
+        //resets with new scene - no information stored
         if (instance == null) {
             instance = this;
-
         } else {
             Destroy(gameObject);
         }
-
-        //DontDestroyOnLoad(gameObject);
-
     }
 
     // Use this for initialization
@@ -114,14 +114,15 @@ public class RibbonGameManager : MonoBehaviour {
         FadeFromWhite();
 	}
 	
-	// Update is called once per frame
 	void Update () {
 
-        /////////////////////////////////////////////////////////////
+
         //populate arrays with each stem type, then adjust the volumes of each stem according
         //to how many stems of that type currently exist
+        //todo: move to seperate Audio Manager
 		drumRibbons = GameObject.FindGameObjectsWithTag ("DrumStem");
 
+        //Normalize Drum stem volumes, fade out and destroy if too far from player
 		foreach (GameObject go in drumRibbons) {
 
             if (go.transform.root.GetComponent<RibbonGenerator>() && !go.transform.root.GetComponent<RibbonGenerator>().fadingOut) {
@@ -136,7 +137,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 		}
         
-		//worst volume problems are coming from the bass
+		//some volume problems can come from the bass - max volume on these audiosources is 0.7
 		bassRibbons = GameObject.FindGameObjectsWithTag("BassStem");
 
 		foreach (GameObject go in bassRibbons) {
@@ -175,9 +176,6 @@ public class RibbonGameManager : MonoBehaviour {
 
 		}
 
-
-
-
         totalRibbons = ribbonObjects.Count;
 
 
@@ -197,26 +195,52 @@ public class RibbonGameManager : MonoBehaviour {
 		
 	}
 
-	public float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax) {
-		return newMin + (value - oldMin) * (newMax - newMin) / (oldMax - oldMin);
-	}
-    
+    void ResetGame() {
+        SceneManager.LoadScene(0);
+    }
+
+    void FadeFromWhite() {
+        SteamVR_Fade.Start(Color.white, 0f);
+        SteamVR_Fade.Start(Color.clear, gameFadeTime);
+        audioInSnapshot.TransitionTo(gameFadeTime);
+    }
+
+    void FadeToWhite() {
+        SteamVR_Fade.Start(Color.white, gameFadeTime);
+        audioOutSnapshot.TransitionTo(gameFadeTime);
+    }
+
+    /// <summary>
+    /// Remaps a float from one linear range to another
+    /// </summary>
+    /// <param name="value">value to be remapped</param>
+    /// <param name="oldMin">in low bound</param>
+    /// <param name="oldMax">in hi bound</param>
+    /// <param name="newMin">out low bound</param>
+    /// <param name="newMax">out hi bound</param>
+    /// <returns></returns>
+	public float RemapRange(float value, float oldMin, float oldMax, float newMin, float newMax)
+    {
+        return newMin + (value - oldMin) * (newMax - newMin) / (oldMax - oldMin);
+    }
+
+
+    // old methods for controlling number of ribbons
+
+    /* 
+   public void CapRibbons() {
+
+       if (RibbonObjects.Count > maxRibbons) {
+           GameObject ribbonToDestroy = RibbonObjects [0];
+           RibbonObjects.RemoveAt (0);
+           Destroy (ribbonToDestroy);
+       }
+   }
+   */
+
     /*
-	public void CapRibbons() {
-
-		if (RibbonObjects.Count > maxRibbons) {
-			GameObject ribbonToDestroy = RibbonObjects [0];
-			RibbonObjects.RemoveAt (0);
-			Destroy (ribbonToDestroy);
-		}
-
-	}
-    */
 	public void MoveRibbons(){
 
-
-
-		//This first method of moving ribbons works
 		foreach (GameObject ribbonParent in ribbonObjects) {
 
 
@@ -225,7 +249,7 @@ public class RibbonGameManager : MonoBehaviour {
 			
 
 			direction.Normalize ();
-			//direction.y *= Mathf.Sin (Time.time);
+	
 			float clampedRibbonLength = Mathf.Clamp (ribbonParent.GetComponent<RibbonGenerator> ().ribbonLength, 0f, 20f);
 
 			float ribbonMoveAmount = ribbonMoveDistance * RemapRange (clampedRibbonLength, 0f, 20f, 2f, 0.1f);
@@ -239,6 +263,7 @@ public class RibbonGameManager : MonoBehaviour {
 			
 
 	}
+    */
 
     /*
 	void MoveSmallRibbons() {
@@ -247,7 +272,7 @@ public class RibbonGameManager : MonoBehaviour {
 
 			if (ribbonParent.GetComponent<RibbonGenerator> ().ribbonLength < 3.0f) {
 
-				//using the sound prefab, because the other objects in the ribbon seem to have weird positions
+				//using the sound prefab, because there seems to be an offset between the mesh and the ribbon transform
 				Vector3 direction = ribbonParent.GetComponentInChildren<DrawRibbonSound>().transform.position - Camera.main.transform.position;
 				//adding an offset to compensate for the position of the transform (not sure why it is offset to begin with)
 				//direction.y += 1f;
@@ -272,40 +297,27 @@ public class RibbonGameManager : MonoBehaviour {
 	}
 	*/
 
-	IEnumerator MoveAlongSineCurve(GameObject go, Vector3 direction, float timeToComplete) {
-		float timeElapsed = 0;
+    /*
+    
+    //Moves object with some wave motion, was used when pushing ribbons away from the player
+    IEnumerator MoveAlongSineCurve(GameObject go, Vector3 direction, float timeToComplete)
+    {
+        float timeElapsed = 0;
 
-		while (timeElapsed < timeToComplete && go != null) {
+        while (timeElapsed < timeToComplete && go != null)
+        {
 
-			Vector3 newDirection = direction;
-			newDirection.y *= Mathf.Cos (Time.time) * 0.4f;
-			 
-			go.transform.Translate (newDirection * (Mathf.Abs(0.5f * Mathf.Cos(Time.time)) + 0.5f) * (Time.deltaTime / 5f) 
-				* ((timeToComplete - timeElapsed)/timeToComplete));
-			timeElapsed += Time.deltaTime;
-			yield return null;
+            Vector3 newDirection = direction;
+            newDirection.y *= Mathf.Cos(Time.time) * 0.4f;
 
-		}
+            go.transform.Translate(newDirection * (Mathf.Abs(0.5f * Mathf.Cos(Time.time)) + 0.5f) * (Time.deltaTime / 5f)
+                * ((timeToComplete - timeElapsed) / timeToComplete));
+            timeElapsed += Time.deltaTime;
+            yield return null;
 
-	}
-
-    void ResetGame() {
-
-        SceneManager.LoadScene(0);
-    }
-
-    void FadeFromWhite() {
-        SteamVR_Fade.Start(Color.white, 0f);
-
-        SteamVR_Fade.Start(Color.clear, gameFadeTime);
-        audioInSnapshot.TransitionTo(gameFadeTime);
-    }
-
-    void FadeToWhite() {
-        SteamVR_Fade.Start(Color.white, gameFadeTime);
-        audioOutSnapshot.TransitionTo(gameFadeTime);
-
+        }
 
     }
+    */
 
 }

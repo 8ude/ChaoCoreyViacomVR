@@ -127,8 +127,6 @@ public class EraseRibbon : MonoBehaviour {
 			LeftRubber = LeftSword.transform.Find("Capsule").gameObject;
             LeftColorBall = LeftSword.transform.Find("StemIndicator").gameObject;
             
-            //Debug.Log ("found object: " + LeftRubber.name);
-            //change our status if we've found this particular component
             currentStatus = controllerFoundStatus.LeftFound;
 		}
 
@@ -173,8 +171,7 @@ public class EraseRibbon : MonoBehaviour {
 				GameObject otherParent = other.transform.parent.parent.gameObject;
 
                 if (otherParent.GetComponentInChildren<DrawRibbonSound>() != null) {
-                    //Want to add juice by having an "eraser" particle follow the ribbon...
-                    //the sound follower object already has a reference to the points
+                    //Eraser particle follows ribbon to add visual juice
 
                     Vector3[] splinePoints = otherParent.GetComponentInChildren<DrawRibbonSound>().splinePoints;
 

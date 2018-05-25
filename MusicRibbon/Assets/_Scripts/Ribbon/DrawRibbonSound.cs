@@ -6,10 +6,11 @@ using FluffyUnderware.Curvy.Controllers;
 using DG.Tweening;
 using Beat;
 
+/// <summary>
+/// Responsible for creating clips that correspond with drawing motion
+/// </summary>
 public class DrawRibbonSound : MonoBehaviour {
-    /// <summary>
-    /// Responsible for creating clips that correspond with drawing motion
-    /// </summary>
+    
 
     AudioSource[] myAudioSources;
 
@@ -23,24 +24,16 @@ public class DrawRibbonSound : MonoBehaviour {
 
     bool pauseBalancing = false;
 
-	public string instrumentType;
-
 	public int clipIndex;
 
 	double startTime, stopTime;
 	double timeDifference;
-
-	int sampleOffset = 0;
-
-	//time to fadeout at end of clip
-	public float fadeOutTime = 0.2f;
-
 	
     float[] origHighAudioData;
     float[] origLowAudioData;
 
 	public Vector3[] splinePoints;
-    public GameObject[] markerObjects;
+    //public GameObject[] markerObjects;
 
 
 	int splinePointIndex;
@@ -52,7 +45,7 @@ public class DrawRibbonSound : MonoBehaviour {
     }
 
 
-    //flip this to false to turn off the movement of the source along the ribbon
+    //flip this to false to turn off the movement of the music source along the ribbon
     public bool autoMoveSound = true;
 
 	//need this for debugging Audio Sync issues
@@ -66,7 +59,7 @@ public class DrawRibbonSound : MonoBehaviour {
         pauseBalancing = false;
         
         myAudioSources = gameObject.GetComponents<AudioSource>();
-        //Debug.Log(myAudioSources.Length);
+       
         if (myAudioSources.Length > 1) {
             myHighSource = myAudioSources[0];
             myLowSource = myAudioSources[1];
@@ -78,23 +71,21 @@ public class DrawRibbonSound : MonoBehaviour {
 	void Update() {
 
         if (!pauseBalancing) {
+            //y-position of game object acts as a crossfader between high and low audio sources
             float balanceValue = RibbonGameManager.instance.RemapRange(transform.position.y, -0.5f, 2f, -1f, 1f);
             balanceValue = Mathf.Clamp(balanceValue, -1f, 1f);
+            
             BalanceAudioSources(balanceValue, currentMaxVolume);
         } 
 	
 	}
 
+
     public void StartDrawingRibbon(AudioClip origHighClip, AudioClip origLowClip) {
 
 
 		myHighSource.clip = origHighClip;
-        Debug.Log(myHighSource.clip.name);
-        //Debug.Log("high clip " + origHighClip.name);
-
         myLowSource.clip = origLowClip;
-        //Debug.Log("low clip " + origLowClip.name);
-
 
         startTime = Clock.Instance.AtNextHalf();
 
@@ -120,22 +111,21 @@ public class DrawRibbonSound : MonoBehaviour {
 		}
 
 		int newClipSamples = Mathf.RoundToInt (newClipLength * origClip.frequency);
-        
 
         float[] highAudioData = new float[newClipSamples * myHighSource.clip.channels];
         float[] lowAudioData = new float[newClipSamples * myLowSource.clip.channels];
         
 
-		AudioClip newHighClip = AudioClip.Create ("RibbonHighClip", newClipSamples, origClip.channels, origClip.frequency, false);
-        AudioClip newLowClip = AudioClip.Create("RibbonLowClip", newClipSamples, origClip.channels, origClip.frequency, false);
+		AudioClip newHighClip = AudioClip.Create (origClip.name + "_HighClip", newClipSamples, origClip.channels, origClip.frequency, false);
+        AudioClip newLowClip = AudioClip.Create(origClip.name + "_LowClip", newClipSamples, origClip.channels, origClip.frequency, false);
 
-
+        //write data to audio clips
 		for (int i = 0; i < (newClipSamples*myHighSource.clip.channels); i++) {
 
 			highAudioData [i] = origHighAudioData [i];
             lowAudioData[i] = origLowAudioData[i];
 
-            // fade out last 10000 samples (roughly 1/4 sec);
+            // linear fade out last 10000 samples (about 1/4 sec) to minimize pops
 
 			if (i > (newClipSamples * myHighSource.clip.channels) - 10000) {
 
@@ -162,17 +152,7 @@ public class DrawRibbonSound : MonoBehaviour {
 
 	}
 
-    /*
-     * doesnt fucking work
-     * 
-    public void FollowRibbonSpline() {
-        SplineController sController = gameObject.AddComponent<SplineController>();
-        sController.Spline = transform.root.gameObject.GetComponentInChildren<CurvySpline>();
-        sController.Speed = 20f;
-        sController.Clamping = CurvyClamping.Loop;
-        sController.Play();
-    }
-    */
+    
 
 	public void FollowRibbon() {
 
@@ -203,11 +183,12 @@ public class DrawRibbonSound : MonoBehaviour {
 		}
 	}
 
+    ///<summary>
+    /// Crossfade between the two different audio loops according
+    /// to constant power curve
+    ///</summary>
     public void BalanceAudioSources (float heightValue, float maxVolume) {
-        ///<summary>
-        /// Balance between the two different audio loops according
-        /// to constant power curve
-        ///</summary>
+        
         //Debug.Log ("height value " + heightValue);
         //Debug.Log("power scale " + Mathf.Sqrt(0.5f * (1f + heightValue)));
 
@@ -231,5 +212,19 @@ public class DrawRibbonSound : MonoBehaviour {
         prevLowVolume = 0f;
         prevHighVolume = 0f;
     }
+
+
+
+    /*
+     * Built-in Curvy Spline following methods not functioning properly
+     * 
+    public void FollowRibbonSpline() {
+        SplineController sController = gameObject.AddComponent<SplineController>();
+        sController.Spline = transform.root.gameObject.GetComponentInChildren<CurvySpline>();
+        sController.Speed = 20f;
+        sController.Clamping = CurvyClamping.Loop;
+        sController.Play();
+    }
+    */
 
 }
