@@ -1,15 +1,19 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
 using FluffyUnderware.Curvy;
-using FluffyUnderware.Curvy.Generator;
 using FluffyUnderware.Curvy.Generator.Modules;
 
+/// <summary>
+/// Script handles input from vr devices as well as fallback mouse
+/// determines whether hand is in "draw" or "erase" mode and adjusts input accordingly
+/// </summary>
 public class DrawRibbon: MonoBehaviour {
 
 	private SteamVR_TrackedController device;
 	//public GameObject Switchstems;
 
+    //
 	public EraseRibbon eraseRibbon;
 	public float timeInterval = 0f;
 	public float pointGenTime = 0.1f;
@@ -26,7 +30,7 @@ public class DrawRibbon: MonoBehaviour {
 	public GameObject ribbonSoundPrefab;
 
     //reference to switch stems - use to change color of ribbons to match instruments
-    public SwitchStems switchStems;
+    [SerializeField] SwitchStems switchStems;
 
     
     [SerializeField] GameObject currentRibbonSound;
@@ -38,11 +42,6 @@ public class DrawRibbon: MonoBehaviour {
 
     bool isDrawing;
 
-
-	//public int numRibbons = 0;
-
-	//public CurvySpline ribbonSpline;
-
 	void Awake() {
 		minGenTime = pointGenTime * 4f;
         if (gameObject.GetComponentInChildren<SwitchStems>() != null) {
@@ -50,7 +49,6 @@ public class DrawRibbon: MonoBehaviour {
         }
 	}
 
-	// Use this for initialization
 	void Start () {
 
 		markerChain = new List<GameObject> ();
@@ -173,8 +171,6 @@ public class DrawRibbon: MonoBehaviour {
 
         //use switch stems to find the current instrument, then cycle through corresponding clips using
         //Ribbon Game Manager
-
-        //Debug.Log (switchStems.currentInstrument);
         if (switchStems != null) {
             switch (switchStems.currentInstrument) {
                 case "Bass":
@@ -363,10 +359,5 @@ public class DrawRibbon: MonoBehaviour {
         }
 
     }
-
-
-
-    //fallback for testing on laptop
-
 
 }

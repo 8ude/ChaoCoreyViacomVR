@@ -6,20 +6,23 @@ using DG.Tweening;
 
 public class EraseRibbon : MonoBehaviour {
 
+    //Attempting to decouple things by eliminating hard references
 	public bool isErasing;
-	public GameObject LeftHand;
-	public GameObject RightHand;
-	public GameObject LeftSword;
-	public GameObject RightSword;
-	public GameObject LeftWand;
-	public GameObject LeftRubber;
-	public GameObject RightWand;
-	public GameObject RightRubber;
-    public GameObject LeftColorBall;
-    public GameObject RightColorBall;
+	[SerializeField] GameObject LeftHand;
+	[SerializeField] GameObject RightHand;
+	GameObject LeftSword;
+	GameObject RightSword;
+	GameObject LeftWand;
+	GameObject LeftRubber;
+	GameObject RightWand;
+	GameObject RightRubber;
+    [SerializeField] GameObject LeftColorBall;
+    [SerializeField] GameObject RightColorBall;
 
 
-    public GameObject EraserCubePrefab;
+    [SerializeField] GameObject EraserCubePrefab;
+
+    //todo -- decouple this hard reference
 	public DrawRibbon drawRibbonScript;
 
 
@@ -50,7 +53,7 @@ public class EraseRibbon : MonoBehaviour {
 	void Update () {
 		//Debug.Log (Time.time);
 		if (Time.time > initTimeDelay && currentStatus != controllerFoundStatus.BothFound) {
-			FindController ();
+			FindController (); 
 		}
 
 		drawRibbonScript.enabled = !isErasing;
@@ -119,9 +122,14 @@ public class EraseRibbon : MonoBehaviour {
 
 	void FindController(){
 
-		//Seperating out finding L controller and finding R controller
+        //Seperating out finding L controller and finding R controller
+        //better solution will be to not have any references to other hand - need to encapsulate
+        LeftHand = GameObject.Find("[CameraRig]/Controller (left)");
+        RightHand = GameObject.Find("[CameraRig]/Controller (right)");
 
-		if (LeftHand.GetComponentInChildren<Sword> ()) {
+
+
+        if (LeftHand.GetComponentInChildren<Sword> () != null) {
 			LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
 			LeftWand = LeftSword.transform.Find ("Wand").gameObject;
 			LeftRubber = LeftSword.transform.Find("Capsule").gameObject;
@@ -130,7 +138,7 @@ public class EraseRibbon : MonoBehaviour {
             currentStatus = controllerFoundStatus.LeftFound;
 		}
 
-		if (RightHand.GetComponentInChildren<Sword> ()) {
+		if (RightHand.GetComponentInChildren<Sword> () != null) {
 			RightSword = RightHand.GetComponentInChildren<Sword>().gameObject;
 			RightWand = RightSword.transform.Find("Wand").gameObject;
 			RightRubber = RightSword.transform.Find("Capsule").gameObject;
@@ -160,27 +168,33 @@ public class EraseRibbon : MonoBehaviour {
 
 		if (isErasing == true) {
 
+            //edge case and bug where the marker object is the only thing remaining
 			if (other.transform.name == "MarkerObject(Clone)") {
 
 				Destroy (other.transform.gameObject);
 				drawRibbonScript.markerChain.Clear();
 			}
 
+
 			if (other.transform.parent.parent.name == "MarkerParent(Clone)") {
 
 				GameObject otherParent = other.transform.parent.parent.gameObject;
 
                 if (otherParent.GetComponentInChildren<DrawRibbonSound>() != null) {
+                    
                     //Eraser particle follows ribbon to add visual juice
 
                     Vector3[] splinePoints = otherParent.GetComponentInChildren<DrawRibbonSound>().splinePoints;
 
                     GameObject eraserCube = Instantiate(EraserCubePrefab, splinePoints[0], Quaternion.identity);
                     eraserCube.GetComponent<EraseRibbonAnim>().EraseRibbon(splinePoints, 1.0f);
+
+                    //fade out ribbon, tween out sound
                     otherParent.GetComponent<RibbonGenerator>().FadeOutRibbon(0.5f);
                     DOTween.To(() => otherParent.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume,
                               x => otherParent.GetComponentInChildren<DrawRibbonSound>().currentMaxVolume = x,
                                0f, 0.6f);
+
                     RibbonGameManager.instance.ribbonObjects.Remove(otherParent);
                 }
 

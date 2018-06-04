@@ -1,16 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 using UnityEngine.Audio;
 using Beat;
-using DG.Tweening;
-using FluffyUnderware.Curvy;
-using FluffyUnderware.Curvy.Generator;
-using FluffyUnderware.Curvy.Generator.Modules;
-using FluffyUnderware.Curvy.Controllers;
-using FluffyUnderware.Curvy.Shapes;
-using FluffyUnderware.DevTools;
-using UnityEngine.UI;
 
 /// <summary>
 /// Attach to Wand object to spawn particles upon collision with ribbon
