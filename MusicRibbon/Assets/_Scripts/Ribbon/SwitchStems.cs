@@ -5,6 +5,11 @@ using VRTK.Examples;
 
 public class SwitchStems : MonoBehaviour {
 
+    //Update 4 June - decoupling erasing and instrument switching dependencies
+    //Issues arising because VRTK Prefabs and Steam VR prefabs are performing different (but similar)
+    //functionality and therefore have far too many hardcoded references
+
+
     public new List<Color> Colors;
     [Tooltip("A list of customized colors")]
 
@@ -25,19 +30,21 @@ public class SwitchStems : MonoBehaviour {
 
 	public GameObject LeftHand;
 	public GameObject RightHand;
-	public GameObject LeftSword;
-	public GameObject RightSword;
-	public GameObject LeftWand;
-	public GameObject LeftRubber;
-	public GameObject RightWand;
-	public GameObject RightRubber;
-	public GameObject LeftColorBall;
-	public GameObject RightColorBall;
+	GameObject LeftSword;
+	GameObject RightSword;
+	GameObject LeftWand;
+	GameObject LeftRubber;
+	GameObject RightWand;
+	GameObject RightRubber;
+	GameObject LeftColorBall;
+	GameObject RightColorBall;
 
 	public float initTimeDelay = 4f;
 
 	bool bothControllersFound = false;
 
+
+    //temp solution to current race condition with controllers
 	public enum controllerFoundStatus {NeitherFound = 0, LeftFound = 1, RightFound = 2, BothFound = 3};
 
 	controllerFoundStatus currentStatus;
@@ -70,6 +77,7 @@ public class SwitchStems : MonoBehaviour {
 	void FindController(){
 
 		//Seperating out finding L controller and finding R controller
+        //todo - "onehanded mode" - eliminate hard references to both hands
 		if (LeftHand.GetComponentInChildren<Sword> ()) {
 			LeftSword = LeftHand.GetComponentInChildren<Sword>().gameObject;
 			LeftWand = LeftSword.transform.Find ("Wand").gameObject;
@@ -101,19 +109,19 @@ public class SwitchStems : MonoBehaviour {
     public void ChangeLeftBallColor() {
 
         if(currentInstrument == "Bass") {
-            LeftColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
+            LeftColorBall.GetComponent<MeshRenderer>().material.color = RibbonGameManager.instance.bassColor;
 			LeftColorBall.GetComponent<MeshRenderer> ().material = BassRibbonMaterial;
         }
         if (currentInstrument == "Drums") {
-            LeftColorBall.GetComponent<MeshRenderer>().material.color = drumColor;
+            LeftColorBall.GetComponent<MeshRenderer>().material.color = RibbonGameManager.instance.drumColor;
 			LeftColorBall.GetComponent<MeshRenderer> ().material = DrumRibbonMaterial;
         }
         if (currentInstrument == "Harmony") {
-            LeftColorBall.GetComponent<MeshRenderer>().material.color = harmonyColor;
+            LeftColorBall.GetComponent<MeshRenderer>().material.color = RibbonGameManager.instance.harmonyColor;
 			LeftColorBall.GetComponent<MeshRenderer> ().material = HarmonyRibbonMaterial;
         }
         if (currentInstrument == "Melody") {
-            LeftColorBall.GetComponent<MeshRenderer>().material.color = melodyColor;
+            LeftColorBall.GetComponent<MeshRenderer>().material.color = RibbonGameManager.instance.melodyColor;
 			LeftColorBall.GetComponent<MeshRenderer> ().material = MelodyRibbonMaterial;
         }
     }
@@ -122,26 +130,26 @@ public class SwitchStems : MonoBehaviour {
 
 
         if (currentInstrument == "Bass") {
-            RightColorBall.GetComponent<MeshRenderer>().material.color = bassColor;
+            RightColorBall.GetComponent<MeshRenderer>().material.color = RibbonGameManager.instance.bassColor;
 			RightColorBall.GetComponent<MeshRenderer> ().material = BassRibbonMaterial;
         }
         if (currentInstrument == "Drums") {
-            RightColorBall.GetComponent<MeshRenderer>().material.color = drumColor;
+            RightColorBall.GetComponent<MeshRenderer>().material.color = RibbonGameManager.instance.drumColor;
 			RightColorBall.GetComponent<MeshRenderer> ().material = DrumRibbonMaterial;
         }
         if (currentInstrument == "Harmony") {
-            RightColorBall.GetComponent<MeshRenderer>().material.color = harmonyColor;
+            RightColorBall.GetComponent<MeshRenderer>().material.color = RibbonGameManager.instance.harmonyColor;
 			RightColorBall.GetComponent<MeshRenderer> ().material = HarmonyRibbonMaterial;
         }
         if (currentInstrument == "Melody") {
-            RightColorBall.GetComponent<MeshRenderer>().material.color = melodyColor;
+            RightColorBall.GetComponent<MeshRenderer>().material.color = RibbonGameManager.instance.melodyColor;
 			RightColorBall.GetComponent<MeshRenderer> ().material = MelodyRibbonMaterial;
         }
 
 
     }
 
-
+    //Beginning to refactor - eventually want to move to a more modular system that allows for additional (or replacement) instruments
     public void DrawBassRibbon(){
 		Stemnum = 0;
 		currentInstrument = "Bass";
@@ -166,5 +174,8 @@ public class SwitchStems : MonoBehaviour {
 		currentInstrument = "Melody";
 		//Debug.Log ("Melody: "+ Stemnum);
 	}
+
+    
+
 
 }

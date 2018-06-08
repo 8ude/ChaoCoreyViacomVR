@@ -24,7 +24,32 @@ public class RibbonGenerator : MonoBehaviour {
 	public CurvyGenerator curvyGenerator;
 	public DrawRibbonSound drawRibbonSound;
 
-	public enum musicStem {Bass = 0, Drum = 1, Harmony = 2, Melody = 3};
+    //holds values for shaders - assign these on prefab
+    [SerializeField] RibbonShaderValues bassValues, drumValues, melodyValues, harmonyValues;
+    public RibbonShaderValues BassValues
+    {
+        get { return bassValues; }
+    }
+
+    public RibbonShaderValues DrumValues
+    {
+        get { return drumValues; }
+    }
+
+    public RibbonShaderValues MelodyValues
+    {
+        get { return melodyValues; }
+    }
+
+    public RibbonShaderValues HarmonyValues
+    {
+        get { return harmonyValues; }
+    }
+
+
+
+
+    public enum musicStem {Bass = 0, Drum = 1, Harmony = 2, Melody = 3};
 	public musicStem myStem;
 	public int stemIntValue;
 

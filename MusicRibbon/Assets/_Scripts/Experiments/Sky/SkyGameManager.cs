@@ -10,7 +10,9 @@ public class SkyGameManager : MonoBehaviour {
     private LineRenderer skylinerender;
 	public SteamVR_TrackedController device;
 	public SwitchStems SwitchStem;
-    
+
+    public Color drumColor, bassColor, harmonyColor, melodyColor;
+
 
     public int i;
 
@@ -56,19 +58,19 @@ public class SkyGameManager : MonoBehaviour {
         Debug.Log("called");
 
 		if (SwitchStem.currentInstrument == "Bass") {
-			skylinerender.material.color = SwitchStem.bassColor;
+			skylinerender.material.color = bassColor;
             Debug.Log(skylinerender.material.color);
         }
 		if (SwitchStem.currentInstrument == "Drums") {
-			skylinerender.material.color = SwitchStem.drumColor;
+			skylinerender.material.color = drumColor;
             Debug.Log(skylinerender.material.color);
         }
 		if (SwitchStem.currentInstrument == "Harmony") {
-			skylinerender.material.color = SwitchStem.harmonyColor;
+			skylinerender.material.color = harmonyColor;
             Debug.Log(skylinerender.material.color);
         }
 		if (SwitchStem.currentInstrument == "Melody") {
-			skylinerender.material.color = SwitchStem.melodyColor;
+			skylinerender.material.color = melodyColor;
             Debug.Log(skylinerender.material.color);
         }
 	

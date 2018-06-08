@@ -120,20 +120,20 @@ public class DrawRibbon: MonoBehaviour {
             //Debug.Log(drawRibbonScript.switchStems.currentInstrument);
             switch (instrumentType) {
                 case "Bass":
-		            main.startColor = new ParticleSystem.MinMaxGradient(switchStems.bassColor, Color.white);
+		            main.startColor = new ParticleSystem.MinMaxGradient(RibbonGameManager.instance.bassColor, Color.white);
                     aSource.clip = RibbonGameManager.instance.bassCollisionClips[0];
 
                     break;
                 case "Drums":
-                    main.startColor = new ParticleSystem.MinMaxGradient(switchStems.drumColor, Color.white);
+                    main.startColor = new ParticleSystem.MinMaxGradient(RibbonGameManager.instance.drumColor, Color.white);
                     aSource.clip = RibbonGameManager.instance.drumCollisionClips[0];
                     break;
                 case "Harmony":
-                    main.startColor = new ParticleSystem.MinMaxGradient(switchStems.harmonyColor, Color.white);
+                    main.startColor = new ParticleSystem.MinMaxGradient(RibbonGameManager.instance.harmonyColor, Color.white);
                     aSource.clip = RibbonGameManager.instance.harmonyCollisionClips[0];
                     break;
                 case "Melody":
-                    main.startColor = new ParticleSystem.MinMaxGradient(switchStems.melodyColor, Color.white);
+                    main.startColor = new ParticleSystem.MinMaxGradient(RibbonGameManager.instance.melodyColor, Color.white);
                     aSource.clip = RibbonGameManager.instance.melodyCollisionClips[0];
                     break;
 
