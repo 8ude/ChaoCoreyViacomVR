@@ -13,7 +13,6 @@ public class AudioShaderReact : MonoBehaviour {
 	float prevEnergy = 0f;
 	float smoothedEnergy = 0f;
 
-	float energyGate = 0.5f;
 	[SerializeField] Material myMaterial;
 
 	[SerializeField] RibbonGenerator parentRibbonGenerator;

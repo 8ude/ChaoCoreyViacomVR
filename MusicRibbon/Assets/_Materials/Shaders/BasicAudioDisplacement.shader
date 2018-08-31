@@ -1,4 +1,5 @@
-﻿Shader "Custom/AudioDisplacement" {
+﻿Shader "Custom/BasicAudioDisplacement" {
+	//Same as AudioDisplacement shader but without positional variables and audio texture
 
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
@@ -8,8 +9,6 @@
         
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
-        
-		_AudioPosition ("Audio Position", Vector) = (0,0,0,0)
 
         //AudioInput is averaged audio data from the ribbon audio sources
 		_AudioInput ("Audio Input", Float) = 0.0
@@ -17,13 +16,9 @@
         //not used currently
 		_InputAlpha("Input Alpha", Float) = 0.0
 
-        //position of wand after ontriggerenter is called
-		_WandPos("Wand Pos", Vector) = (0,0,0,0)
-
 
         //These properties could and should be tuned for each instrument:
-        //How much the audio source creates a localized chaotic spikey effect
-        _PosTurb("Positional Turbulence", Range(0,3)) = 1.0
+
         //How much the audio input changes the wave speed/phase
         _WaveShud("Wave Shudder", Range(0,1)) = 0.1
         //How much the audio input adjusts overall chaotic spikey displacement
@@ -33,9 +28,6 @@
 
 		//Controls how much spikes will displace from the mesh
 		_Spikinees("Spikiness", Range(1,3)) = 1.0
-
-		//Degree of color change around Audio Source and Wand
-		_ColorShift("Color Shift", Range(0.1, 0.5)) = 0.2
 
 		_MaxAudioDistance("Max Audio Distance", Float) = 0.4
 		_MaxWandDistance("Max Wand Distance", Float) = 0.4
@@ -65,29 +57,21 @@
 
 		struct Input {
 			float2 uv_MainTex;
-			float3 customColor;
+			//vertex color
+			//float3 customColor;
 		};
 
-        
-
-		float4 _AudioPosition;
 		
 		float _AudioInput;
-		float _MaxAudioDistance;
 		float _InputAlpha;
 
-		float4 _WandPos;
-		float _MaxWandDistance;
 
         float _Turbulence;
         float _TurbulenceSpeed;
 
 		float _Spikiness;
 
-        float _PosTurb;
         float _WaveShud;
-
-		float _ColorShift;
 
 		half _Glossiness;
 		half _Metallic;
@@ -170,16 +154,16 @@
 
 			float3 vertWorld = mul(unity_ObjectToWorld, v.vertex).xyz;
 
-			float distPointToSound = distance(vertWorld, _AudioPosition.xyz);
+			//float distPointToSound = distance(vertWorld, _AudioPosition.xyz);
 
-			float distPointToWand = distance(vertWorld, _WandPos.xyz);
+			//float distPointToWand = distance(vertWorld, _WandPos.xyz);
 
 			S += (S * _AudioInput * _WaveShud * 0.1);
 			float3 wsVertexOut = gerstnerWave(v.vertex.xyz);
 
 			v.vertex.xyz = wsVertexOut;
 
-            o.customColor = float3(1.0,1.0,1.0);
+            //o.customColor = float3(1.0,1.0,1.0);
 
             //create noise by scaling turbulence (from the other shader file), with the time scale
             //given by the _TurbulenceSpeed property)
@@ -195,7 +179,7 @@
 				displacement *= _Spikiness * 5;
 			}
             
-			 //
+			/*
 			if (distPointToSound < _MaxAudioDistance) {
 
 				
@@ -217,6 +201,7 @@
 				//float3 newVertPos = (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance))
 				//v.vertex.xyz += (v.normal * _AudioInput * ((_MaxAudioDistance-distPointToSound)/_MaxAudioDistance));
 			}
+			
 
 			if (distPointToWand < _MaxWandDistance) {
 
@@ -233,7 +218,7 @@
 
 				//v.vertex.xyz += subWave * 1.0;
 			}
-
+			*/
             //Ambient Noise
 
             v.vertex.xyz += v.normal * displacement * ( _Turbulence * 0.001 ) * (_AudioInput);
@@ -247,7 +232,6 @@
 			// Albedo comes from a texture tinted by color
 			//fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * _Color;
-	        o.Albedo = (o.Albedo * (1.0 - _ColorShift) + (IN.customColor * _ColorShift));
 			//o.Albedo = c.rgb;
 			// Metallic and smoothness come from slider variables
 			o.Metallic = _Metallic;
